@@ -1,6 +1,5 @@
 package dev.abelab.smartpointer.helper
 
-
 import java.time.LocalDateTime
 
 /**
