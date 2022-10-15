@@ -1,0 +1,31 @@
+version: "3"
+services:
+  db-local:
+    build: ./docker/mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: "smartpointer"
+      MYSQL_USER: "smartpointer"
+      MYSQL_PASSWORD: "smartpointer"
+      MYSQL_ROOT_PASSWORD: "smartpointer"
+      TZ: "Asia/Tokyo"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d
+      - ./docker/mysql/log/local:/var/log/mysql
+      - ./docker/mysql/db:/var/lib/mysql
+  db-test:
+    build: ./docker/mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: "smartpointer"
+      MYSQL_USER: "smartpointer"
+      MYSQL_PASSWORD: "smartpointer"
+      MYSQL_ROOT_PASSWORD: "smartpointer"
+      TZ: "Asia/Tokyo"
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d
+      - ./docker/mysql/log/test:/var/log/mysql
