@@ -23,7 +23,6 @@ spring:
     user: ${spring.datasource.username}
     password: ${spring.datasource.password}
     locations: classpath:db/migration
-    connect-retries: 5
     enabled: true
 
 springdoc:
@@ -45,7 +44,7 @@ server:
       timeout: 3h
 
 project:
-  name: Smart Pointer
+  name: smartpointer
   version: 1.0.0_SNAPSHOT
   package: dev.abelab.smartpointer
   mybatis:

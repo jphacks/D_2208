@@ -1,0 +1,21 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: deploy
+        env:
+          JENKINS_URL: ${{secrets.JENKINS_URL}}
+          JENKINS_USER: ${{secrets.JENKINS_USER}}
+          JENKINS_JOB_TOKEN: ${{secrets.JENKINS_JOB_TOKEN}}
+        run: |
+          curl --user $JENKINS_USER $JENKINS_URL -d token=$JENKINS_JOB_TOKEN
