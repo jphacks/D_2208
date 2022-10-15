@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: 11
+
+      - name: launch docker
+        run: docker-compose up -d
+
+      - name: build
+        run: |
+          ./gradlew bootJar
+
+      - name: test
+        run: |
+          ./gradlew test
+
+  # TODO: フロントエンドのCIを追加
