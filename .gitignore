@@ -38,7 +38,6 @@ bin
 
 ### Eclipse ###
 *.pydevproject
-.project
 .metadata
 bin/**
 tmp/**
@@ -48,7 +47,6 @@ tmp/**/*
 *.swp
 *~.nib
 local.properties
-.classpath
 .settings/
 .loadpath
 .externalToolBuilders/
@@ -66,6 +64,7 @@ out/
 ### Application property ###
 app/src/main/resources/application-prod.yml
 app/src/main/resources/application-dev.yml
+app/src/main/resources/application-local.yml
 
 ### Docker ###
 docker/mysql/db
