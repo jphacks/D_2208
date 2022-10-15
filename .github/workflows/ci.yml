@@ -32,4 +32,37 @@ jobs:
         run: |
           ./gradlew test
 
-  # TODO: フロントエンドのCIを追加
+  desktop:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: desktop
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'yarn'
+          cache-dependency-path: ./desktop/yarn.lock
+
+      - name: dependencies
+        run: yarn install
+
+      - name: code check
+        run: |
+          yarn code-check
+
+      - name: build
+        run: |
+          yarn build
+
+      # TODO: test
+      # - name: test
+      #   run: |
+      #     yarn test
+
+  # TODO: モバイルのCIを追加
