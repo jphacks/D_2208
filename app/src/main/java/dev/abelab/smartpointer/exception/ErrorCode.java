@@ -43,7 +43,7 @@ public enum ErrorCode {
     UNEXPECTED_ERROR(6000, "exception.internal_server_error.unexpected_error");
 
     /**
-     * コード
+     * エラーコード
      */
     private final Integer code;
 
