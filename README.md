@@ -1,6 +1,7 @@
 # Smart Box
 
 ![CI](https://github.com/jphacks/D_2208/workflows/CI/badge.svg)
+![deploy](https://github.com/jphacks/D_2208/workflows/deploy/badge.svg)
 ![version](https://img.shields.io/badge/version-1.0.0__SNAPSHOT-blue.svg)
 
 [![IMAGE ALT TEXT HERE](https://jphacks.com/wp-content/uploads/2022/08/JPHACKS2022_ogp.jpg)](https://www.youtube.com/watch?v=LUPQFB4QyVo)
