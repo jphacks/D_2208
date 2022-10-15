@@ -1,0 +1,10 @@
+test {
+    useJUnitPlatform()
+    systemProperty "spring.profiles.active", "test"
+    systemProperties System.properties
+
+    // testLogging {
+    //     exceptionFormat "full"
+    //     showStandardStreams true
+    // }
+}

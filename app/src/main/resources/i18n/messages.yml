@@ -1,0 +1,14 @@
+exception:
+  bad_request:
+    validation_error: 不正なリクエストです。
+    invalid_request_parameter: 不正なリクエストです。
+  unauthorized:
+    user_not_logged_in: ユーザはログインしていません。
+  forbidden:
+    user_has_no_permission: その動作は許可されていません。
+  not_found:
+    api: APIが見つかりません。
+  conflict:
+    user_name_is_already_exists: そのユーザ名は既に使われています。
+  internal_server_error:
+    unexpected_error: 予期しないエラーが発生しました。

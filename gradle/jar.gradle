@@ -1,0 +1,7 @@
+jar {
+    enabled = false
+}
+
+bootJar {
+    archiveBaseName = "${APPLICATION_NAME}_${APPLICATION_VERSION}"
+}

@@ -1,0 +1,152 @@
+import org.yaml.snakeyaml.Yaml
+
+buildscript {
+    ext {
+        SPRING_BOOT_VERSION = "2.7.1"
+    }
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${SPRING_BOOT_VERSION}"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.12.RELEASE"
+        classpath "org.flywaydb:flyway-gradle-plugin:8.5.13"
+        classpath "org.flywaydb:flyway-mysql:8.5.13"
+        classpath "org.yaml:snakeyaml:1.30"
+        classpath "com.github.ben-manes:gradle-versions-plugin:0.42.0"
+    }
+}
+
+apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
+apply plugin: "org.flywaydb.flyway"
+apply plugin: "com.github.ben-manes.versions"
+apply plugin: "java"
+apply plugin: "groovy"
+apply plugin: "eclipse"
+apply plugin: "idea"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    mybatisGenerate
+}
+
+ext {
+    // path
+    PROJECT_ROOT_PATH = projectDir.absolutePath.replaceAll("\\\\", "/")
+    JAVA_ROOT_PATH = "${PROJECT_ROOT_PATH}/src/main/java"
+    RESOURCES_ROOT_PATH = "app/src/main/resources"
+    PROPERTY_ROOT_PATH = "${rootProject.rootDir.path}/${RESOURCES_ROOT_PATH}"
+    GRADLE_ROOT_PATH = "../gradle"
+
+    // application property file
+    BASE_PROPERTY_FILE = "application.yml"
+    ENVIRONMENT = System.getProperty("spring.profiles.active") ?: "sample"
+    EXTENSION_PROPERTY_FILE = "application-${ENVIRONMENT}.yml"
+
+    // application property
+    BASE_PROPERTY = new Yaml().load(new File("${PROPERTY_ROOT_PATH}/${BASE_PROPERTY_FILE}").newInputStream())
+    EXTENSION_PROPERTY = new Yaml().load(new File("${PROPERTY_ROOT_PATH}/${EXTENSION_PROPERTY_FILE}").newInputStream())
+
+    // application info
+    APPLICATION_NAME = BASE_PROPERTY.project.name
+    APPLICATION_VERSION = BASE_PROPERTY.project.version
+
+    // datasource
+    DATASOURCE_URL = EXTENSION_PROPERTY.spring.datasource.url
+    DATASOURCE_USERNAME = EXTENSION_PROPERTY.spring.datasource.username
+    DATASOURCE_PASSWORD = EXTENSION_PROPERTY.spring.datasource.password
+    DATASOURCE_DRIVER = EXTENSION_PROPERTY.spring.datasource["driver-class-name"]
+
+    // mybatis
+    MYBATIS_PROPERTY = BASE_PROPERTY.project.mybatis
+}
+
+dependencies {
+    // spring boot
+    implementation "org.springframework.boot:spring-boot-starter-web:${SPRING_BOOT_VERSION}"
+    implementation "org.springframework.boot:spring-boot-starter-websocket:${SPRING_BOOT_VERSION}"
+    implementation "org.springframework.boot:spring-boot-starter-validation:${SPRING_BOOT_VERSION}"
+    implementation "org.springframework.boot:spring-boot-starter-security:${SPRING_BOOT_VERSION}"
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${SPRING_BOOT_VERSION}"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${SPRING_BOOT_VERSION}"
+
+    // spring security
+    implementation "org.springframework.security:spring-security-core:5.7.2"
+    implementation "org.springframework.security:spring-security-web:5.7.2"
+    implementation "org.springframework.security:spring-security-config:5.7.2"
+    testImplementation "org.springframework.security:spring-security-test:5.7.2"
+
+    // spring session
+    implementation "org.springframework.session:spring-session-jdbc:2.7.0"
+
+    // flyway
+    implementation "org.flywaydb:flyway-core:8.5.13"
+    implementation "org.flywaydb:flyway-mysql:8.5.13"
+
+    // lombok
+    implementation "org.projectlombok:lombok:1.18.24"
+    annotationProcessor "org.projectlombok:lombok:1.18.24"
+    testImplementation "org.projectlombok:lombok:1.18.24"
+    testAnnotationProcessor "org.projectlombok:lombok:1.18.24"
+
+    // mybatis
+    implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2"
+    implementation "org.mybatis.generator:mybatis-generator-maven-plugin:1.4.1"
+    mybatisGenerate "org.mybatis.generator:mybatis-generator-core:1.4.1"
+    mybatisGenerate "com.softwareloop:mybatis-generator-lombok-plugin:1.0"
+    mybatisGenerate "mysql:mysql-connector-java:8.0.29"
+
+    // mysql
+    implementation "mysql:mysql-connector-java:8.0.29"
+
+    // swagger
+    implementation "io.springfox:springfox-boot-starter:3.0.0"
+    implementation "org.springdoc:springdoc-openapi-ui:1.6.9"
+    implementation "org.springdoc:springdoc-openapi-javadoc:1.6.9"
+    implementation "org.springdoc:springdoc-openapi-security:1.6.9"
+    implementation "com.github.therapi:therapi-runtime-javadoc:0.13.0"
+    annotationProcessor "com.github.therapi:therapi-runtime-javadoc-scribe:0.13.0"
+
+    // test
+    testImplementation "org.spockframework:spock-core:2.2-M1-groovy-4.0"
+    testImplementation "org.spockframework:spock-spring:2.2-M1-groovy-4.0"
+    testImplementation "org.jeasy:easy-random-core:5.0.0"
+    testImplementation "org.apache.groovy:groovy:4.0.3"
+    testImplementation "org.apache.groovy:groovy-sql:4.0.3"
+
+    // logging
+    implementation "ch.qos.logback:logback-classic:1.2.3"
+
+    // util
+    implementation "com.google.guava:guava:31.1-jre"
+    implementation "org.apache.commons:commons-lang3:3.12.0"
+    implementation "org.apache.commons:commons-collections4:4.4"
+    implementation "commons-net:commons-net:3.8.0"
+    implementation "commons-validator:commons-validator:1.7"
+    implementation "net.rakugakibox.util:yaml-resource-bundle:1.2"
+}
+
+tasks.withType(Test) {
+    systemProperties System.properties
+}
+
+tasks.withType(JavaExec) {
+    systemProperties System.properties
+}
+
+apply from: "${GRADLE_ROOT_PATH}/jar.gradle"
+apply from: "${GRADLE_ROOT_PATH}/run.gradle"
+apply from: "${GRADLE_ROOT_PATH}/test.gradle"
+apply from: "${GRADLE_ROOT_PATH}/flyway.gradle"
+apply from: "${GRADLE_ROOT_PATH}/javadoc.gradle"
+apply from: "${GRADLE_ROOT_PATH}/mybatis.gradle"
