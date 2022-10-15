@@ -35,7 +35,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
         final var info = new Info() //
-            .title(String.format("%s Internal API", this.projectProperty.getName())) //
+            .title("Smart Pointer Internal API") //
             .version(this.projectProperty.getVersion());
         return new OpenAPI().info(info);
     }
