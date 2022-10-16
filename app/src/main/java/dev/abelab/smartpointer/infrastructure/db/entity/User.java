@@ -17,7 +17,7 @@ public class User {
      *
      * @mbg.generated
      */
-    private Integer id;
+    private String id;
 
     /**
      *
@@ -26,7 +26,7 @@ public class User {
      *
      * @mbg.generated
      */
-    private Integer roomId;
+    private String roomId;
 
     /**
      *
