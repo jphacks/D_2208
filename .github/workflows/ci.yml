@@ -47,7 +47,7 @@ jobs:
         with:
           node-version: 16
           cache: yarn
-          cache-dependency-path: ./yarn.lock
+          cache-dependency-path: ./desktop/yarn.lock
 
       - name: dependencies
         run: yarn install
@@ -60,12 +60,12 @@ jobs:
         run: |
           yarn build
 
-  mobile:
+  pointer:
     runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
-        working-directory: app/src/main/mobile
+        working-directory: app/src/main/pointer
     steps:
       - uses: actions/checkout@v2
 
@@ -74,7 +74,7 @@ jobs:
         with:
           node-version: 16
           cache: yarn
-          cache-dependency-path: ./desktop/yarn.lock
+          cache-dependency-path: ./app/src/main/pointer/yarn.lock
 
       - name: dependencies
         run: yarn install
