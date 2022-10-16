@@ -12,6 +12,21 @@ pipeline {
             }
         }
 
+        stage("frontend-build") {
+            agent {
+                docker {
+                    image "node:16-alpine"
+                    reuseNode true
+                }
+            }
+            steps {
+                dir("app/src/main/pointer") {
+                    sh "yarn install"
+                    sh "yarn build"
+                }
+            }
+        }
+
         stage("backend-build") {
             agent {
                 docker {
