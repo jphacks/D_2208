@@ -3,6 +3,7 @@ import { Container } from "@chakra-ui/react";
 import { UserNameForm } from "./components/UserNameForm";
 import { Paginator } from "./components/Paginator";
 import { Timer } from "./components/Timer";
+import { Pointer } from "./components/Pointer";
 
 export const App = () => {
   const [userName, setUserName] = useState<string | null>(null);
@@ -15,7 +16,7 @@ export const App = () => {
           <h1>{userName}</h1>
           {/* TODO: <WebSocketProvider> */}
           <Timer />
-          {/* <Pointer /> */}
+          <Pointer />
           <Paginator />
           {/* </WebSocketProvider> */}
         </>
