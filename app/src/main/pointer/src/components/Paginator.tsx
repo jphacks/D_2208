@@ -12,7 +12,7 @@ export const Paginator: FC = () => {
         <IconButton
           key={`${index}`}
           aria-label={label}
-          width={24}
+          flexGrow={1}
           height={24}
           icon={<Icon width={14} height={14} as={icon} />}
         />

@@ -53,9 +53,9 @@ export const Timer: FC = () => {
           fill="currentColor"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M10.5 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm0 12a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"
-            clip-rule="evenodd"
+            clipRule="evenodd"
           />
         </Icon>
         <NumberInput defaultValue={0} min={0} max={59} size="lg" maxW={40}>
