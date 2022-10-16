@@ -38,7 +38,6 @@
                              type="${generator.client.type}"/>
 
         <table tableName="%" delimitIdentifiers="true" delimitAllColumns="true">
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
             <ignoreColumn column="created_at"/>
             <ignoreColumn column="updated_at"/>
         </table>

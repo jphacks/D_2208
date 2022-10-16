@@ -1,0 +1,43 @@
+package dev.abelab.smartpointer.domain.repository;
+
+import java.util.List;
+import java.util.Optional;
+
+import dev.abelab.smartpointer.domain.model.UserModel;
+
+/**
+ * ユーザリポジトリ
+ */
+public interface UserRepository {
+
+    /**
+     * IDからユーザを取得
+     * 
+     * @param id ユーザID
+     * @return ユーザ
+     */
+    Optional<UserModel> selectById(final String id);
+
+    /**
+     * ルームIDからユーザリストを取得
+     *
+     * @param roomId ルームID
+     * @return ユーザリスト
+     */
+    List<UserModel> selectByRoomId(final String roomId);
+
+    /**
+     * ユーザを作成
+     *
+     * @param userModel ユーザ
+     */
+    void insert(final UserModel userModel);
+
+    /**
+     * IDからユーザを削除
+     * 
+     * @param id ユーザID
+     */
+    void deleteById(final String id);
+
+}

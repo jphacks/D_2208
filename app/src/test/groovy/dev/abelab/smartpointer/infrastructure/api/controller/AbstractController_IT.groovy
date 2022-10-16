@@ -1,6 +1,5 @@
 package dev.abelab.smartpointer.infrastructure.api.controller
 
-
 import dev.abelab.smartpointer.AbstractDatabaseSpecification
 import dev.abelab.smartpointer.exception.BaseException
 import dev.abelab.smartpointer.helper.JsonConvertHelper
@@ -9,8 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.messaging.simp.stomp.StompSession
+import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
 import org.springframework.mock.web.MockHttpSession
-import org.springframework.security.core.Authentication
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
@@ -19,18 +19,22 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.util.MultiValueMap
 import org.springframework.web.context.WebApplicationContext
+import org.springframework.web.socket.client.standard.StandardWebSocketClient
+import org.springframework.web.socket.messaging.WebSocketStompClient
+import org.springframework.web.socket.sockjs.client.SockJsClient
+import org.springframework.web.socket.sockjs.client.WebSocketTransport
 import spock.lang.Shared
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity
+import java.util.concurrent.TimeUnit
 
 /**
- * RestController統合テストの基底クラス
+ * Controller統合テストの基底クラス
  */
-abstract class AbstractRestController_IT extends AbstractDatabaseSpecification {
+abstract class AbstractController_IT extends AbstractDatabaseSpecification {
 
     private MockMvc mockMvc
+
+    private WebSocketStompClient stompClient
 
     @Autowired
     private WebApplicationContext webApplicationContext
@@ -44,9 +48,6 @@ abstract class AbstractRestController_IT extends AbstractDatabaseSpecification {
     @Shared
     protected MockHttpSession session = new MockHttpSession()
 
-    @Shared
-    protected Authentication authentication = null
-
     /**
      * GET request
      *
@@ -57,8 +58,6 @@ abstract class AbstractRestController_IT extends AbstractDatabaseSpecification {
     MockHttpServletRequestBuilder getRequest(final String path) {
         return MockMvcRequestBuilders.get(path)
             .session(this.session)
-            .with(authentication(this.authentication))
-            .with(csrf())
     }
 
     /**
@@ -71,8 +70,6 @@ abstract class AbstractRestController_IT extends AbstractDatabaseSpecification {
     MockHttpServletRequestBuilder postRequest(final String path) {
         return MockMvcRequestBuilders.post(path)
             .session(this.session)
-            .with(authentication(this.authentication))
-            .with(csrf())
     }
 
     /**
@@ -88,8 +85,6 @@ abstract class AbstractRestController_IT extends AbstractDatabaseSpecification {
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .params(params)
             .session(this.session)
-            .with(authentication(this.authentication))
-            .with(csrf())
     }
 
     /**
@@ -105,8 +100,6 @@ abstract class AbstractRestController_IT extends AbstractDatabaseSpecification {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(JsonConvertHelper.convertObjectToJson(content))
             .session(this.session)
-            .with(authentication(this.authentication))
-            .with(csrf())
     }
 
     /**
@@ -122,8 +115,6 @@ abstract class AbstractRestController_IT extends AbstractDatabaseSpecification {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(JsonConvertHelper.convertObjectToJson(content))
             .session(this.session)
-            .with(authentication(this.authentication))
-            .with(csrf())
     }
 
     /**
@@ -136,8 +127,6 @@ abstract class AbstractRestController_IT extends AbstractDatabaseSpecification {
     MockHttpServletRequestBuilder deleteRequest(final String path) {
         return MockMvcRequestBuilders.delete(path)
             .session(this.session)
-            .with(authentication(this.authentication))
-            .with(csrf())
     }
 
     /**
@@ -204,6 +193,17 @@ abstract class AbstractRestController_IT extends AbstractDatabaseSpecification {
     }
 
     /**
+     * STOMPのコネクションを開始
+     *
+     * @return session
+     */
+    protected StompSession connect() {
+        final stompSessionHandler = new StompSessionHandlerAdapter() {}
+        return this.stompClient.connect(String.format("ws://localhost:%d/ws", PORT), stompSessionHandler)
+            .get(1, TimeUnit.SECONDS)
+    }
+
+    /**
      * setup before test case
      */
     def setup() {
@@ -213,8 +213,9 @@ abstract class AbstractRestController_IT extends AbstractDatabaseSpecification {
                 response.setCharacterEncoding("UTF-8")
                 chain.doFilter(request, response)
             }))
-            .apply(springSecurity())
             .build()
+
+        this.stompClient = new WebSocketStompClient(new SockJsClient(List.of(new WebSocketTransport(new StandardWebSocketClient()))))
     }
 
 }
