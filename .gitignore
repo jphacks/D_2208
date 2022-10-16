@@ -66,6 +66,9 @@ app/src/main/resources/application-dev.yml
 app/src/main/resources/application-stage.yml
 app/src/main/resources/application-prod.yml
 
+### Static contents ###
+app/src/main/resources/static/*
+
 ### Docker ###
 docker/mysql/db
 docker/mysql/log
