@@ -1,19 +1,18 @@
 /** @format */
 
 import { app, Menu, MenuItemConstructorOptions } from "electron";
-import createRoom from "./createRoom";
-import quitRoom from "./createRoom";
-import showShereLink from "./createRoom";
+import AppState from "./AppState";
+import showShereLink from "./showShereLink";
 
-const defaultMenu = (isActivating: boolean): MenuItemConstructorOptions[] => [
+const defaultMenu = (appState: AppState): MenuItemConstructorOptions[] => [
   {
     label: app.name,
     submenu: [
       {
         label: "ルームを作成",
         accelerator: "CmdOrCtrl+N",
-        enabled: !isActivating,
-        click: createRoom,
+        enabled: !appState.isActivating,
+        click: appState.createRoom,
       },
       { type: "separator" },
       { role: "quit", label: "アプリを終了" },
@@ -21,7 +20,7 @@ const defaultMenu = (isActivating: boolean): MenuItemConstructorOptions[] => [
   },
 ];
 
-const roomMenu = (users: string[]): MenuItemConstructorOptions[] => [
+const roomMenu = (appState: AppState): MenuItemConstructorOptions[] => [
   {
     label: app.name,
     submenu: [
@@ -29,7 +28,7 @@ const roomMenu = (users: string[]): MenuItemConstructorOptions[] => [
         label: "参加者一覧",
         accelerator: "CmdOrCtrl+L",
         // TODO: チェックリストに変更する
-        submenu: users.map((user) => ({ label: user })),
+        submenu: appState.room?.users.map((user) => ({ label: user })) ?? [],
       },
       {
         label: "招待リンクを表示",
@@ -37,7 +36,11 @@ const roomMenu = (users: string[]): MenuItemConstructorOptions[] => [
         click: showShereLink,
       },
       { type: "separator" },
-      { label: "ルームを終了", accelerator: "CmdOrCtrl+W", click: quitRoom },
+      {
+        label: "ルームを終了",
+        accelerator: "CmdOrCtrl+W",
+        click: appState.deleteRoom,
+      },
       { type: "separator" },
       { role: "quit", label: "アプリを終了" },
     ],
@@ -45,13 +48,9 @@ const roomMenu = (users: string[]): MenuItemConstructorOptions[] => [
 ];
 
 const createMenu = () => {
-  // TODO: これらの値はどこか別のとこで管理する
-  const isRoomCreated = true;
-  const isRoomActivating = true;
-  const users = ["ユーザ1", "ユーザ2"];
-
+  const appState = new AppState();
   const menu = Menu.buildFromTemplate(
-    isRoomCreated ? roomMenu(users) : defaultMenu(isRoomActivating)
+    appState.room ? roomMenu(appState) : defaultMenu(appState)
   );
   Menu.setApplicationMenu(menu);
 };
