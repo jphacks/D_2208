@@ -2,6 +2,7 @@
 
 import { app, BrowserWindow } from "electron";
 import electronReload from "electron-reload";
+import createMenu from "./src/main/menu";
 
 const createWindow = async () => {
   const mainWindow = new BrowserWindow({
@@ -10,9 +11,9 @@ const createWindow = async () => {
     title: "スマートポインター",
   });
   const isDevelopment = (process.env.NODE_ENV ?? "").trim() === "DEV";
-  console.log("isDevelopment", isDevelopment);
   if (isDevelopment) {
     // Load the url of the dev server if in development mode
+    // XXX: このポートは変更されるかもしれない
     await mainWindow.loadURL("http://localhost:5173");
     electronReload(__dirname, {
       electron: require(`${__dirname}/../node_modules/electron`),
@@ -27,6 +28,7 @@ const createWindow = async () => {
 };
 
 app.once("ready", () => {
+  createMenu();
   createWindow();
 });
 
