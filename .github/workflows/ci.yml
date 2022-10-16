@@ -45,9 +45,8 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
-          cache: 'yarn'
-          cache-dependency-path: ./desktop/yarn.lock
+          node-version: "16"
+          cache: "yarn"
 
       - name: dependencies
         run: yarn install
@@ -60,9 +59,28 @@ jobs:
         run: |
           yarn build
 
-      # TODO: test
-      # - name: test
-      #   run: |
-      #     yarn test
+  mobile:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: app/src/main/mobile
+    steps:
+      - uses: actions/checkout@v2
 
-  # TODO: モバイルのCIを追加
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "yarn"
+
+      - name: dependencies
+        run: yarn install
+
+      - name: code check
+        run: |
+          yarn code-check
+
+      - name: build
+        run: |
+          yarn build
