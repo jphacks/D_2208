@@ -8,8 +8,9 @@ export const Paginator: FC = () => {
       {[
         { icon: ChevronLeftIcon, label: "1ページ戻す" },
         { icon: ChevronRightIcon, label: "1ページ進める" },
-      ].map(({ icon, label }) => (
+      ].map(({ icon, label }, index) => (
         <IconButton
+          key={`${index}`}
           aria-label={label}
           width={24}
           height={24}
