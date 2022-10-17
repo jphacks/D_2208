@@ -36,9 +36,9 @@ export const Timer: FC = () => {
   };
 
   return (
-    <VStack>
+    <VStack gap={4}>
       <Flex justify="center" align="center">
-        <NumberInput defaultValue={5} min={0} size="lg" maxW={40}>
+        <NumberInput defaultValue={5} min={0} size="lg" flexGrow={1}>
           <NumberInputField textAlign="right" fontSize="5xl" height={24} />
           <NumberInputStepper>
             <NumberIncrementStepper />
@@ -58,7 +58,7 @@ export const Timer: FC = () => {
             clipRule="evenodd"
           />
         </Icon>
-        <NumberInput defaultValue={0} min={0} max={59} size="lg" maxW={40}>
+        <NumberInput defaultValue={0} min={0} max={59} size="lg" flexGrow={1}>
           <NumberInputField textAlign="right" fontSize="5xl" height={24} />
           <NumberInputStepper>
             <NumberIncrementStepper />
