@@ -4,6 +4,7 @@ import { UserNameForm } from "./components/UserNameForm";
 import { Paginator } from "./components/Paginator";
 import { Timer } from "./components/Timer";
 import { Pointer } from "./components/Pointer";
+import { Header } from "./components/Header";
 
 export const App = () => {
   const [userName, setUserName] = useState<string | null>(null);
@@ -12,9 +13,8 @@ export const App = () => {
     <Container size="md">
       {userName ? (
         <>
-          {/* TODO: ↓消す */}
-          <h1>{userName}</h1>
           {/* TODO: <WebSocketProvider> */}
+          <Header userName={userName} />
           <Timer />
           <Pointer />
           <Paginator />
