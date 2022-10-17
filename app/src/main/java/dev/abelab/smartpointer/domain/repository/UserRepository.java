@@ -40,4 +40,13 @@ public interface UserRepository {
      */
     void deleteById(final String id);
 
+    /**
+     * ルームID、ユーザ名からユーザの存在チェック
+     * 
+     * @param roomId ルームID
+     * @param name ユーザ名
+     * @return 存在するか
+     */
+    boolean existsByRoomIdAndName(final String roomId, final String name);
+
 }

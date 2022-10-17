@@ -16,4 +16,19 @@ class RoomModel_UT extends AbstractSpecification {
         room.token.length() == 44
     }
 
+    def "isTokenValid: トークンが有効かチェック"() {
+        given:
+        final room = RoomModel.builder()
+            .token("A")
+            .build()
+
+        expect:
+        room.isTokenValid(inputToken) == expectedResult
+
+        where:
+        inputToken || expectedResult
+        "A"        || true
+        "B"        || false
+    }
+
 }

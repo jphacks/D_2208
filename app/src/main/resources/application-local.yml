@@ -4,3 +4,8 @@ spring:
     username: smartpointer
     password: smartpointer
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+auth:
+  jwt:
+    secret: 70gdy7X82ya650Vdhb8HqofHniMkPHTIYOIFJA1NKY4=
+    issuer: dev.abelab.smartpointer

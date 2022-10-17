@@ -10,7 +10,7 @@ class RoomRestController_IT extends AbstractController_IT {
 
     static final String CREATE_ROOM_PATH = "/api/rooms"
 
-    def "ルーム作成API: ルームを作成できる"() {
+    def "ルーム作成API: 正常系 ルームを作成できる"() {
         when:
         final request = this.postRequest(CREATE_ROOM_PATH)
         final response = execute(request, HttpStatus.CREATED, RoomResponse)

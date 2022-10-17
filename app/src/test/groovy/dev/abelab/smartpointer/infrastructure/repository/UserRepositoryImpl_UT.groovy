@@ -131,4 +131,30 @@ class UserRepositoryImpl_UT extends AbstractRepository_UT {
         users*.name == ["B"]
     }
 
+    def "existsByRoomIdAndName: ルームID、ユーザ名からユーザの存在チェック"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | token
+            "00000000-0000-0000-0000-000000000000" | ""
+        }
+        TableHelper.insert sql, "user", {
+            room_id                                | name
+            "00000000-0000-0000-0000-000000000000" | "A"
+        }
+        // @formatter:on
+
+        when:
+        final result = this.sut.existsByRoomIdAndName(inputRoomId, inputName)
+
+        then:
+        result == expectedResult
+
+        where:
+        inputRoomId                            | inputName || expectedResult
+        "00000000-0000-0000-0000-000000000000" | "A"       || true
+        "00000000-0000-0000-0000-000000000001" | "A"       || false
+        "00000000-0000-0000-0000-000000000000" | "B"       || false
+    }
+
 }
