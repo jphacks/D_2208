@@ -49,4 +49,11 @@ public class UserRepositoryImpl implements UserRepository {
         this.userMapper.deleteByPrimaryKey(id);
     }
 
+    @Override
+    public boolean existsByRoomIdAndName(final String roomId, final String name) {
+        final var example = new UserExample();
+        example.createCriteria().andRoomIdEqualTo(roomId).andNameEqualTo(name);
+        return this.userMapper.selectByExample(example).size() != 0;
+    }
+
 }

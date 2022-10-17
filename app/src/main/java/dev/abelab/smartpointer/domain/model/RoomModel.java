@@ -37,4 +37,14 @@ public class RoomModel {
         this.token = room.getToken();
     }
 
+    /**
+     * トークンが有効かチェック
+     * 
+     * @param token トークン
+     * @return チェック結果
+     */
+    public boolean isTokenValid(final String token) {
+        return this.token.equals(token);
+    }
+
 }

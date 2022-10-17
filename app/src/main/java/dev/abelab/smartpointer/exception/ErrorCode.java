@@ -17,10 +17,14 @@ public enum ErrorCode {
 
     INVALID_REQUEST_PARAMETER(1001, "exception.bad_request.invalid_request_parameter"),
 
+    INVALID_USER_NAME(1002, "exception.bad_request.invalid_user_name"),
+
     /**
      * 401 Unauthorized: 2000~2999
      */
     USER_NOT_LOGGED_IN(2000, "exception.unauthorized.user_not_logged_in"),
+
+    INVALID_ROOM_TOKEN(2001, "exception.unauthorized.invalid_room_token"),
 
     /**
      * 403 Forbidden: 3000~3999
@@ -31,6 +35,8 @@ public enum ErrorCode {
      * 404 Not Found: 4000~4999
      */
     NOT_FOUND_API(4000, "exception.not_found.api"),
+
+    NOT_FOUND_ROOM(4001, "exception.not_found.room"),
 
     /**
      * 409 Conflict: 5000~5999
