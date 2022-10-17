@@ -2,13 +2,17 @@ package dev.abelab.smartpointer
 
 import dev.abelab.smartpointer.exception.BaseException
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.server.LocalServerPort
 import spock.lang.Specification
 
 /**
  * テストの基底クラス
  */
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 abstract class AbstractSpecification extends Specification {
+
+    @LocalServerPort
+    protected Integer PORT
 
     /**
      * 例外を検証

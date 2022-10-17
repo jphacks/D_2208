@@ -35,9 +35,6 @@ server:
     encoding:
       charset: UTF-8
       force: true
-    session:
-      cookie:
-        same-site: strict
   forward-headers-strategy: framework
   reactive:
     session:

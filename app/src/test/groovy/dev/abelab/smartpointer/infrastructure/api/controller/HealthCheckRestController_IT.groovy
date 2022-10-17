@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus
 /**
  * HealthCheckRestControllerの統合テスト
  */
-class HealthCheckRestController_IT extends AbstractRestController_IT {
+class HealthCheckRestController_IT extends AbstractController_IT {
 
     // API PATH
     static final String BASE_PATH = "/api/health"
