@@ -1,6 +1,6 @@
-import { FC } from "react";
 import { IconButton, Icon, Flex } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { FC } from "react";
 
 export const Paginator: FC = () => {
   return (

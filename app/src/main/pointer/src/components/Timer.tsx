@@ -1,4 +1,3 @@
-import { FC, useState, useCallback } from "react";
 import {
   Flex,
   NumberInput,
@@ -22,6 +21,7 @@ import {
   InputRightAddon,
 } from "@chakra-ui/react";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
+import { FC, useState } from "react";
 
 export const Timer: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

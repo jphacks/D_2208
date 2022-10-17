@@ -1,4 +1,3 @@
-import { FC, useState } from "react";
 import {
   VStack,
   FormControl,
@@ -7,6 +6,7 @@ import {
   FormHelperText,
   Button,
 } from "@chakra-ui/react";
+import { FC, useState } from "react";
 
 type Props = {
   onSubmit: (name: string) => void;
