@@ -1,11 +1,11 @@
+import { Container, VStack } from "@chakra-ui/react";
 import { useState } from "react";
-import { Container } from "@chakra-ui/react";
-import { UserNameForm } from "./components/UserNameForm";
-import { Paginator } from "./components/Paginator";
-import { Timer } from "./components/Timer";
-import { Pointer } from "./components/Pointer";
+
 import { Header } from "./components/Header";
-import { VStack } from "@chakra-ui/react";
+import { Paginator } from "./components/Paginator";
+import { Pointer } from "./components/Pointer";
+import { Timer } from "./components/Timer";
+import { UserNameForm } from "./components/UserNameForm";
 
 export const App = () => {
   const [userName, setUserName] = useState<string | null>(null);

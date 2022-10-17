@@ -16,6 +16,26 @@
 yarn install
 ```
 
+#### エディタの設定
+
+以下を自動実行するように設定することを推奨します。
+
+- フォーマッタ (Prettier)
+- Linter (ESLint)
+- テスト (Vitest)
+
+[Visual Studio Code](https://code.visualstudio.com/) を使用する場合は、以下の拡張機能を使用することを推奨します。
+
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- [Vitest](https://marketplace.visualstudio.com/items?itemName=ZixuanChen.vitest-explorer)
+
+また、これらの拡張機能は、プロジェクトのフォルダ内で拡張機能を `@recommended` で検索すると表示されます。
+
+変更する場合は `.vscode/extensions.json` ファイルを編集してください。
+
+参考: [Workspace recommended extensions - Managing Extensions in Visual Studio Code](https://code.visualstudio.com/docs/editor/extension-marketplace#_workspace-recommended-extensions)
+
 ### 開発用サーバの起動
 
 ```sh

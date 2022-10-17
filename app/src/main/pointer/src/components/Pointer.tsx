@@ -1,5 +1,5 @@
-import { FC } from "react";
 import { IconButton, Icon, Flex } from "@chakra-ui/react";
+import { FC } from "react";
 
 export const Pointer: FC = () => {
   return (
