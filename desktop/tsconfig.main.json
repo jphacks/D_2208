@@ -6,5 +6,5 @@
     "sourceMap": true,
     "noEmit": false
   },
-  "include": ["main.ts"]
+  "include": ["src/main"]
 }

@@ -12,10 +12,10 @@
     "build": "run-p build:*",
     "build:renderer": "vite build",
     "build:main": "tsc --project tsconfig.main.json",
-    "lint": "eslint src main.ts",
-    "format": "yarn check:format --write",
+    "lint": "eslint src",
+    "format": "yarn check:format --write && eslint --fix src",
     "code-check": "run-p lint check:*",
-    "check:format": "prettier src main.ts index.html --check",
+    "check:format": "prettier src index.html --check",
     "check:type": "tsc --project tsconfig.json && tsc --project tsconfig.main.json"
   },
   "devDependencies": {
