@@ -4,6 +4,7 @@ import dev.abelab.smartpointer.AbstractDatabaseSpecification
 import dev.abelab.smartpointer.exception.BaseException
 import dev.abelab.smartpointer.helper.JsonConvertHelper
 import dev.abelab.smartpointer.infrastructure.api.response.ErrorResponse
+import dev.abelab.smartpointer.property.AuthProperty
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.http.HttpStatus
@@ -44,6 +45,9 @@ abstract class AbstractController_IT extends AbstractDatabaseSpecification {
 
     @Autowired
     private MessageSource messageSource
+
+    @Autowired
+    protected AuthProperty authProperty
 
     @Shared
     protected MockHttpSession session = new MockHttpSession()

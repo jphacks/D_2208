@@ -10,19 +10,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ログインリクエスト
+ * ルーム入室リクエスト
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequest implements BaseRequest {
-
-    /**
-     * ルームID
-     */
-    @Schema(required = true)
-    String roomId;
+public class RoomJoinRequest implements BaseRequest {
 
     /**
      * トークン

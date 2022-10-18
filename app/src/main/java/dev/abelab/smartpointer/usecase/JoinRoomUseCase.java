@@ -12,18 +12,19 @@ import dev.abelab.smartpointer.domain.service.UserService;
 import dev.abelab.smartpointer.exception.ErrorCode;
 import dev.abelab.smartpointer.exception.NotFoundException;
 import dev.abelab.smartpointer.exception.UnauthorizedException;
-import dev.abelab.smartpointer.infrastructure.api.request.LoginRequest;
+import dev.abelab.smartpointer.infrastructure.api.request.RoomJoinRequest;
+import dev.abelab.smartpointer.infrastructure.api.response.AccessTokenResponse;
 import dev.abelab.smartpointer.property.AuthProperty;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 
 /**
- * ログインユースケース
+ * ルーム入室ユースケース
  */
 @RequiredArgsConstructor
 @Component
-public class LoginUseCase {
+public class JoinRoomUseCase {
 
     private final RoomRepository roomRepository;
 
@@ -35,14 +36,15 @@ public class LoginUseCase {
 
     /**
      * Handle UseCase
-     * 
-     * @param requestBody ログインリクエスト
-     * @return access token
+     *
+     * @param roomId ルームID
+     * @param requestBody ルーム入室リクエスト
+     * @return アクセストークン
      */
     @Transactional
-    public String handle(final LoginRequest requestBody) {
+    public AccessTokenResponse handle(final String roomId, final RoomJoinRequest requestBody) {
         // ルームの取得
-        final var room = this.roomRepository.selectById(requestBody.getRoomId()) //
+        final var room = this.roomRepository.selectById(roomId) //
             .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_ROOM));
 
         // トークンチェック
@@ -51,22 +53,24 @@ public class LoginUseCase {
         }
 
         // ユーザ名が使われていないことをチェック
-        this.userService.checkIsNameAlreadyUsed(requestBody.getRoomId(), requestBody.getName());
+        this.userService.checkIsNameAlreadyUsed(roomId, requestBody.getName());
 
         // ユーザを作成
         final var user = UserModel.builder() //
-            .roomId(requestBody.getRoomId()) //
+            .roomId(roomId) //
             .name(requestBody.getName()) //
             .build();
         this.userRepository.insert(user);
 
-        return Jwts.builder() //
+        // アクセストークンを作成
+        final var accessToken = Jwts.builder() //
             .setSubject(user.getId()) //
             .setIssuer(this.authProperty.getJwt().getIssuer()) //
             .setIssuedAt(new Date()) //
             .setExpiration(new Date(System.currentTimeMillis() + this.authProperty.getTtl() * 1000)) //
             .signWith(SignatureAlgorithm.HS512, this.authProperty.getJwt().getSecret().getBytes()) //
             .compact();
+        return new AccessTokenResponse(this.authProperty.getTokenType(), accessToken);
     }
 
 }
