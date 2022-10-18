@@ -19,9 +19,9 @@ public class AuthProperty {
     Integer ttl;
 
     /**
-     * 認証タイプ
+     * トークンタイプ
      */
-    String type;
+    String tokenType;
 
     /**
      * JWT

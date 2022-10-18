@@ -68,3 +68,4 @@ logging:
 
 auth:
   ttl: 86400 # 24h
+  token-type: Bearer
