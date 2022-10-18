@@ -70,7 +70,7 @@ public class JoinRoomUseCase {
             .setExpiration(new Date(System.currentTimeMillis() + this.authProperty.getTtl() * 1000)) //
             .signWith(SignatureAlgorithm.HS512, this.authProperty.getJwt().getSecret().getBytes()) //
             .compact();
-        return new AccessTokenResponse(this.authProperty.getTokenType(), accessToken);
+        return new AccessTokenResponse(this.authProperty.getTokenType(), accessToken, this.authProperty.getTtl());
     }
 
 }

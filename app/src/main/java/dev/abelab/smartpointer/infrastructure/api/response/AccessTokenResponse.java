@@ -27,4 +27,10 @@ public class AccessTokenResponse {
     @Schema(required = true)
     String accessToken;
 
+    /**
+     * TTL
+     */
+    @Schema(required = true)
+    Integer ttl;
+
 }
