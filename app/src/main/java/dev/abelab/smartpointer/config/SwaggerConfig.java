@@ -1,11 +1,9 @@
 package dev.abelab.smartpointer.config;
 
 import org.springdoc.core.GroupedOpenApi;
-import org.springdoc.core.SpringDocUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import dev.abelab.smartpointer.annotation.SwaggerHiddenParameter;
 import dev.abelab.smartpointer.property.ProjectProperty;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -17,10 +15,6 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @RequiredArgsConstructor
 public class SwaggerConfig {
-
-    static {
-        SpringDocUtils.getConfig().addAnnotationsToIgnore(SwaggerHiddenParameter.class);
-    }
 
     private final ProjectProperty projectProperty;;
 

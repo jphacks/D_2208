@@ -5,12 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.session.FindByIndexNameSessionRepository;
-import org.springframework.session.Session;
-import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,17 +33,12 @@ public class WebSecurityConfig {
 
         // アクセス許可
         http.authorizeRequests() //
-            .antMatchers("/", "/api/health").permitAll() //
+            .antMatchers("/", "/api/health", "/ws/**").permitAll() //
             .antMatchers("/api/batch/**").hasIpAddress("::1") //
             .antMatchers("/**").permitAll() //
             .anyRequest().authenticated();
 
         return http.build();
-    }
-
-    @Bean
-    public <S extends Session> SessionRegistry sessionRegistry(final FindByIndexNameSessionRepository<S> sessionRepository) {
-        return new SpringSessionBackedSessionRegistry<>(sessionRepository);
     }
 
 }

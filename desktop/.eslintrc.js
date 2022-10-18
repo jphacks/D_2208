@@ -8,6 +8,9 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
+    "eslint:recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
   ],
   overrides: [],
   parser: "@typescript-eslint/parser",
@@ -16,5 +19,35 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["@typescript-eslint"],
-  rules: {},
+  settings: {
+    "import/resolver": {
+      typescript: {},
+    },
+  },
+  rules: {
+    // restrict order of imports
+    "import/order": [
+      "error",
+      {
+        pathGroups: [
+          {
+            pattern: "@/**",
+            group: "internal",
+            position: "before",
+          },
+        ],
+        groups: [
+          ["builtin", "external"],
+          ["parent"],
+          ["internal"],
+          ["index", "sibling"],
+        ],
+        "newlines-between": "always",
+        alphabetize: {
+          order: "asc",
+          caseInsensitive: true,
+        },
+      },
+    ],
+  },
 };

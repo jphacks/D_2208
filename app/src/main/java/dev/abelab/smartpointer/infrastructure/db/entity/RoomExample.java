@@ -204,183 +204,133 @@ public class RoomExample {
             return (Criteria) this;
         }
 
-        public Criteria andIdEqualTo(Integer value) {
+        public Criteria andIdEqualTo(String value) {
             addCriterion("`id` =", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotEqualTo(Integer value) {
+        public Criteria andIdNotEqualTo(String value) {
             addCriterion("`id` <>", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdGreaterThan(Integer value) {
+        public Criteria andIdGreaterThan(String value) {
             addCriterion("`id` >", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andIdGreaterThanOrEqualTo(String value) {
             addCriterion("`id` >=", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdLessThan(Integer value) {
+        public Criteria andIdLessThan(String value) {
             addCriterion("`id` <", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdLessThanOrEqualTo(Integer value) {
+        public Criteria andIdLessThanOrEqualTo(String value) {
             addCriterion("`id` <=", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdIn(List<Integer> values) {
+        public Criteria andIdLike(String value) {
+            addCriterion("`id` like", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdNotLike(String value) {
+            addCriterion("`id` not like", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdIn(List<String> values) {
             addCriterion("`id` in", values, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotIn(List<Integer> values) {
+        public Criteria andIdNotIn(List<String> values) {
             addCriterion("`id` not in", values, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdBetween(Integer value1, Integer value2) {
+        public Criteria andIdBetween(String value1, String value2) {
             addCriterion("`id` between", value1, value2, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andIdNotBetween(String value1, String value2) {
             addCriterion("`id` not between", value1, value2, "id");
             return (Criteria) this;
         }
 
-        public Criteria andPasscodeIsNull() {
-            addCriterion("`passcode` is null");
+        public Criteria andTokenIsNull() {
+            addCriterion("`token` is null");
             return (Criteria) this;
         }
 
-        public Criteria andPasscodeIsNotNull() {
-            addCriterion("`passcode` is not null");
+        public Criteria andTokenIsNotNull() {
+            addCriterion("`token` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPasscodeEqualTo(String value) {
-            addCriterion("`passcode` =", value, "passcode");
+        public Criteria andTokenEqualTo(String value) {
+            addCriterion("`token` =", value, "token");
             return (Criteria) this;
         }
 
-        public Criteria andPasscodeNotEqualTo(String value) {
-            addCriterion("`passcode` <>", value, "passcode");
+        public Criteria andTokenNotEqualTo(String value) {
+            addCriterion("`token` <>", value, "token");
             return (Criteria) this;
         }
 
-        public Criteria andPasscodeGreaterThan(String value) {
-            addCriterion("`passcode` >", value, "passcode");
+        public Criteria andTokenGreaterThan(String value) {
+            addCriterion("`token` >", value, "token");
             return (Criteria) this;
         }
 
-        public Criteria andPasscodeGreaterThanOrEqualTo(String value) {
-            addCriterion("`passcode` >=", value, "passcode");
+        public Criteria andTokenGreaterThanOrEqualTo(String value) {
+            addCriterion("`token` >=", value, "token");
             return (Criteria) this;
         }
 
-        public Criteria andPasscodeLessThan(String value) {
-            addCriterion("`passcode` <", value, "passcode");
+        public Criteria andTokenLessThan(String value) {
+            addCriterion("`token` <", value, "token");
             return (Criteria) this;
         }
 
-        public Criteria andPasscodeLessThanOrEqualTo(String value) {
-            addCriterion("`passcode` <=", value, "passcode");
+        public Criteria andTokenLessThanOrEqualTo(String value) {
+            addCriterion("`token` <=", value, "token");
             return (Criteria) this;
         }
 
-        public Criteria andPasscodeLike(String value) {
-            addCriterion("`passcode` like", value, "passcode");
+        public Criteria andTokenLike(String value) {
+            addCriterion("`token` like", value, "token");
             return (Criteria) this;
         }
 
-        public Criteria andPasscodeNotLike(String value) {
-            addCriterion("`passcode` not like", value, "passcode");
+        public Criteria andTokenNotLike(String value) {
+            addCriterion("`token` not like", value, "token");
             return (Criteria) this;
         }
 
-        public Criteria andPasscodeIn(List<String> values) {
-            addCriterion("`passcode` in", values, "passcode");
+        public Criteria andTokenIn(List<String> values) {
+            addCriterion("`token` in", values, "token");
             return (Criteria) this;
         }
 
-        public Criteria andPasscodeNotIn(List<String> values) {
-            addCriterion("`passcode` not in", values, "passcode");
+        public Criteria andTokenNotIn(List<String> values) {
+            addCriterion("`token` not in", values, "token");
             return (Criteria) this;
         }
 
-        public Criteria andPasscodeBetween(String value1, String value2) {
-            addCriterion("`passcode` between", value1, value2, "passcode");
+        public Criteria andTokenBetween(String value1, String value2) {
+            addCriterion("`token` between", value1, value2, "token");
             return (Criteria) this;
         }
 
-        public Criteria andPasscodeNotBetween(String value1, String value2) {
-            addCriterion("`passcode` not between", value1, value2, "passcode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeIsNull() {
-            addCriterion("`mode` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeIsNotNull() {
-            addCriterion("`mode` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeEqualTo(Integer value) {
-            addCriterion("`mode` =", value, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeNotEqualTo(Integer value) {
-            addCriterion("`mode` <>", value, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeGreaterThan(Integer value) {
-            addCriterion("`mode` >", value, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("`mode` >=", value, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeLessThan(Integer value) {
-            addCriterion("`mode` <", value, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeLessThanOrEqualTo(Integer value) {
-            addCriterion("`mode` <=", value, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeIn(List<Integer> values) {
-            addCriterion("`mode` in", values, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeNotIn(List<Integer> values) {
-            addCriterion("`mode` not in", values, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeBetween(Integer value1, Integer value2) {
-            addCriterion("`mode` between", value1, value2, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeNotBetween(Integer value1, Integer value2) {
-            addCriterion("`mode` not between", value1, value2, "mode");
+        public Criteria andTokenNotBetween(String value1, String value2) {
+            addCriterion("`token` not between", value1, value2, "token");
             return (Criteria) this;
         }
     }
