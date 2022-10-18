@@ -19,6 +19,10 @@ public enum ErrorCode {
 
     INVALID_USER_NAME(1002, "exception.bad_request.invalid_user_name"),
 
+    TIMER_IS_ALREADY_STARTED(1003, "exception.bad_request.timer_is_already_started"),
+
+    INVALID_TIMER_VALUE(1004, "exception.bad_request.invalid_timer_value"),
+
     /**
      * 401 Unauthorized: 2000~2999
      */

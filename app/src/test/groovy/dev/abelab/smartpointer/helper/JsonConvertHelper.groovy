@@ -10,7 +10,7 @@ import lombok.SneakyThrows
  */
 class JsonConvertHelper {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper() //
+    private static final ObjectMapper objectMapper = new ObjectMapper()
         .registerModule(new JavaTimeModule())
         .configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true)
 

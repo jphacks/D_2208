@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import dev.abelab.smartpointer.domain.model.RoomModel;
 import dev.abelab.smartpointer.domain.repository.RoomRepository;
+import dev.abelab.smartpointer.infrastructure.db.entity.RoomExample;
 import dev.abelab.smartpointer.infrastructure.db.mapper.RoomMapper;
 import dev.abelab.smartpointer.infrastructure.factory.RoomFactory;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,13 @@ public class RoomRepositoryImpl implements RoomRepository {
     @Override
     public void deleteById(final String id) {
         this.roomMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public boolean existsById(final String id) {
+        final var example = new RoomExample();
+        example.createCriteria().andIdEqualTo(id);
+        return this.roomMapper.countByExample(example) != 0;
     }
 
 }
