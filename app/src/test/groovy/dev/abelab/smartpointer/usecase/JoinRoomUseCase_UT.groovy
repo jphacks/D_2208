@@ -35,6 +35,7 @@ class JoinRoomUseCase_UT extends AbstractUseCase_UT {
         1 * this.userService.checkIsNameAlreadyUsed(room.id, requestBody.name) >> {}
         1 * this.userRepository.insert(_)
         result.tokenType == this.authProperty.tokenType
+        result.ttl == this.authProperty.ttl
     }
 
     def "handle: ルームが存在しない場合は404エラー"() {

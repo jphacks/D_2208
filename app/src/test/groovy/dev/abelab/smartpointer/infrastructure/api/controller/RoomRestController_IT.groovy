@@ -52,6 +52,7 @@ class RoomRestController_IT extends AbstractController_IT {
 
         then:
         response.tokenType == this.authProperty.tokenType
+        response.ttl == this.authProperty.ttl
 
         final createdUser = sql.firstRow("SELECT * FROM user")
         createdUser.room_id == roomId
