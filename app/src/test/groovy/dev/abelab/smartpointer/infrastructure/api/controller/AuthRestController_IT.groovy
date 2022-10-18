@@ -3,7 +3,6 @@ package dev.abelab.smartpointer.infrastructure.api.controller
 import dev.abelab.smartpointer.exception.*
 import dev.abelab.smartpointer.helper.RandomHelper
 import dev.abelab.smartpointer.helper.TableHelper
-import dev.abelab.smartpointer.infrastructure.api.request.LoginRequest
 import org.springframework.http.HttpStatus
 
 /**
