@@ -1,27 +1,26 @@
 {
-  "name": "desktop",
+  "private": true,
   "version": "1.0.0-SNAPSHOT",
-  "main": "dist/main.js",
-  "license": "MIT",
+  "main": "dist-electron/main/index.js",
   "scripts": {
-    "start": "electron .",
-    "preview": "vite preview",
-    "dev": "NODE_ENV=DEV run-p dev:* start",
-    "dev:renderer": "vite",
-    "dev:main": "tsc --watch --project tsconfig.main.json",
-    "build": "run-p build:*",
-    "build:renderer": "vite build",
-    "build:main": "tsc --project tsconfig.main.json",
-    "lint": "eslint src main.ts",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint src electron",
     "format": "yarn check:format --write",
     "code-check": "run-p lint check:*",
-    "check:format": "prettier src main.ts index.html --check",
-    "check:type": "tsc --project tsconfig.json && tsc --project tsconfig.main.json"
+    "check:format": "prettier src electron index.html --check",
+    "check:type": "tsc"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.40.0",
-    "@typescript-eslint/parser": "^5.40.0",
+    "@tsconfig/strictest": "^1.0.2",
+    "@types/module-alias": "^2.0.1",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.40.1",
+    "@typescript-eslint/parser": "^5.40.1",
+    "@vitejs/plugin-react": "^2.1.0",
     "electron": "^21.1.1",
+    "electron-builder": "^23.3.3",
     "electron-reload": "^2.0.0-alpha.1",
     "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.5.0",
@@ -29,8 +28,16 @@
     "eslint-plugin-import": "^2.26.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sass": "^1.55.0",
     "typescript": "^4.8.4",
-    "vite": "^3.1.8"
+    "vite": "^3.1.8",
+    "vite-electron-plugin": "^0.4.6"
   },
-  "private": true
+  "debug": {
+    "env": {
+      "VITE_DEV_SERVER_URL": "http://127.0.0.1:7777"
+    }
+  }
 }
