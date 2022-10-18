@@ -1,5 +1,5 @@
-import Room from "./Room";
 import { updateMenu } from "./menu";
+import Room from "./Room";
 
 // HACK: 良い感じの名前
 class AppState {

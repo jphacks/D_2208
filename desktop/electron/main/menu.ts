@@ -1,4 +1,5 @@
 import { app, Menu, MenuItemConstructorOptions } from "electron";
+
 import AppState from "./AppState";
 import showShereLink from "./showShereLink";
 
