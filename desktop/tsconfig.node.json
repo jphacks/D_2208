@@ -1,10 +1,14 @@
 {
   "extends": "@tsconfig/strictest/tsconfig.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "composite": true,
     "module": "esnext",
     "moduleResolution": "node",
-    "types": ["node"]
+    "types": ["node"],
+    "paths": {
+      "@/*": ["electron/main/*"]
+    }
   },
   "include": ["package.json", "electron"]
 }
