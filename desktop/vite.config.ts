@@ -13,6 +13,14 @@ export default defineConfig({
       "@": path.join(__dirname, "src"),
     },
   },
+  build: {
+    rollupOptions: {
+      input: {
+        link: path.resolve(__dirname, "link.html"),
+        // overlay: path.resolve(__dirname, "overlay.html"),
+      },
+    },
+  },
   plugins: [
     electron({
       include: ["electron"],

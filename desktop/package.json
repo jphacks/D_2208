@@ -8,7 +8,7 @@
     "lint": "eslint src electron",
     "format": "yarn check:format --write",
     "code-check": "run-p lint check:*",
-    "check:format": "prettier src electron index.html --check",
+    "check:format": "prettier src electron link.html --check",
     "check:type": "tsc"
   },
   "devDependencies": {

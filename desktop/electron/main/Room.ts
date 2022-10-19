@@ -1,4 +1,5 @@
 import type AppState from "@/AppState";
+import { showOverlayWindow } from "@/pointer";
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -24,13 +25,12 @@ export const createRoom =
     await delay(1000); // TODO: ここは消す
 
     const roomId = "aaa";
+    const token = "bbb";
 
     appState.setState({
       name: "CREATED",
-      room: { id: roomId },
+      room: { id: roomId, token },
       users: new Map(),
       pointers: new Map(),
     });
-
-    console.log(appState);
   };
