@@ -33,4 +33,6 @@ export const createRoom =
       users: new Map(),
       pointers: new Map(),
     });
+
+    await showOverlayWindow(appState);
   };
