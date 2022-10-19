@@ -14,7 +14,6 @@ module.exports = {
   overrides: [],
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: ["./tsconfig.json", "./tsconfig.node.json"],
     ecmaVersion: "latest",
     sourceType: "module",
   },
