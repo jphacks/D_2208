@@ -1,0 +1,3 @@
+export class StompClient {
+  constructor() {}
+}

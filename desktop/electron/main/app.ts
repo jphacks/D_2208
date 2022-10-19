@@ -1,30 +1,23 @@
 import { app, BrowserWindow } from "electron";
 import electronReload from "electron-reload";
 
-import createMenu from "./menu";
-
-const createWindow = async () => {
-  const mainWindow = new BrowserWindow({
-    width: 600,
-    height: 400,
-    title: "スマートポインター",
-  });
-
-  if (process.env.NODE_ENV === "DEV") {
-    await mainWindow.loadURL("http://localhost:5173");
-    electronReload(__dirname, {
-      electron: require(`${__dirname}/../node_modules/electron`),
-    });
-    // TODO: dev tool をトグルできるようにする
-    mainWindow.webContents.openDevTools();
-  } else {
-    mainWindow.loadURL(`file://${__dirname}/index.html`);
-  }
-};
+import { HttpClient } from "@/api/HttpClient";
+import { StompClient } from "@/api/StompClient";
+import { Pagination } from "@/feature/pagination/Pagination";
+import { Pointer } from "@/feature/pointer/Pointer";
+import { Room } from "@/feature/room/Room";
 
 app.once("ready", () => {
-  createMenu();
-  createWindow();
+  const httpClient = new HttpClient();
+  const stompClient = new StompClient();
+
+  const features = {
+    room: new Room(httpClient, stompClient),
+    pointer: new Pointer(httpClient, stompClient),
+    pagination: new Pagination(httpClient, stompClient),
+  };
+
+  Promise.all(Object.values(features).map((feature) => feature.run()));
 });
 
 app.once("window-all-closed", () => app.quit());
