@@ -1,7 +1,6 @@
 import { Menu, Tray } from "electron";
 import { join } from "path";
 
-import type AppState from "@/AppState";
 import { publicPath } from "@/path";
 
 import { renderMenuTemplate } from "./template";

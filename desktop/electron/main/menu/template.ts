@@ -2,10 +2,13 @@ import type { MenuItemConstructorOptions } from "electron";
 
 import type AppState from "@/AppState";
 
-const renderDefaultMenuTemplate = (
-  appState: AppState,
-  handleClickCreateRoom: () => void
-): MenuItemConstructorOptions[] => [
+const renderDefaultMenuTemplate = ({
+  appState,
+  handleClickCreateRoom,
+}: {
+  appState: AppState;
+  handleClickCreateRoom: () => void;
+}): MenuItemConstructorOptions[] => [
   {
     label: "ルームを作成",
     accelerator: "CmdOrCtrl+N",
@@ -14,9 +17,13 @@ const renderDefaultMenuTemplate = (
   },
 ];
 
-const renderCreatedMenuTemplate = (
-  appState: AppState
-): MenuItemConstructorOptions[] => [
+const renderCreatedMenuTemplate = ({
+  appState,
+  handleClickShowInviteLink,
+}: {
+  appState: AppState;
+  handleClickShowInviteLink: () => void;
+}): MenuItemConstructorOptions[] => [
   {
     label: "参加者一覧",
     accelerator: "CmdOrCtrl+L",
@@ -29,19 +36,22 @@ const renderCreatedMenuTemplate = (
   {
     label: "招待リンクを表示",
     accelerator: "CmdOrCtrl+S",
+    click: handleClickShowInviteLink,
   },
 ];
 
 export const renderMenuTemplate = ({
   appState,
   handleClickCreateRoom,
+  handleClickShowInviteLink,
 }: {
   appState: AppState;
   handleClickCreateRoom: () => void;
+  handleClickShowInviteLink: () => void;
 }): MenuItemConstructorOptions[] => [
   ...(appState.state.name === "CREATED"
-    ? renderCreatedMenuTemplate(appState)
-    : renderDefaultMenuTemplate(appState, handleClickCreateRoom)),
+    ? renderCreatedMenuTemplate({ appState, handleClickShowInviteLink })
+    : renderDefaultMenuTemplate({ appState, handleClickCreateRoom })),
   { type: "separator" },
 
   { role: "quit", label: "アプリを終了" },
