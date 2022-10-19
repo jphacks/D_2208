@@ -1,7 +1,10 @@
 import { app, BrowserWindow } from "electron";
 import electronReload from "electron-reload";
 
-import createMenu from "./menu";
+import { AppState } from "@/AppState";
+import { createTray } from "@/menu/tray";
+import { distPath } from "@/path";
+import { createRoom } from "@/room";
 
 const createWindow = async () => {
   const mainWindow = new BrowserWindow({
@@ -10,21 +13,25 @@ const createWindow = async () => {
     title: "スマートポインター",
   });
 
-  if (process.env.NODE_ENV === "DEV") {
+  if (!app.isPackaged) {
     await mainWindow.loadURL("http://localhost:5173");
     electronReload(__dirname, {
-      electron: require(`${__dirname}/../node_modules/electron`),
+      electron: require(`${__dirname}/../../node_modules/electron`),
     });
     // TODO: dev tool をトグルできるようにする
     mainWindow.webContents.openDevTools();
   } else {
-    mainWindow.loadURL(`file://${__dirname}/index.html`);
+    mainWindow.loadURL(`file://${distPath}/index.html`);
   }
 };
 
 app.once("ready", () => {
-  createMenu();
   createWindow();
+  const appState = new AppState();
+  createTray({
+    appState,
+    handleClickCreateRoom: createRoom({ appState }),
+  });
 });
 
 app.once("window-all-closed", () => app.quit());

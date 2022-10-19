@@ -1,22 +1,36 @@
-class Room {
-  users: string[] = [];
-  public static async build() {
-    const room = new Room();
-    room.users = await room.fetchUsers();
-    return room;
-  }
-  private async fetchUsers() {
-    // TODO: ここ全部あとでかえる
-    await this.wait(1000);
-    return ["user1", "user2", "user3"];
-  }
-  async delete() {
-    // TODO: ここ全部あとでかえる
-    await this.wait(1000);
-  }
-  // TODO: あとで消す
-  private wait = async (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
-}
+import type AppState from "@/AppState";
 
-export default Room;
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const createRoom =
+  ({
+    appState,
+  }: // TODO: httpClient,
+  {
+    appState: AppState;
+    // httpClient: HttpClient;
+  }) =>
+  async () => {
+    if (appState.state.name !== "READY") {
+      throw new Error("なんしとんねん");
+    }
+
+    appState.setState({
+      name: "CREATING",
+    });
+
+    console.log("ルームを作るよ");
+    // TODO: httpClient からルームを作成する
+    await delay(1000); // TODO: ここは消す
+
+    const roomId = "aaa";
+
+    appState.setState({
+      name: "CREATED",
+      room: { id: roomId },
+      users: new Map(),
+      pointers: new Map(),
+    });
+
+    console.log(appState);
+  };

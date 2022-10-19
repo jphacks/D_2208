@@ -1,29 +1,51 @@
-import { updateMenu } from "./menu";
-import Room from "./Room";
+import type { Room, User, Coordinate } from "@/types";
 
-// HACK: 良い感じの名前
-class AppState {
-  room: Room | undefined;
-  // 二度クリックされないための変数、あとで名前変える
-  isActivating = false;
+type State =
+  | {
+      name: "READY";
+      room?: undefined;
+      users?: undefined;
+      pointers?: undefined;
+    }
+  | {
+      name: "CREATING";
+      room?: undefined;
+      users?: undefined;
+      pointers?: undefined;
+    }
+  | {
+      name: "CREATED";
+      room: Room;
+      users: Map<User["id"], User>;
+      pointers: Map<User["id"], Coordinate>;
+    };
 
-  async createRoom() {
-    this.isActivating = true;
-    updateMenu(this);
+export class AppState {
+  #state: State = {
+    name: "READY",
+  };
 
-    this.room = await Room.build();
-    this.isActivating = false;
-    updateMenu(this);
+  #subscribeListeners = new Set<(state: Readonly<State>) => void>();
+
+  get state(): Readonly<State> {
+    return this.#state;
   }
 
-  async deleteRoom() {
-    this.isActivating = true;
-    updateMenu(this);
+  public setState(state: State | ((state: State) => State)): void {
+    if (typeof state === "function") {
+      this.#state = state(this.#state);
+    } else {
+      this.#state = state;
+    }
+    this.#subscribeListeners.forEach((callback) => callback(this.#state));
+  }
 
-    await this.room?.delete();
-    this.room = undefined;
-    this.isActivating = false;
-    updateMenu(this);
+  public subscribe(callback: (state: Readonly<State>) => void): void {
+    this.#subscribeListeners.add(callback);
+  }
+
+  public unsubscribe(callback: (state: Readonly<State>) => void): void {
+    this.#subscribeListeners.delete(callback);
   }
 }
 
