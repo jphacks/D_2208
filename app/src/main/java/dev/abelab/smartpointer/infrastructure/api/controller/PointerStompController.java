@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import dev.abelab.smartpointer.infrastructure.api.request.PointerControlRequest;
 import dev.abelab.smartpointer.infrastructure.api.validation.RequestValidated;
 import dev.abelab.smartpointer.usecase.ControlPointerUseCase;
+import dev.abelab.smartpointer.usecase.DisconnectPointerUseCase;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -21,6 +22,8 @@ public class PointerStompController {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     private final ControlPointerUseCase controlPointerUseCase;
+
+    private final DisconnectPointerUseCase disconnectPointerUseCase;
 
     /**
      * ポインター操作トピック
@@ -36,6 +39,21 @@ public class PointerStompController {
         this.simpMessagingTemplate.convertAndSend( //
             String.format("/topic/rooms/%s/pointer/control", roomId), //
             this.controlPointerUseCase.handle(roomId, requestBody) //
+        );
+    }
+
+    /**
+     * ポインター切断トピック
+     *
+     * @param roomId ルームID
+     */
+    @MessageMapping("/rooms/{roomId}/pointer/disconnect")
+    public void disconnectPointer( //
+        @DestinationVariable final String roomId //
+    ) {
+        this.simpMessagingTemplate.convertAndSend( //
+            String.format("/topic/rooms/%s/pointer/control", roomId), //
+            this.disconnectPointerUseCase.handle(roomId) //
         );
     }
 
