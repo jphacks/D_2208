@@ -91,4 +91,15 @@ public class TimerModel implements Serializable {
         this.setStatus(TimerStatus.READY);
     }
 
+    /**
+     * タイマーをリセット
+     */
+    public void reset() {
+        if (!this.getStatus().equals(TimerStatus.READY)) {
+            throw new BadRequestException(ErrorCode.TIMER_CANNOT_BE_RESET);
+        }
+
+        this.setFinishAt(LocalDateTime.now().plusSeconds(this.getValue()));
+    }
+
 }

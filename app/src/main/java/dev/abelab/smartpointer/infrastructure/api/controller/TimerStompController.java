@@ -9,10 +9,7 @@ import org.springframework.stereotype.Controller;
 import dev.abelab.smartpointer.infrastructure.api.request.TimerResumeRequest;
 import dev.abelab.smartpointer.infrastructure.api.request.TimerStartRequest;
 import dev.abelab.smartpointer.infrastructure.api.validation.RequestValidated;
-import dev.abelab.smartpointer.usecase.BroadcastTimerUseCase;
-import dev.abelab.smartpointer.usecase.ResumeTimerUseCase;
-import dev.abelab.smartpointer.usecase.StartTimerUseCase;
-import dev.abelab.smartpointer.usecase.StopTimerUseCase;
+import dev.abelab.smartpointer.usecase.*;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -29,6 +26,8 @@ public class TimerStompController {
     private final ResumeTimerUseCase resumeTimerUseCase;
 
     private final StopTimerUseCase stopTimerUseCase;
+
+    private final ResetTimerUseCase resetTimerUseCase;
 
     /**
      * タイマー開始トピック
@@ -86,7 +85,8 @@ public class TimerStompController {
     public void resetTimer( //
         @DestinationVariable final String roomId //
     ) {
-        // TODO: TimerController::resetTimerを実装
+        this.resetTimerUseCase.handle(roomId);
+        this.broadcastTimerUseCase.handle(roomId);
     }
 
 }

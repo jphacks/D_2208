@@ -5,6 +5,9 @@ import dev.abelab.smartpointer.enums.TimerStatus
 import dev.abelab.smartpointer.exception.BadRequestException
 import dev.abelab.smartpointer.exception.BaseException
 import dev.abelab.smartpointer.exception.ErrorCode
+import dev.abelab.smartpointer.helper.RandomHelper
+
+import java.time.LocalDateTime
 
 /**
  * TimerModelの単体テスト
@@ -99,6 +102,38 @@ class TimerModel_UT extends AbstractSpecification {
         then:
         final BaseException exception = thrown()
         verifyException(exception, new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STOPPED))
+    }
+
+    def "reset: 準備中のタイマーをリセットする"() {
+        given:
+        final oldFinishAt = RandomHelper.mock(LocalDateTime)
+        final timer = TimerModel.builder()
+            .status(TimerStatus.READY)
+            .value(60)
+            .finishAt(oldFinishAt)
+            .build()
+
+        when:
+        timer.reset()
+
+        then:
+        timer.status == TimerStatus.READY
+        timer.finishAt != oldFinishAt
+    }
+
+
+    def "reset: 実行中のタイマーはリセット不可"() {
+        given:
+        final timer = TimerModel.builder()
+            .status(TimerStatus.RUNNING)
+            .build()
+
+        when:
+        timer.reset()
+
+        then:
+        final BaseException exception = thrown()
+        verifyException(exception, new BadRequestException(ErrorCode.TIMER_CANNOT_BE_RESET))
     }
 
 }

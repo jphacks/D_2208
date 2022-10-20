@@ -23,7 +23,9 @@ public enum ErrorCode {
 
     TIMER_IS_ALREADY_STOPPED(1004, "exception.bad_request.timer_is_already_stopped"),
 
-    INVALID_TIMER_VALUE(1005, "exception.bad_request.invalid_timer_value"),
+    TIMER_CANNOT_BE_RESET(1005, "exception.bad_request.timer_cannot_be_reset"),
+
+    INVALID_TIMER_VALUE(1006, "exception.bad_request.invalid_timer_value"),
 
     /**
      * 401 Unauthorized: 2000~2999
