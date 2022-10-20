@@ -6,6 +6,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "codegen": "openapi-generator-cli generate -g typescript-axios -i https://smartpointer.abelab.dev/v3/api-docs/Public%20API -o ./src/generated/http-client",
     "lint": "eslint src",
     "format": "yarn check:format --write",
     "test": "vitest",
@@ -24,6 +25,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.5.2",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
