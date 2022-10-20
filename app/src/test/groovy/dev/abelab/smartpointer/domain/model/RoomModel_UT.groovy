@@ -13,22 +13,22 @@ class RoomModel_UT extends AbstractSpecification {
 
         then:
         room.id.length() == 36
-        room.token.length() == 44
+        room.passcode.length() == 6
     }
 
-    def "isTokenValid: トークンが有効かチェック"() {
+    def "isPasscodeValid: パスコードが有効かチェック"() {
         given:
         final room = RoomModel.builder()
-            .token("A")
+            .passcode("000000")
             .build()
 
         expect:
-        room.isTokenValid(inputToken) == expectedResult
+        room.isPasscodeValid(inputPasscode) == expectedResult
 
         where:
-        inputToken || expectedResult
-        "A"        || true
-        "B"        || false
+        inputPasscode || expectedResult
+        "000000"      || true
+        "000001"      || false
     }
 
 }

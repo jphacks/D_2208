@@ -32,7 +32,7 @@ public enum ErrorCode {
      */
     USER_NOT_LOGGED_IN(2000, "exception.unauthorized.user_not_logged_in"),
 
-    INVALID_ROOM_TOKEN(2001, "exception.unauthorized.invalid_room_token"),
+    INCORRECT_ROOM_PASSCODE(2001, "exception.unauthorized.incorrect_room_passcode"),
 
     /**
      * 403 Forbidden: 3000~3999

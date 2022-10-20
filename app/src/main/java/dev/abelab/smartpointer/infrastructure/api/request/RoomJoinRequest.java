@@ -19,10 +19,10 @@ import lombok.NoArgsConstructor;
 public class RoomJoinRequest implements BaseRequest {
 
     /**
-     * トークン
+     * パスコード
      */
     @Schema(required = true)
-    String token;
+    String passcode;
 
     /**
      * ユーザ名

@@ -39,6 +39,16 @@ class RandomHelper {
     }
 
     /**
+     * ランダムな数字の文字列を生成
+     *
+     * @param length
+     * @return 文字列
+     */
+    static String numeric(final Integer length) {
+        return RandomStringUtils.randomNumeric(length)
+    }
+
+    /**
      * ランダム値を格納したモックオブジェクトを返す
      *
      * @param clazz

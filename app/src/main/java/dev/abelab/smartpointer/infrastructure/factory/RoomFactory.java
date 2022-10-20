@@ -20,7 +20,7 @@ public class RoomFactory {
     public Room createRoom(final RoomModel roomModel) {
         return Room.builder() //
             .id(roomModel.getId()) //
-            .token(roomModel.getToken()) //
+            .passcode(roomModel.getPasscode()) //
             .build();
     }
 

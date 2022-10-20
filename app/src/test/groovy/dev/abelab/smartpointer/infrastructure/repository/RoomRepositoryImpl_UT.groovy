@@ -17,8 +17,8 @@ class RoomRepositoryImpl_UT extends AbstractRepository_UT {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id                                     | token
-            "00000000-0000-0000-0000-000000000000" | "A"
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | "000000"
         }
         // @formatter:on
 
@@ -28,7 +28,7 @@ class RoomRepositoryImpl_UT extends AbstractRepository_UT {
         then:
         result.isPresent()
         result.get().id == "00000000-0000-0000-0000-000000000000"
-        result.get().token == "A"
+        result.get().passcode == "000000"
     }
 
     def "selectById: 存在しない場合はOptional.empty()を返す"() {
@@ -49,14 +49,14 @@ class RoomRepositoryImpl_UT extends AbstractRepository_UT {
         then:
         final createdRoom = sql.firstRow("SELECT * FROM room")
         createdRoom.id == room.id
-        createdRoom.token == room.token
+        createdRoom.passcode == room.passcode
     }
 
     def "deleteById: IDからルームを削除"() {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id                                     | token
+            id                                     | passcode
             "00000000-0000-0000-0000-000000000000" | ""
             "00000000-0000-0000-0000-000000000001" | ""
         }
@@ -74,7 +74,7 @@ class RoomRepositoryImpl_UT extends AbstractRepository_UT {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id                                     | token
+            id                                     | passcode
             "00000000-0000-0000-0000-000000000000" | ""
         }
         // @formatter:on

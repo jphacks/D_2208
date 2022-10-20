@@ -9,7 +9,7 @@ exception:
     invalid_timer_value: タイマー時間は1〜3600秒にしてください。
   unauthorized:
     user_not_logged_in: ユーザはログインしていません。
-    invalid_room_token: 不正なトークンです。
+    incorrect_room_passcode: パスコードが間違えています。
   forbidden:
     user_has_no_permission: その動作は許可されていません。
   not_found:
