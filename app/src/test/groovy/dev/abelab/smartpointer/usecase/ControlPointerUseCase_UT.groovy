@@ -1,39 +1,44 @@
 package dev.abelab.smartpointer.usecase
 
 import dev.abelab.smartpointer.domain.model.RoomModel
-import dev.abelab.smartpointer.enums.SlideControl
 import dev.abelab.smartpointer.exception.BaseException
 import dev.abelab.smartpointer.exception.ErrorCode
 import dev.abelab.smartpointer.exception.NotFoundException
 import dev.abelab.smartpointer.helper.RandomHelper
+import dev.abelab.smartpointer.infrastructure.api.request.PointerControlRequest
 import org.springframework.beans.factory.annotation.Autowired
 
 /**
- * GoNextSlideUseCaseの単体テスト
+ * ControlPointerUseCaseの単体テスト
  */
-class GoNextSlideUseCase_UT extends AbstractUseCase_UT {
+class ControlPointerUseCase_UT extends AbstractUseCase_UT {
 
     @Autowired
-    GoNextSlideUseCase sut
+    ControlPointerUseCase sut
 
-    def "handle: スライドを進める"() {
+    def "handle: ポインターを操作する"() {
         given:
         final room = RandomHelper.mock(RoomModel)
+        final requestBody = RandomHelper.mock(PointerControlRequest)
 
         when:
-        final result = this.sut.handle(room.id)
+        final result = this.sut.handle(room.id, requestBody)
 
         then:
         1 * this.roomRepository.existsById(room.id) >> true
-        result.control == SlideControl.NEXT.id
+        result.rotation.alpha == requestBody.alpha
+        result.rotation.beta == requestBody.beta
+        result.rotation.gamma == requestBody.gamma
+        result.isActive
     }
 
     def "handle: ルームが存在しない場合は404エラー"() {
         given:
         final room = RandomHelper.mock(RoomModel)
+        final requestBody = RandomHelper.mock(PointerControlRequest)
 
         when:
-        this.sut.handle(room.id)
+        this.sut.handle(room.id, requestBody)
 
         then:
         1 * this.roomRepository.existsById(room.id) >> false
