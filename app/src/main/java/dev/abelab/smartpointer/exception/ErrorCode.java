@@ -21,7 +21,9 @@ public enum ErrorCode {
 
     TIMER_IS_ALREADY_STARTED(1003, "exception.bad_request.timer_is_already_started"),
 
-    INVALID_TIMER_VALUE(1004, "exception.bad_request.invalid_timer_value"),
+    TIMER_IS_ALREADY_STOPPED(1004, "exception.bad_request.timer_is_already_stopped"),
+
+    INVALID_TIMER_VALUE(1005, "exception.bad_request.invalid_timer_value"),
 
     /**
      * 401 Unauthorized: 2000~2999
@@ -41,6 +43,8 @@ public enum ErrorCode {
     NOT_FOUND_API(4000, "exception.not_found.api"),
 
     NOT_FOUND_ROOM(4001, "exception.not_found.room"),
+
+    NOT_FOUND_TIMER(4002, "exception.not_found.timer"),
 
     /**
      * 409 Conflict: 5000~5999
