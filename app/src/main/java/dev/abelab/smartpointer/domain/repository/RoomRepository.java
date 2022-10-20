@@ -31,4 +31,12 @@ public interface RoomRepository {
      */
     void deleteById(final String id);
 
+    /**
+     * IDからルームの存在チェック
+     * 
+     * @param id ルームID
+     * @return チェック結果
+     */
+    boolean existsById(final String id);
+
 }

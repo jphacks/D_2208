@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.messaging.converter.MappingJackson2MessageConverter
 import org.springframework.messaging.simp.stomp.StompSession
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
 import org.springframework.mock.web.MockHttpSession
@@ -208,6 +209,17 @@ abstract class AbstractController_IT extends AbstractDatabaseSpecification {
     }
 
     /**
+     * publish
+     *
+     * @param destination destination
+     * @param session stomp session
+     * @param payload payload
+     */
+    protected void publish(final String destination, final StompSession session, final Object payload) {
+        session.send(destination, JsonConvertHelper.convertObjectToJson(payload))
+    }
+
+    /**
      * setup before test case
      */
     def setup() {
@@ -220,6 +232,7 @@ abstract class AbstractController_IT extends AbstractDatabaseSpecification {
             .build()
 
         this.stompClient = new WebSocketStompClient(new SockJsClient(List.of(new WebSocketTransport(new StandardWebSocketClient()))))
+        this.stompClient.setMessageConverter(new MappingJackson2MessageConverter())
     }
 
 }
