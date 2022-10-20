@@ -74,4 +74,31 @@ class TimerModel_UT extends AbstractSpecification {
         verifyException(exception, new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STARTED))
     }
 
+    def "stop: 実行中のタイマーを停止する"() {
+        given:
+        final timer = TimerModel.builder()
+            .status(TimerStatus.RUNNING)
+            .build()
+
+        when:
+        timer.stop()
+
+        then:
+        timer.status == TimerStatus.READY
+    }
+
+    def "stop: 準備中のタイマーは停止不可"() {
+        given:
+        final timer = TimerModel.builder()
+            .status(TimerStatus.READY)
+            .build()
+
+        when:
+        timer.stop()
+
+        then:
+        final BaseException exception = thrown()
+        verifyException(exception, new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STOPPED))
+    }
+
 }

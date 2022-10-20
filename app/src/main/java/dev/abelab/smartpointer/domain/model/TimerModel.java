@@ -80,4 +80,15 @@ public class TimerModel implements Serializable {
         this.setFinishAt(LocalDateTime.now().plusSeconds(value));
     }
 
+    /**
+     * タイマーを停止
+     */
+    public void stop() {
+        if (!this.getStatus().equals(TimerStatus.RUNNING)) {
+            throw new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STOPPED);
+        }
+
+        this.setStatus(TimerStatus.READY);
+    }
+
 }

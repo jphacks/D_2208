@@ -1,8 +1,5 @@
 package dev.abelab.smartpointer.infrastructure.api.controller;
 
-import java.security.Principal;
-
-import org.springframework.http.HttpHeaders;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -13,6 +10,7 @@ import dev.abelab.smartpointer.infrastructure.api.request.TimerStartRequest;
 import dev.abelab.smartpointer.infrastructure.api.validation.RequestValidated;
 import dev.abelab.smartpointer.usecase.BroadcastTimerUseCase;
 import dev.abelab.smartpointer.usecase.StartTimerUseCase;
+import dev.abelab.smartpointer.usecase.StopTimerUseCase;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -26,29 +24,31 @@ public class TimerStompController {
 
     private final StartTimerUseCase startTimerUseCase;
 
+    private final StopTimerUseCase stopTimerUseCase;
+
     /**
      * タイマー開始トピック
      * 
      * @param roomId ルームID
      * @param requestBody タイマー開始リクエスト
      * @param headers headers
-     * @param principal principal
      */
     @MessageMapping("/rooms/{room_id}/timer/start")
     public void startTimer( //
         @DestinationVariable("room_id") final String roomId, //
         @RequestValidated @Payload final TimerStartRequest requestBody, //
-        final SimpMessageHeaderAccessor headers, //
-        final Principal principal //
+        final SimpMessageHeaderAccessor headers //
     ) {
-        final var authorization = headers.getFirstNativeHeader(HttpHeaders.AUTHORIZATION);
-        // TODO: ユーザ認証(@Principal経由で取得できるっぽい？)
+        // TODO: ユーザ認証
+        // final var authorization = headers.getFirstNativeHeader(HttpHeaders.AUTHORIZATION);
         this.startTimerUseCase.handle(roomId, requestBody);
         this.broadcastTimerUseCase.handle(roomId);
     }
 
     /**
      * タイマー再開トピック
+     * 
+     * @param roomId ルームID
      */
     @MessageMapping("/rooms/{room_id}/timer/resume")
     public void resumeTimer( //
@@ -59,16 +59,21 @@ public class TimerStompController {
 
     /**
      * タイマー停止トピック
+     *
+     * @param roomId ルームID
      */
     @MessageMapping("/rooms/{room_id}/timer/stop")
     public void stopTimer( //
         @DestinationVariable final String roomId //
     ) {
-        // TODO: TimerController::startTimerを実装
+        this.stopTimerUseCase.handle(roomId);
+        this.broadcastTimerUseCase.handle(roomId);
     }
 
     /**
      * タイマーリセットトピック
+     *
+     * @param roomId ルームID
      */
     @MessageMapping("/rooms/{room_id}/timer/reset")
     public void resetTimer( //
