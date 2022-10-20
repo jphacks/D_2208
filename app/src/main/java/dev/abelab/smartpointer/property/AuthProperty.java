@@ -14,7 +14,7 @@ import lombok.Data;
 public class AuthProperty {
 
     /**
-     * TTL[秒]
+     * TTL[s]
      */
     Integer ttl;
 

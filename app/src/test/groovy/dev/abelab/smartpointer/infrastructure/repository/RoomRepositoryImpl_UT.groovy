@@ -70,4 +70,25 @@ class RoomRepositoryImpl_UT extends AbstractRepository_UT {
         rooms*.id == ["00000000-0000-0000-0000-000000000001"]
     }
 
+    def "existsById: IDからルームの存在チェック"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | token
+            "00000000-0000-0000-0000-000000000000" | ""
+        }
+        // @formatter:on
+
+        when:
+        final result = this.sut.existsById(inputId)
+
+        then:
+        result == expectedResult
+
+        where:
+        inputId                                || expectedResult
+        "00000000-0000-0000-0000-000000000000" || true
+        "00000000-0000-0000-0000-000000000001" || false
+    }
+
 }

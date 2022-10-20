@@ -13,8 +13,9 @@ import org.springframework.http.HttpStatus
  */
 class RoomRestController_IT extends AbstractController_IT {
 
-    static final String CREATE_ROOM_PATH = "/api/rooms"
-    static final String JOIN_ROOM_PATH = "/api/rooms/%s/join"
+    static final String BASE_PATH = "/api/rooms"
+    static final String CREATE_ROOM_PATH = BASE_PATH
+    static final String JOIN_ROOM_PATH = BASE_PATH + "/%s/join"
 
     def "ルーム作成API: 正常系 ルームを作成できる"() {
         when:

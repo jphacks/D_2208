@@ -6,6 +6,8 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+import dev.abelab.smartpointer.infrastructure.api.StompHandshakeHandler;
+
 /**
  * WebSocketの設定
  */
@@ -21,7 +23,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(final StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").withSockJS();
+        registry.addEndpoint("/ws") //
+            // ハッカソンなので、全てのオリジンを許可してもOKとする
+            .setAllowedOriginPatterns("*") //
+            .setHandshakeHandler(new StompHandshakeHandler()) //
+            .withSockJS();
     }
 
 }

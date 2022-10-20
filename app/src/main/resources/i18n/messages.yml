@@ -1,17 +1,22 @@
 exception:
   bad_request:
-    validation_error: 不正なリクエストです
-    invalid_request_parameter: 不正なリクエストです
-    invalid_user_name: "ユーザ名は1~255文字にしてください。"
+    validation_error: 不正なリクエストです。
+    invalid_request_parameter: 不正なリクエストです。
+    invalid_user_name: ユーザ名は1~255文字にしてください。
+    timer_is_already_started: タイマーは既に開始済みです。
+    timer_is_already_stopped: タイマーは既に停止済みです。
+    timer_cannot_be_reset: 実行中のタイマーはリセットできません。
+    invalid_timer_value: タイマー時間は1〜3600秒にしてください。
   unauthorized:
-    user_not_logged_in: ユーザはログインしていません
-    invalid_room_token: 不正なトークンです
+    user_not_logged_in: ユーザはログインしていません。
+    invalid_room_token: 不正なトークンです。
   forbidden:
-    user_has_no_permission: その動作は許可されていません
+    user_has_no_permission: その動作は許可されていません。
   not_found:
-    api: APIが見つかりません
-    room: ルームが見つかりません
+    api: APIが見つかりません。
+    room: ルームが見つかりません。
+    timer: タイマーが見つかりません。
   conflict:
-    user_name_is_already_exists: そのユーザ名は既に使われています
+    user_name_is_already_exists: そのユーザ名は既に使われています。
   internal_server_error:
-    unexpected_error: 予期しないエラーが発生しました
+    unexpected_error: 予期しないエラーが発生しました。
