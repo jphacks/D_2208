@@ -228,23 +228,6 @@ components:
         - alpha
         - beta
         - gamma
-    PointerControlResponse:
-      description: ポインター操作レスポンス
-      type: object
-      properties:
-        alpha:
-          description: α値
-          type: number
-        beta:
-          description: β値
-          type: number
-        gamma:
-          description: γ値
-          type: number
-      required:
-        - alpha
-        - beta
-        - gamma
     UserResponse:
       description: ユーザレスポンス
       type: object
@@ -304,28 +287,28 @@ components:
             - 1
       required:
         - control
-    PointerResponse:
-      description: ポインターレスポンス
+    PointerControlResponse:
+      description: ポインター操作レスポンス
       type: object
       properties:
         user:
           description: ユーザ
           type: object
           $ref: '#/components/schemas/UserResponse'
-        enabled:
-          description: ポインター表示フラグ
+        isActive:
+          description: ポインターがアクティブかどうか
           type: boolean
         rotation:
           description: 回転数
           type: object
           nullable: true
-          $ref: '#/components/schemas/RotationResponse'
+          $ref: '#/components/schemas/PointerRotationResponse'
       required:
         - user
         - enabled
         - rotation
-    RotationResponse:
-      description: 回転数レスポンス
+    PointerRotationResponse:
+      description: ポインター回転数レスポンス
       type: object
       properties:
         alpha:

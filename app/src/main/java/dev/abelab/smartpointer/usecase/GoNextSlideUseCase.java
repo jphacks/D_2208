@@ -23,6 +23,7 @@ public class GoNextSlideUseCase {
      * Handle UseCase
      * 
      * @param roomId ルームID
+     * @return スライド操作レスポンス
      */
     @Transactional
     public SlideControlResponse handle(final String roomId) {
