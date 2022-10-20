@@ -6,9 +6,11 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
+import dev.abelab.smartpointer.infrastructure.api.request.TimerResumeRequest;
 import dev.abelab.smartpointer.infrastructure.api.request.TimerStartRequest;
 import dev.abelab.smartpointer.infrastructure.api.validation.RequestValidated;
 import dev.abelab.smartpointer.usecase.BroadcastTimerUseCase;
+import dev.abelab.smartpointer.usecase.ResumeTimerUseCase;
 import dev.abelab.smartpointer.usecase.StartTimerUseCase;
 import dev.abelab.smartpointer.usecase.StopTimerUseCase;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,8 @@ public class TimerStompController {
     private final BroadcastTimerUseCase broadcastTimerUseCase;
 
     private final StartTimerUseCase startTimerUseCase;
+
+    private final ResumeTimerUseCase resumeTimerUseCase;
 
     private final StopTimerUseCase stopTimerUseCase;
 
@@ -49,12 +53,15 @@ public class TimerStompController {
      * タイマー再開トピック
      * 
      * @param roomId ルームID
+     * @param requestBody タイマー再開リクエスト
      */
     @MessageMapping("/rooms/{room_id}/timer/resume")
     public void resumeTimer( //
-        @DestinationVariable final String roomId //
+        @DestinationVariable final String roomId, //
+        @RequestValidated @Payload final TimerResumeRequest requestBody //
     ) {
-        // TODO: TimerController::resumeTimerを実装
+        this.resumeTimerUseCase.handle(roomId, requestBody);
+        this.broadcastTimerUseCase.handle(roomId);
     }
 
     /**

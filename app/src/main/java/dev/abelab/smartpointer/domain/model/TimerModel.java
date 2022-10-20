@@ -71,7 +71,7 @@ public class TimerModel implements Serializable {
      * 
      * @param value タイマー時間[s]
      */
-    public void restart(final Integer value) {
+    public void resume(final Integer value) {
         if (!this.getStatus().equals(TimerStatus.READY)) {
             throw new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STARTED);
         }

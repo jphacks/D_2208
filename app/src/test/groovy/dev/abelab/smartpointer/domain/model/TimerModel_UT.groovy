@@ -46,7 +46,7 @@ class TimerModel_UT extends AbstractSpecification {
         verifyException(exception, new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STARTED))
     }
 
-    def "restart: タイマーを再開する"() {
+    def "resume: タイマーを再開する"() {
         given:
         final timer = TimerModel.builder()
             .value(120)
@@ -54,20 +54,20 @@ class TimerModel_UT extends AbstractSpecification {
             .build()
 
         when:
-        timer.restart(60)
+        timer.resume(60)
 
         then:
         timer.value == 120
     }
 
-    def "restart: 実行中のタイマーは再開不可"() {
+    def "resume: 実行中のタイマーは再開不可"() {
         given:
         final timer = TimerModel.builder()
             .status(TimerStatus.RUNNING)
             .build()
 
         when:
-        timer.restart(60)
+        timer.resume(60)
 
         then:
         final BaseException exception = thrown()
