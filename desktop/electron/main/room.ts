@@ -1,5 +1,6 @@
 import type AppState from "@/AppState";
-import { showOverlayWindow } from "@/pointer";
+// import { showOverlayWindow } from "@/pointer";
+// TODO: #71 がマージされたらコメントアウトを外す
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
