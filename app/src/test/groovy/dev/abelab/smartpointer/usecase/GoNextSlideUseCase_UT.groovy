@@ -11,12 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired
 /**
  * GoNextUseCaseUseCaseの単体テスト
  */
-class GoNextUseCase_UT extends AbstractUseCase_UT {
+class GoNextSlideUseCase_UT extends AbstractUseCase_UT {
 
     @Autowired
     GoNextSlideUseCase sut
 
-    def "handle: タイマーを進める"() {
+    def "handle: スライドを進める"() {
         given:
         final room = RandomHelper.mock(RoomModel)
 
