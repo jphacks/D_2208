@@ -19,7 +19,7 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id                                     | token
+            id                                     | passcode
             "00000000-0000-0000-0000-000000000000" | ""
         }
         TableHelper.insert sql, "timer", {
@@ -43,7 +43,7 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id                                     | token
+            id                                     | passcode
             "00000000-0000-0000-0000-000000000000" | ""
         }
         TableHelper.insert sql, "timer", {
@@ -63,7 +63,7 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id                                     | token
+            id                                     | passcode
             "00000000-0000-0000-0000-000000000000" | ""
         }
         // @formatter:on
@@ -89,7 +89,7 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id                                     | token
+            id                                     | passcode
             "00000000-0000-0000-0000-000000000000" | ""
         }
         TableHelper.insert sql, "timer", {
@@ -119,7 +119,7 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id                                     | token
+            id                                     | passcode
             "00000000-0000-0000-0000-000000000000" | ""
         }
         // @formatter:on

@@ -264,73 +264,73 @@ public class RoomExample {
             return (Criteria) this;
         }
 
-        public Criteria andTokenIsNull() {
-            addCriterion("`token` is null");
+        public Criteria andPasscodeIsNull() {
+            addCriterion("`passcode` is null");
             return (Criteria) this;
         }
 
-        public Criteria andTokenIsNotNull() {
-            addCriterion("`token` is not null");
+        public Criteria andPasscodeIsNotNull() {
+            addCriterion("`passcode` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTokenEqualTo(String value) {
-            addCriterion("`token` =", value, "token");
+        public Criteria andPasscodeEqualTo(String value) {
+            addCriterion("`passcode` =", value, "passcode");
             return (Criteria) this;
         }
 
-        public Criteria andTokenNotEqualTo(String value) {
-            addCriterion("`token` <>", value, "token");
+        public Criteria andPasscodeNotEqualTo(String value) {
+            addCriterion("`passcode` <>", value, "passcode");
             return (Criteria) this;
         }
 
-        public Criteria andTokenGreaterThan(String value) {
-            addCriterion("`token` >", value, "token");
+        public Criteria andPasscodeGreaterThan(String value) {
+            addCriterion("`passcode` >", value, "passcode");
             return (Criteria) this;
         }
 
-        public Criteria andTokenGreaterThanOrEqualTo(String value) {
-            addCriterion("`token` >=", value, "token");
+        public Criteria andPasscodeGreaterThanOrEqualTo(String value) {
+            addCriterion("`passcode` >=", value, "passcode");
             return (Criteria) this;
         }
 
-        public Criteria andTokenLessThan(String value) {
-            addCriterion("`token` <", value, "token");
+        public Criteria andPasscodeLessThan(String value) {
+            addCriterion("`passcode` <", value, "passcode");
             return (Criteria) this;
         }
 
-        public Criteria andTokenLessThanOrEqualTo(String value) {
-            addCriterion("`token` <=", value, "token");
+        public Criteria andPasscodeLessThanOrEqualTo(String value) {
+            addCriterion("`passcode` <=", value, "passcode");
             return (Criteria) this;
         }
 
-        public Criteria andTokenLike(String value) {
-            addCriterion("`token` like", value, "token");
+        public Criteria andPasscodeLike(String value) {
+            addCriterion("`passcode` like", value, "passcode");
             return (Criteria) this;
         }
 
-        public Criteria andTokenNotLike(String value) {
-            addCriterion("`token` not like", value, "token");
+        public Criteria andPasscodeNotLike(String value) {
+            addCriterion("`passcode` not like", value, "passcode");
             return (Criteria) this;
         }
 
-        public Criteria andTokenIn(List<String> values) {
-            addCriterion("`token` in", values, "token");
+        public Criteria andPasscodeIn(List<String> values) {
+            addCriterion("`passcode` in", values, "passcode");
             return (Criteria) this;
         }
 
-        public Criteria andTokenNotIn(List<String> values) {
-            addCriterion("`token` not in", values, "token");
+        public Criteria andPasscodeNotIn(List<String> values) {
+            addCriterion("`passcode` not in", values, "passcode");
             return (Criteria) this;
         }
 
-        public Criteria andTokenBetween(String value1, String value2) {
-            addCriterion("`token` between", value1, value2, "token");
+        public Criteria andPasscodeBetween(String value1, String value2) {
+            addCriterion("`passcode` between", value1, value2, "passcode");
             return (Criteria) this;
         }
 
-        public Criteria andTokenNotBetween(String value1, String value2) {
-            addCriterion("`token` not between", value1, value2, "token");
+        public Criteria andPasscodeNotBetween(String value1, String value2) {
+            addCriterion("`passcode` not between", value1, value2, "passcode");
             return (Criteria) this;
         }
     }

@@ -47,9 +47,9 @@ public class JoinRoomUseCase {
         final var room = this.roomRepository.selectById(roomId) //
             .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_ROOM));
 
-        // トークンチェック
-        if (!room.isTokenValid(requestBody.getToken())) {
-            throw new UnauthorizedException(ErrorCode.INVALID_ROOM_TOKEN);
+        // パスコードチェック
+        if (!room.isPasscodeValid(requestBody.getPasscode())) {
+            throw new UnauthorizedException(ErrorCode.INCORRECT_ROOM_PASSCODE);
         }
 
         // ユーザ名が使われていないことをチェック

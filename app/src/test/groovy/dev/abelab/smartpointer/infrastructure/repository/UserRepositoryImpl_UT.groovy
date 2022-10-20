@@ -17,8 +17,8 @@ class UserRepositoryImpl_UT extends AbstractRepository_UT {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id                                     | token
-            "00000000-0000-0000-0000-000000000000" | ""
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | "000000"
         }
         TableHelper.insert sql, "user", {
             id                                     | room_id                                | name
@@ -41,8 +41,8 @@ class UserRepositoryImpl_UT extends AbstractRepository_UT {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id                                     | token
-            "00000000-0000-0000-0000-000000000000" | ""
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | "000000"
         }
         TableHelper.insert sql, "user", {
             id                                     | room_id                                | name
@@ -61,9 +61,9 @@ class UserRepositoryImpl_UT extends AbstractRepository_UT {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id                                     | token
-            "00000000-0000-0000-0000-000000000000" | ""
-            "00000000-0000-0000-0000-000000000001" | ""
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | "000000"
+            "00000000-0000-0000-0000-000000000001" | "000000"
         }
         TableHelper.insert sql, "user", {
             id                                     | room_id                                | name
@@ -89,8 +89,8 @@ class UserRepositoryImpl_UT extends AbstractRepository_UT {
 
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id     | token
-            roomId | "room token"
+            id     | passcode
+            roomId | "000000"
         }
         // @formatter:on
 
@@ -113,8 +113,8 @@ class UserRepositoryImpl_UT extends AbstractRepository_UT {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id                                     | token
-            "00000000-0000-0000-0000-000000000000" | ""
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | "000000"
         }
         TableHelper.insert sql, "user", {
             id                                     | room_id                                | name
@@ -135,8 +135,8 @@ class UserRepositoryImpl_UT extends AbstractRepository_UT {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id                                     | token
-            "00000000-0000-0000-0000-000000000000" | ""
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | "000000"
         }
         TableHelper.insert sql, "user", {
             room_id                                | name

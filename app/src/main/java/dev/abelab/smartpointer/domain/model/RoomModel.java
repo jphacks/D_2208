@@ -1,9 +1,8 @@
 package dev.abelab.smartpointer.domain.model;
 
-import java.util.Base64;
 import java.util.UUID;
 
-import org.springframework.security.crypto.keygen.KeyGenerators;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import dev.abelab.smartpointer.infrastructure.db.entity.Room;
 import lombok.AllArgsConstructor;
@@ -27,24 +26,24 @@ public class RoomModel {
     String id = UUID.randomUUID().toString();
 
     /**
-     * トークン
+     * パスコード
      */
     @Builder.Default
-    String token = Base64.getUrlEncoder().encodeToString(KeyGenerators.secureRandom(32).generateKey());
+    String passcode = RandomStringUtils.randomNumeric(6);
 
     public RoomModel(final Room room) {
         this.id = room.getId();
-        this.token = room.getToken();
+        this.passcode = room.getPasscode();
     }
 
     /**
-     * トークンが有効かチェック
+     * パスコードが有効かチェック
      * 
-     * @param token トークン
+     * @param passcode パスコード
      * @return チェック結果
      */
-    public boolean isTokenValid(final String token) {
-        return this.token.equals(token);
+    public boolean isPasscodeValid(final String passcode) {
+        return this.passcode.equals(passcode);
     }
 
 }

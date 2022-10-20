@@ -31,7 +31,7 @@ class JoinRoomUseCase_UT extends AbstractUseCase_UT {
 
         then:
         1 * this.roomRepository.selectById(room.id) >> Optional.of(room)
-        1 * room.isTokenValid(requestBody.token) >> true
+        1 * room.isPasscodeValid(requestBody.passcode) >> true
         1 * this.userService.checkIsNameAlreadyUsed(room.id, requestBody.name) >> {}
         1 * this.userRepository.insert(_)
         result.tokenType == this.authProperty.tokenType
@@ -52,7 +52,7 @@ class JoinRoomUseCase_UT extends AbstractUseCase_UT {
         verifyException(exception, new NotFoundException(ErrorCode.NOT_FOUND_ROOM))
     }
 
-    def "handle: トークンが間違えている場合は401エラー"() {
+    def "handle: パスコードが間違えている場合は401エラー"() {
         given:
         final room = Spy(RoomModel)
         final requestBody = RandomHelper.mock(RoomJoinRequest)
@@ -62,9 +62,9 @@ class JoinRoomUseCase_UT extends AbstractUseCase_UT {
 
         then:
         1 * this.roomRepository.selectById(room.id) >> Optional.of(room)
-        room.isTokenValid(requestBody.token) >> false
+        room.isPasscodeValid(requestBody.passcode) >> false
         final BaseException exception = thrown()
-        verifyException(exception, new UnauthorizedException(ErrorCode.INVALID_ROOM_TOKEN))
+        verifyException(exception, new UnauthorizedException(ErrorCode.INCORRECT_ROOM_PASSCODE))
     }
 
 }

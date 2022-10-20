@@ -23,14 +23,14 @@ public class RoomResponse {
     String roomId;
 
     /**
-     * トークン
+     * パスコード
      */
     @Schema(required = true)
-    String token;
+    String passcode;
 
     public RoomResponse(final RoomModel roomModel) {
         this.roomId = roomModel.getId();
-        this.token = roomModel.getToken();
+        this.passcode = roomModel.getPasscode();
     }
 
 }

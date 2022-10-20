@@ -27,23 +27,23 @@ class RoomRestController_IT extends AbstractController_IT {
         rooms.size() == 1
 
         response.roomId == rooms[0].id
-        response.token == rooms[0].token
+        response.passcode == rooms[0].passcode
     }
 
     def "ルーム入室API: 正常系 入室に成功するとアクセストークンを返す"() {
         given:
         final roomId = RandomHelper.uuid()
-        final roomToken = RandomHelper.alphanumeric(10)
+        final roomPasscode = RandomHelper.numeric(6)
 
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id     | token
-            roomId | roomToken
+            id     | passcode
+            roomId | roomPasscode
         }
         // @formatter:on
 
         final requestBody = RoomJoinRequest.builder()
-            .token(roomToken)
+            .passcode(roomPasscode)
             .name(inputName)
             .build()
 
@@ -69,7 +69,7 @@ class RoomRestController_IT extends AbstractController_IT {
     def "ルーム入室API: 異常系 リクエストボディのバリデーション"() {
         given:
         final requestBody = RoomJoinRequest.builder()
-            .token("")
+            .passcode("")
             .name(inputName)
             .build()
 
@@ -86,17 +86,17 @@ class RoomRestController_IT extends AbstractController_IT {
     def "ルーム入室API: 異常系 ルームが存在しない場合は404エラー"() {
         given:
         final roomId = RandomHelper.uuid()
-        final roomToken = RandomHelper.alphanumeric(10)
+        final roomPasscode = RandomHelper.numeric(6)
 
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id     | token
-            roomId | roomToken
+            id     | passcode
+            roomId | roomPasscode
         }
         // @formatter:on
 
         final requestBody = RoomJoinRequest.builder()
-            .token(roomToken)
+            .passcode(roomPasscode)
             .name(RandomHelper.alphanumeric(10))
             .build()
 
@@ -105,38 +105,38 @@ class RoomRestController_IT extends AbstractController_IT {
         this.execute(request, new NotFoundException(ErrorCode.NOT_FOUND_ROOM))
     }
 
-    def "ルーム入室API: 異常系 トークンが間違えている場合は401エラー"() {
+    def "ルーム入室API: 異常系 パスコードが間違えている場合は401エラー"() {
         given:
         final roomId = RandomHelper.uuid()
-        final roomToken = RandomHelper.alphanumeric(10)
+        final roomPasscode = RandomHelper.numeric(6)
 
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id     | token
-            roomId | roomToken
+            id     | passcode
+            roomId | roomPasscode
         }
         // @formatter:on
 
         final requestBody = RoomJoinRequest.builder()
-            .token(roomToken + "...")
+            .passcode(roomPasscode + "...")
             .name(RandomHelper.alphanumeric(10))
             .build()
 
         expect:
         final request = this.postRequest(String.format(JOIN_ROOM_PATH, roomId), requestBody)
-        this.execute(request, new UnauthorizedException(ErrorCode.INVALID_ROOM_TOKEN))
+        this.execute(request, new UnauthorizedException(ErrorCode.INCORRECT_ROOM_PASSCODE))
     }
 
     def "ルーム入室API: 異常系 ユーザ名が既に使われている場合は409エラー"() {
         given:
         final roomId = RandomHelper.uuid()
-        final roomToken = RandomHelper.alphanumeric(10)
+        final roomPasscode = RandomHelper.numeric(6)
         final userName = RandomHelper.alphanumeric(10)
 
         // @formatter:off
         TableHelper.insert sql, "room", {
-            id     | token
-            roomId | roomToken
+            id     | passcode
+            roomId | roomPasscode
         }
         TableHelper.insert sql, "user", {
             room_id | name
@@ -145,7 +145,7 @@ class RoomRestController_IT extends AbstractController_IT {
         // @formatter:on
 
         final requestBody = RoomJoinRequest.builder()
-            .token(roomToken)
+            .passcode(roomPasscode)
             .name(userName)
             .build()
 
