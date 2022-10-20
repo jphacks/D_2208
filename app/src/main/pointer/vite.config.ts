@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: "http://smartpointer.abelab.dev",
+        target: "http://localhost:8080",
         changeOrigin: true,
       }
     }
