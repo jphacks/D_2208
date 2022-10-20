@@ -14,7 +14,7 @@ type Props = {
 
 const localStorageKey = "lastUserName";
 
-export const UserNameForm: FC<Props> = ({ onSubmit }) => {
+export const JoinRoomForm: FC<Props> = ({ onSubmit }) => {
   const [userName, setUserName] = useState(
     () => localStorage.getItem(localStorageKey) ?? ""
   );
@@ -37,7 +37,7 @@ export const UserNameForm: FC<Props> = ({ onSubmit }) => {
         />
         <FormHelperText>1 〜 255 文字</FormHelperText>
       </FormControl>
-      <Button type="submit">Submit</Button>
+      <Button type="submit">ルームに参加</Button>
     </VStack>
   );
 };
