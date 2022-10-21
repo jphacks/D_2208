@@ -15,6 +15,7 @@ class RoomRestController_IT extends AbstractController_IT {
 
     static final String BASE_PATH = "/api/rooms"
     static final String CREATE_ROOM_PATH = BASE_PATH
+    static final String DELETE_ROOM_PATH = BASE_PATH + "/%s"
     static final String JOIN_ROOM_PATH = BASE_PATH + "/%s/join"
 
     def "ルーム作成API: 正常系 ルームを作成できる"() {
@@ -28,6 +29,36 @@ class RoomRestController_IT extends AbstractController_IT {
 
         response.roomId == rooms[0].id
         response.passcode == rooms[0].passcode
+    }
+
+    def "ルーム削除API: 正常系 ルームを削除する"() {
+        given:
+        final roomId = RandomHelper.uuid()
+        final roomPasscode = RandomHelper.numeric(6)
+
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id     | passcode
+            roomId | roomPasscode
+        }
+        // @formatter:on
+
+        when:
+        final request = this.deleteRequest(String.format(DELETE_ROOM_PATH, roomId))
+        this.execute(request, HttpStatus.OK)
+
+        then:
+        final room = sql.firstRow("SELECT * FROM room WHERE id=:id", [id: roomId])
+        room == null
+    }
+
+    def "ルーム削除API: 異常系 ルームが存在しない場合は404エラー"() {
+        given:
+        final roomId = RandomHelper.uuid()
+
+        expect:
+        final request = this.deleteRequest(String.format(DELETE_ROOM_PATH, roomId))
+        this.execute(request, new NotFoundException(ErrorCode.NOT_FOUND_ROOM))
     }
 
     def "ルーム入室API: 正常系 入室に成功するとアクセストークンを返す"() {
