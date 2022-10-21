@@ -79,6 +79,9 @@ jobs:
       - name: dependencies
         run: yarn install
 
+      - name: generate code
+        run: yarn codegen
+
       - name: code check
         run: |
           yarn code-check
