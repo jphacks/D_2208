@@ -1,4 +1,4 @@
-import { BrowserWindow } from "electron";
+import { BrowserWindow, screen } from "electron";
 
 import type { AppState } from "@/AppState";
 import type { Coordinate, User } from "@/types";
@@ -11,14 +11,23 @@ export const showOverlayWindow = async (appState: AppState) => {
     throw new Error("なにしとんねん");
   }
 
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
   if (overlayWindow === null) {
     overlayWindow = new BrowserWindow({
-      width: 600,
-      height: 400,
+      width,
+      height,
       title: "スマートポインター",
       show: false,
+      frame: false,
+      transparent: true,
+      alwaysOnTop: true,
+      fullscreen: true,
+      focusable: false,
     });
   }
+
+  overlayWindow.setIgnoreMouseEvents(true);
 
   loadWindow(overlayWindow, "overlay.html");
 
