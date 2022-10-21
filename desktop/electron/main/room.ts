@@ -2,7 +2,7 @@ import { roomApi } from "@/api";
 import type AppState from "@/AppState";
 import { showOverlayWindow } from "@/pointer";
 
-export const createRoom = (appState: AppState) => async () => {
+export const createRoom = async (appState: AppState): Promise<void> => {
   if (appState.state.name !== "READY") {
     throw new Error("なんしとんねん");
   }
