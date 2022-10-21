@@ -7,7 +7,7 @@ import {
   Button,
   FormErrorMessage,
 } from "@chakra-ui/react";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useForm } from "react-hook-form";
 
 import { roomApi } from "@/api";

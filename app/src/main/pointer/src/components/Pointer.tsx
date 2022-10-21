@@ -1,13 +1,4 @@
-import {
-  IconButton,
-  Icon,
-  Flex,
-  Box,
-  Button,
-  Text,
-  Heading,
-  VStack,
-} from "@chakra-ui/react";
+import { IconButton, Icon, Flex, Box, Heading, VStack } from "@chakra-ui/react";
 import { FC } from "react";
 
 export const Pointer: FC = () => {
