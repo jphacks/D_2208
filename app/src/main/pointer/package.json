@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "codegen": "openapi-generator-cli generate -g typescript-axios -i https://smartpointer.abelab.dev/v3/api-docs/Public%20API -o ./src/generated/http-client",
+    "codegen": "openapi-generator-cli generate -g typescript-axios -i http://localhost:8080/v3/api-docs/Public%20API -o ./src/generated/http-client",
     "lint": "eslint src",
     "format": "yarn check:format --write",
     "test": "vitest",
@@ -20,9 +20,11 @@
     "@emotion/react": "11.10.4",
     "@emotion/styled": "11.10.4",
     "@heroicons/react": "^2.0.12",
+    "axios": "^1.1.3",
     "framer-motion": "7.5.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.38.0"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.2",

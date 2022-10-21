@@ -6,23 +6,24 @@ import { JoinRoomForm } from "./components/JoinRoomForm";
 import { Paginator } from "./components/Paginator";
 import { Pointer } from "./components/Pointer";
 import { Timer } from "./components/Timer";
+import { AuthData } from "./types/AuthData";
 
 export const App = () => {
-  const [userName, setUserName] = useState<string | null>(null);
+  const [authData, setAuthData] = useState<AuthData | null>(null);
 
   return (
     <Container size="md">
-      {userName ? (
+      {authData ? (
         <VStack gap={8} align="stretch" py={4}>
           {/* TODO: <WebSocketProvider> */}
-          <Header userName={userName} />
+          <Header userName={authData.userName} />
           <Timer />
           <Pointer />
           <Paginator />
           {/* </WebSocketProvider> */}
         </VStack>
       ) : (
-        <JoinRoomForm onSubmit={(name) => setUserName(name)} />
+        <JoinRoomForm onSubmit={setAuthData} />
       )}
     </Container>
   );
