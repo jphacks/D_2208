@@ -1,4 +1,4 @@
-import { Center, Container, VStack } from "@chakra-ui/react";
+import { Center, VStack } from "@chakra-ui/react";
 import { toCanvas } from "qrcode";
 import { useEffect, useRef, type FC } from "react";
 
@@ -34,14 +34,19 @@ export const InviteLink: FC = () => {
     if (element === null) {
       throw new Error("canvas element is not found");
     }
-    // TODO: 環境変数にする
-    toCanvas(element, inviteLink);
+    toCanvas(element, inviteLink, { width: 160 });
   }, [canvasRef]);
 
   return (
-    <Container>
-      <Center p="4">
-        <canvas id="canvas" ref={canvasRef} />
+    <VStack p="4" w="full" h="full">
+      <Center p="2" flexGrow={1}>
+        <canvas
+          ref={canvasRef}
+          style={{
+            width: "100%",
+            height: "100%",
+          }}
+        />
       </Center>
 
       <VStack gap="2">
@@ -49,6 +54,6 @@ export const InviteLink: FC = () => {
         <Clipboard title="ルームID" text={roomId} />
         <Clipboard title="passcode" text={passcode} />
       </VStack>
-    </Container>
+    </VStack>
   );
 };
