@@ -45,9 +45,13 @@ const sub = (a: Orientation, b: Orientation): Orientation => ({
 });
 
 let lastOrientation: Orientation | null = null;
+let handler: ((orientation: DeviceOrientationEvent) => void) | null = null;
 
 export const subscribeOrientation = (roomId: string) => {
-  window.addEventListener("deviceorientation", (event) => {
+  if (handler) {
+    return;
+  }
+  handler = (event: DeviceOrientationEvent) => {
     const orientation = {
       alpha: event.alpha!,
       beta: event.beta!,
@@ -60,11 +64,16 @@ export const subscribeOrientation = (roomId: string) => {
       destination: `/app/rooms/${roomId}/pointer/control`,
       body: JSON.stringify(sub(orientation, lastOrientation)),
     });
-  });
+  };
+  window.addEventListener("deviceorientation", handler);
 };
 
 export const unsubscribeOrientation = (roomId: string) => {
   lastOrientation = null;
+  if (handler) {
+    window.removeEventListener("deviceorientation", handler);
+    handler = null;
+  }
   stompClient.publish({
     destination: `/app/rooms/${roomId}/pointer/disconnect`,
   });
