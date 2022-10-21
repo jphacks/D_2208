@@ -1,5 +1,7 @@
 import { Client } from "@stomp/stompjs";
 
-export const client = new Client({
-  brokerURL: "/ws",
+export const stompClient = new Client({
+  brokerURL: `ws${location.protocol === "https:" ? "s" : ""}://${
+    location.host
+  }/ws`,
 });
