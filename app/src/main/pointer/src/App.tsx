@@ -15,12 +15,10 @@ export const App = () => {
     <Container size="md">
       {authData ? (
         <VStack gap={6} align="stretch" py={4}>
-          {/* TODO: <WebSocketProvider> */}
           <Header authData={authData} />
           <Timer authData={authData} />
           <Pointer authData={authData} />
           <Paginator authData={authData} />
-          {/* </WebSocketProvider> */}
         </VStack>
       ) : (
         <JoinRoomForm onSubmit={setAuthData} />
