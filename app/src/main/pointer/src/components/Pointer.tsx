@@ -1,6 +1,11 @@
 import { IconButton, Icon, Flex, Box, Heading, VStack } from "@chakra-ui/react";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 
+import {
+  requestPermission,
+  subscribeOrientation,
+  unsubscribeOrientation,
+} from "@/deviceorientation";
 import { AuthData } from "@/types/AuthData";
 
 type Props = {
@@ -8,6 +13,19 @@ type Props = {
 };
 
 export const Pointer: FC<Props> = ({ authData }) => {
+  const [isActive, setIsActive] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!isActive) {
+      return;
+    }
+
+    requestPermission().then(() => {
+      subscribeOrientation(authData.roomId);
+    });
+    return () => unsubscribeOrientation(authData.roomId);
+  }, [authData.roomId, isActive]);
+
   return (
     <VStack align="stretch">
       <Heading fontSize="xl" textAlign="center">
@@ -19,12 +37,10 @@ export const Pointer: FC<Props> = ({ authData }) => {
           width="full"
           height={36}
           variant="link"
-          sx={{
-            ":active circle": {
-              stroke: "green.500",
-              fill: "green.500",
-            },
-          }}
+          onMouseDown={() => setIsActive(true)}
+          onMouseUp={() => setIsActive(false)}
+          onTouchStart={() => setIsActive(true)}
+          onTouchEnd={() => setIsActive(false)}
           icon={
             <Icon
               h={32}
@@ -38,8 +54,8 @@ export const Pointer: FC<Props> = ({ authData }) => {
                 cy="12.5"
                 r="12"
                 strokeWidth="0.5"
-                stroke="green.300"
-                fill="none"
+                stroke={isActive ? "green.500" : "green.300"}
+                fill={isActive ? "green.500" : "none"}
               />
             </Icon>
           }
