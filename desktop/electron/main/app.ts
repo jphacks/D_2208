@@ -3,17 +3,69 @@ import { app } from "electron";
 import { AppState } from "@/AppState";
 import { showInviteLinkWindow } from "@/link";
 import { createTray } from "@/menu/tray";
+import { goNext, goPrevious } from "@/pagination";
 import { createRoom } from "@/room";
 import { stompClient } from "@/stomp";
 
-app.once("ready", () => {
+enum SlideControl {
+  NEXT,
+  PREVIOUS,
+}
+
+app.once("ready", async () => {
   const appState = new AppState();
 
   stompClient.activate();
 
+  const handleClickCreateRoom = async () => {
+    await createRoom(appState);
+
+    if (appState.state.name !== "CREATED") {
+      throw new Error("ぃやなんしとんねん");
+    }
+
+    // スライド操作を購読
+    stompClient.subscribe(
+      `/topic/rooms/${appState.state.room.id}/slides/control`,
+      (message) => {
+        type Response = {
+          control: SlideControl;
+        };
+        const body = JSON.parse(message.body) as Response;
+        if (body.control === SlideControl.NEXT) {
+          goNext();
+        } else {
+          goPrevious();
+        }
+      }
+    );
+
+    // ポインター操作を購読
+    stompClient.subscribe(
+      `/topic/rooms/${appState.state.room.id}/pointer/control`,
+      (message) => {
+        type Response =
+          | {
+              isActive: true;
+              rotation: {
+                alpha: number;
+                beta: number;
+                gamma: number;
+              };
+            }
+          | {
+              isActive: false;
+              rotation: null;
+            };
+        const body = JSON.parse(message.body) as Response;
+        // TODO: ここでポインターを動かす
+      }
+    );
+  };
+
   createTray({
     appState,
-    handleClickCreateRoom: createRoom(appState),
+    handleClickCreateRoom,
     handleClickShowInviteLink: showInviteLinkWindow(appState),
   });
 });
