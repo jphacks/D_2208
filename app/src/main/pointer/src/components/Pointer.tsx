@@ -9,9 +9,11 @@ type Props = {
 
 export const Pointer: FC<Props> = ({ authData }) => {
   return (
-    <VStack>
-      <Heading fontSize="xl">ポインター</Heading>
-      <Flex justify="center">
+    <VStack align="stretch">
+      <Heading fontSize="xl" textAlign="center">
+        ポインター
+      </Heading>
+      <Flex justify="stretch">
         <IconButton
           aria-label={"ポインターを起動"}
           width="full"
