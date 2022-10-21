@@ -1,6 +1,5 @@
 import type AppState from "@/AppState";
-// import { showOverlayWindow } from "@/pointer";
-// TODO: #71 がマージされたらコメントアウトを外す
+import { showOverlayWindow } from "@/pointer";
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -34,4 +33,6 @@ export const createRoom =
       users: new Map(),
       pointers: new Map(),
     });
+
+    await showOverlayWindow(appState);
   };
