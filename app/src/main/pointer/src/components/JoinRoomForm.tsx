@@ -50,6 +50,7 @@ export const JoinRoomForm: FC<Props> = ({ onSubmit: onSubmitProps }) => {
     onSubmitProps({
       ...data,
       userName: values.userName,
+      roomId: values.roomId,
     });
   };
 

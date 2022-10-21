@@ -1,14 +1,16 @@
 import { Flex, Text } from "@chakra-ui/react";
 import { FC } from "react";
 
+import { AuthData } from "@/types/AuthData";
+
 type Props = {
-  userName: string;
+  authData: AuthData;
 };
 
-export const Header: FC<Props> = ({ userName }) => {
+export const Header: FC<Props> = ({ authData }) => {
   return (
     <Flex justify="right">
-      <Text fontSize="xl">{userName}</Text>
+      <Text fontSize="xl">{authData.userName}</Text>
     </Flex>
   );
 };

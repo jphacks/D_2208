@@ -24,7 +24,13 @@ import {
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { FC, useState } from "react";
 
-export const Timer: FC = () => {
+import { AuthData } from "@/types/AuthData";
+
+type Props = {
+  authData: AuthData;
+};
+
+export const Timer: FC<Props> = ({ authData }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [state, setState] = useState<"READY" | "RUNNING">("READY");
   const [noticeTime, setNoticeTime] = useState<string>("1");
