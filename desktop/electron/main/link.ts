@@ -10,19 +10,17 @@ export const showInviteLinkWindow = (appState: AppState) => async () => {
     throw new Error("んなんしとんねん");
   }
 
-  if (inviteLinkWindow === null) {
-    inviteLinkWindow = new BrowserWindow({
-      width: 600,
-      height: 400,
-      title: "招待リンク - スマートポインター",
-      show: false,
-    });
+  inviteLinkWindow = new BrowserWindow({
+    width: 600,
+    height: 400,
+    title: "招待リンク - スマートポインター",
+    show: false,
+  });
 
-    loadWindow(inviteLinkWindow, "link.html", {
-      roomId: appState.state.room.id,
-      passcode: appState.state.room.passcode,
-    });
-  }
+  loadWindow(inviteLinkWindow, "link.html", {
+    roomId: appState.state.room.id,
+    passcode: appState.state.room.passcode,
+  });
 
   inviteLinkWindow.show();
 };

@@ -1,9 +1,18 @@
 import { FC, useState } from "react";
 
+import { Confirmation } from "./Confirmation";
+import { InviteLink } from "./InviteLink";
+
 export const App: FC = () => {
-  const showQRCode = useState(false);
+  const [showInviteLink, setShowInviteLink] = useState(false);
 
   return (
-    <div>{showQRCode ? <div>QRコード</div> : <div>QRコードじゃない</div>}</div>
+    <>
+      {showInviteLink ? (
+        <InviteLink />
+      ) : (
+        <Confirmation onConfirm={() => setShowInviteLink(true)} />
+      )}
+    </>
   );
 };
