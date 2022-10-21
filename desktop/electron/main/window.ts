@@ -6,7 +6,7 @@ import { distPath } from "@/path";
 const getURL = (fileName: string, params?: { [K in string]: string }) => {
   const url = new URL(
     fileName,
-    app.isPackaged ? `file://${distPath}` : "http://localhost:5173"
+    app.isPackaged ? `file://${distPath}` : "http://localhost:7777"
   );
 
   if (params !== undefined) {

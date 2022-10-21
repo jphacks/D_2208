@@ -1,31 +1,20 @@
+import { roomApi } from "@/api";
 import type AppState from "@/AppState";
 import { showOverlayWindow } from "@/pointer";
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+export const createRoom = (appState: AppState) => async () => {
+  if (appState.state.name !== "READY") {
+    throw new Error("なんしとんねん");
+  }
 
-export const createRoom =
-  ({
-    appState,
-  }: // TODO: httpClient,
-  {
-    appState: AppState;
-    // httpClient: HttpClient;
-  }) =>
-  async () => {
-    if (appState.state.name !== "READY") {
-      throw new Error("なんしとんねん");
-    }
+  appState.setState({
+    name: "CREATING",
+  });
 
-    appState.setState({
-      name: "CREATING",
-    });
-
-    console.log("ルームを作るよ");
-    // TODO: httpClient からルームを作成する
-    await delay(1000); // TODO: ここは消す
-
-    const roomId = "aaa";
-    const passcode = "bbb";
+  try {
+    const {
+      data: { roomId, passcode },
+    } = await roomApi.createRoom();
 
     appState.setState({
       name: "CREATED",
@@ -35,4 +24,7 @@ export const createRoom =
     });
 
     await showOverlayWindow(appState);
-  };
+  } catch (e) {
+    console.error(e);
+  }
+};
