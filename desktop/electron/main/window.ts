@@ -29,7 +29,5 @@ export const loadWindow = async (
     electronReload(__dirname, {
       electron: require(`${__dirname}/../../node_modules/electron`),
     });
-    // TODO: dev tool をトグルできるようにする
-    window.webContents.openDevTools();
   }
 };

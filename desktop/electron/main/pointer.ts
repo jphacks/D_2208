@@ -41,3 +41,10 @@ export const movePointer =
       };
     });
   };
+
+export const toggleOverlayWindowDevTools = () => {
+  if (overlayWindow === null) {
+    return;
+  }
+  overlayWindow.webContents.toggleDevTools();
+};

@@ -26,3 +26,10 @@ export const showInviteLinkWindow = (appState: AppState) => async () => {
 
   inviteLinkWindow.show();
 };
+
+export const toggleInviteLinkWindowDevTools = () => {
+  if (inviteLinkWindow === null) {
+    return;
+  }
+  inviteLinkWindow.webContents.toggleDevTools();
+};
