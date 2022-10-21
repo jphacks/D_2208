@@ -10,6 +10,7 @@ import dev.abelab.smartpointer.infrastructure.api.response.AccessTokenResponse;
 import dev.abelab.smartpointer.infrastructure.api.response.RoomResponse;
 import dev.abelab.smartpointer.infrastructure.api.validation.RequestValidated;
 import dev.abelab.smartpointer.usecase.CreateRoomUseCase;
+import dev.abelab.smartpointer.usecase.DeleteRoomUseCase;
 import dev.abelab.smartpointer.usecase.JoinRoomUseCase;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,8 @@ public class RoomRestController {
 
     private final CreateRoomUseCase createRoomUseCase;
 
+    private final DeleteRoomUseCase deleteRoomUseCase;
+
     private final JoinRoomUseCase joinRoomUseCase;
 
     /**
@@ -37,6 +40,18 @@ public class RoomRestController {
     @ResponseStatus(HttpStatus.CREATED)
     public RoomResponse createRoom() {
         return new RoomResponse(this.createRoomUseCase.handle());
+    }
+
+    /**
+     * ルーム削除API
+     * 
+     * @param roomId ルームID
+     */
+    @DeleteMapping("/{room_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteRoom(@PathVariable("room_id") final String roomId //
+    ) {
+        this.deleteRoomUseCase.handle(roomId);
     }
 
     /**
