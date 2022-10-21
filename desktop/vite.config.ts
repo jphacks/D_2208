@@ -2,6 +2,7 @@ import { rmSync } from "fs";
 import path from "path";
 import { defineConfig } from "vite";
 import electron from "vite-electron-plugin";
+import react from "@vitejs/plugin-react";
 import { alias } from "vite-electron-plugin/plugin";
 
 rmSync(path.join(__dirname, "dist-electron"), { recursive: true, force: true });
@@ -22,6 +23,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    react(),
     electron({
       include: ["electron"],
       plugins: [
