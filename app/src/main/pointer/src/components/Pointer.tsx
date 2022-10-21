@@ -1,7 +1,13 @@
 import { IconButton, Icon, Flex, Box, Heading, VStack } from "@chakra-ui/react";
 import { FC } from "react";
 
-export const Pointer: FC = () => {
+import { AuthData } from "@/types/AuthData";
+
+type Props = {
+  authData: AuthData;
+};
+
+export const Pointer: FC<Props> = ({ authData }) => {
   return (
     <VStack>
       <Heading fontSize="xl">ポインター</Heading>
