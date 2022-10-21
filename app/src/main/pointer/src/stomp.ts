@@ -1,7 +1,5 @@
-import { Client } from '@stomp/stompjs';
-
+import { Client } from "@stomp/stompjs";
 
 export const client = new Client({
-    brokerURL: "/ws",
-})
-
+  brokerURL: "/ws",
+});
