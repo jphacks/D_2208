@@ -7,7 +7,7 @@ import {
   Button,
   FormErrorMessage,
 } from "@chakra-ui/react";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useForm } from "react-hook-form";
 
 import { roomApi } from "@/api";
@@ -35,7 +35,7 @@ export const JoinRoomForm: FC<Props> = ({ onSubmit: onSubmitProps }) => {
   } = useForm<FormValues>({
     defaultValues: {
       userName: localStorage.getItem(localStorageKey) ?? "",
-      passcode: url.searchParams.get("token") ?? "",
+      passcode: url.searchParams.get("passcode") ?? "",
       roomId: url.searchParams.get("roomId") ?? "",
     },
   });

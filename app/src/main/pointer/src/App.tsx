@@ -14,7 +14,7 @@ export const App = () => {
   return (
     <Container size="md">
       {authData ? (
-        <VStack gap={8} align="stretch" py={4}>
+        <VStack gap={6} align="stretch" py={4}>
           {/* TODO: <WebSocketProvider> */}
           <Header userName={authData.userName} />
           <Timer />
