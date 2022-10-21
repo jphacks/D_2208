@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "codegen": "openapi-generator-cli generate -g typescript-axios -i http://localhost:8080/v3/api-docs/Public%20API -o ./electron/main/generated/http-client",
     "lint": "eslint src electron",
     "format": "yarn check:format --write",
     "code-check": "run-p lint check:*",
