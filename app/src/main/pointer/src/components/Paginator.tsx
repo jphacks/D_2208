@@ -2,7 +2,7 @@ import { IconButton, Icon, Flex, VStack, Heading } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { FC } from "react";
 
-import { client } from "@/stomp";
+import { stompClient } from "@/stomp";
 import { AuthData } from "@/types/AuthData";
 
 type Props = {
@@ -10,14 +10,15 @@ type Props = {
 };
 
 export const Paginator: FC<Props> = ({ authData }) => {
-  const goNext = () =>
-    client.publish({
+  const goNext = () => {
+    stompClient.publish({
       destination: `/app/rooms/${authData.roomId}/slides/next`,
       body: JSON.stringify({ room_id: authData.roomId }),
     });
+  };
 
   const goPrevious = () =>
-    client.publish({
+    stompClient.publish({
       destination: `/app/rooms/${authData.roomId}/slides/previous`,
       body: JSON.stringify({ room_id: authData.roomId }),
     });
