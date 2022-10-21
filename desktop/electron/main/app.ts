@@ -9,7 +9,7 @@ app.once("ready", () => {
   const appState = new AppState();
   createTray({
     appState,
-    handleClickCreateRoom: createRoom({ appState }),
+    handleClickCreateRoom: createRoom(appState),
     handleClickShowInviteLink: showInviteLinkWindow(appState),
   });
 });
