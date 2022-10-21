@@ -21,12 +21,11 @@ export const showOverlayWindow = async (appState: AppState) => {
       show: false,
       frame: false,
       transparent: true,
-      alwaysOnTop: true,
-      fullscreen: true,
       focusable: false,
     });
   }
-
+  overlayWindow.setAlwaysOnTop(true, "screen-saver");
+  overlayWindow.setVisibleOnAllWorkspaces(true);
   overlayWindow.setIgnoreMouseEvents(true);
 
   loadWindow(overlayWindow, "overlay.html");
