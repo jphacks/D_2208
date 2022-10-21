@@ -8,7 +8,7 @@ import { alias } from "vite-electron-plugin/plugin";
 rmSync(path.join(__dirname, "dist-electron"), { recursive: true, force: true });
 
 console.log(path.resolve(__dirname, "electron", "main"));
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.join(__dirname, "src"),
@@ -36,4 +36,10 @@ export default defineConfig({
       ],
     }),
   ],
-});
+  esbuild:
+    mode === "production"
+      ? {
+          drop: ["console", "debugger"],
+        }
+      : {},
+}));

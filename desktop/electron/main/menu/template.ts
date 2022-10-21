@@ -54,5 +54,9 @@ export const renderMenuTemplate = ({
     : renderDefaultMenuTemplate({ appState, handleClickCreateRoom })),
   { type: "separator" },
 
-  { role: "quit", label: "アプリを終了" },
+  {
+    role: "quit",
+    label: "アプリを終了",
+    accelerator: "Cmd+Q",
+  },
 ];

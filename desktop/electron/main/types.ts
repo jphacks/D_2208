@@ -1,6 +1,6 @@
 export type Room = {
   id: string;
-  token: string;
+  passcode: string;
 };
 export type User = {
   id: string;

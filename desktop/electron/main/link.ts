@@ -20,7 +20,7 @@ export const showInviteLinkWindow = (appState: AppState) => async () => {
 
     loadWindow(inviteLinkWindow, "link.html", {
       roomId: appState.state.room.id,
-      token: appState.state.room.token,
+      passcode: appState.state.room.passcode,
     });
   }
 

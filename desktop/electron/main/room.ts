@@ -25,11 +25,11 @@ export const createRoom =
     await delay(1000); // TODO: ここは消す
 
     const roomId = "aaa";
-    const token = "bbb";
+    const passcode = "bbb";
 
     appState.setState({
       name: "CREATED",
-      room: { id: roomId, token },
+      room: { id: roomId, passcode },
       users: new Map(),
       pointers: new Map(),
     });
