@@ -6,9 +6,14 @@ import {
   FormHelperText,
   Button,
   FormErrorMessage,
+  useToast,
+  PinInput,
+  PinInputField,
+  Flex,
 } from "@chakra-ui/react";
+import { AxiosError } from "axios";
 import { FC } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import { roomApi } from "@/api";
 import { AuthData } from "@/types/AuthData";
@@ -28,10 +33,13 @@ type FormValues = {
 export const JoinRoomForm: FC<Props> = ({ onSubmit: onSubmitProps }) => {
   const url = new URL(location.href);
 
+  const toast = useToast();
+
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
+    control,
   } = useForm<FormValues>({
     defaultValues: {
       userName: localStorage.getItem(localStorageKey) ?? "",
@@ -41,17 +49,35 @@ export const JoinRoomForm: FC<Props> = ({ onSubmit: onSubmitProps }) => {
   });
 
   const onSubmit = async (values: FormValues) => {
-    console.log(values);
-    const { data } = await roomApi.joinRoom(values.roomId, {
-      passcode: values.passcode,
-      name: values.userName,
-    });
-    localStorage.setItem(localStorageKey, values.userName);
-    onSubmitProps({
-      ...data,
-      userName: values.userName,
-      roomId: values.roomId,
-    });
+    try {
+      const { data } = await roomApi.joinRoom(values.roomId, {
+        passcode: values.passcode,
+        name: values.userName,
+      });
+      localStorage.setItem(localStorageKey, values.userName);
+      onSubmitProps({
+        ...data,
+        userName: values.userName,
+        roomId: values.roomId,
+      });
+
+      toast({
+        title: "ログインに成功しました。",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast({
+          title: "ログインに失敗しました。",
+          description: error.response?.data.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    }
   };
 
   return (
@@ -83,12 +109,22 @@ export const JoinRoomForm: FC<Props> = ({ onSubmit: onSubmitProps }) => {
       </FormControl>
       <FormControl isInvalid={errors.passcode !== undefined}>
         <FormLabel>パスコード</FormLabel>
-        <Input
-          type="text"
-          {...register("passcode", {
-            required: "パスコードは必須です",
-          })}
-        />
+        <Flex justify="center" gap="4">
+          <Controller
+            name="passcode"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <PinInput type="number" onChange={onChange} value={value}>
+                <PinInputField />
+                <PinInputField />
+                <PinInputField />
+                <PinInputField />
+                <PinInputField />
+                <PinInputField />
+              </PinInput>
+            )}
+          />
+        </Flex>
         <FormErrorMessage>{errors.passcode?.message}</FormErrorMessage>
       </FormControl>
       <Button isLoading={isSubmitting} type="submit">

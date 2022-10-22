@@ -6,7 +6,7 @@
   "productName": "smartpointer",
   "description": "手元のスマホをリモコン化する、共同プレゼンテーション支援ツール",
   "scripts": {
-    "dev": "NODE_ENV=development vite",
+    "dev": "cross-env NODE_ENV=development vite",
     "build": "tsc && vite build",
     "codegen": "openapi-generator-cli generate -g typescript-axios -i http://localhost:8080/v3/api-docs/Public%20API -o ./electron/main/generated/http-client",
     "lint": "eslint src electron",
@@ -53,6 +53,7 @@
     "@typescript-eslint/eslint-plugin": "5.40.1",
     "@typescript-eslint/parser": "5.40.1",
     "@vitejs/plugin-react": "2.1.0",
+    "cross-env": "^7.0.3",
     "electron": "^21.1.1",
     "electron-builder": "^23.3.3",
     "electron-reload": "^2.0.0-alpha.1",
