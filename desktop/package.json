@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "1.0.0-SNAPSHOT",
+  "version": "1.0.0",
   "main": "dist-electron/electron/main/app.js",
   "name": "smartpointer",
   "productName": "smartpointer",
