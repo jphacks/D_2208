@@ -3,7 +3,7 @@
   "version": "1.0.0-SNAPSHOT",
   "main": "dist-electron/electron/main/app.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development vite",
+    "dev": "cross-env NODE_ENV=prod vite",
     "build": "tsc && vite build",
     "codegen": "openapi-generator-cli generate -g typescript-axios -i http://localhost:8080/v3/api-docs/Public%20API -o ./electron/main/generated/http-client",
     "lint": "eslint src electron",
