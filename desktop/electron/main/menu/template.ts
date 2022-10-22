@@ -1,8 +1,8 @@
 import type { MenuItemConstructorOptions } from "electron";
 
-import type AppState from "@/AppState";
-import { toggleInviteLinkWindowDevTools } from "@/link";
-import { toggleOverlayWindowDevTools } from "@/pointer";
+import type AppState from "../AppState";
+import { toggleInviteLinkWindowDevTools } from "../link";
+import { toggleOverlayWindowDevTools } from "../pointer";
 
 const renderDefaultMenuTemplate = ({
   appState,

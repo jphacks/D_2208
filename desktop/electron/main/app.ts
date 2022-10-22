@@ -1,16 +1,19 @@
 import { app } from "electron";
 
-import { AppState } from "@/AppState";
-import { showInviteLinkWindow } from "@/link";
-import { createTray } from "@/menu/tray";
-import { goNext, goPrevious } from "@/pagination";
-import { createRoom } from "@/room";
-import { stompClient } from "@/stomp";
+import { AppState } from "./AppState";
+import { showInviteLinkWindow } from "./link";
+import { createTray } from "./menu/tray";
+import { goNext, goPrevious } from "./pagination";
+import { sendHidePointer, sendPointerPosition } from "./pointer";
+import { createRoom } from "./room";
+import { stompClient } from "./stomp";
 
 enum SlideControl {
   NEXT,
   PREVIOUS,
 }
+
+const tanDeg = (deg: number) => Math.tan((deg * Math.PI) / 180);
 
 app.once("ready", async () => {
   const appState = new AppState();
@@ -58,7 +61,15 @@ app.once("ready", async () => {
               rotation: null;
             };
         const body = JSON.parse(message.body) as Response;
-        // TODO: ここでポインターを動かす
+
+        if (body.isActive) {
+          sendPointerPosition({
+            x: -tanDeg(body.rotation.alpha) / 2,
+            y: -tanDeg(body.rotation.beta) / 2,
+          });
+        } else {
+          sendHidePointer();
+        }
       }
     );
   };

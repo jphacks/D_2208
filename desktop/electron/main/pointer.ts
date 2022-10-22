@@ -1,8 +1,8 @@
 import { BrowserWindow, screen } from "electron";
 
-import type { AppState } from "@/AppState";
-import type { Coordinate, User } from "@/types";
-import { loadWindow } from "@/window";
+import type { AppState } from "./AppState";
+import type { Coordinate } from "./types";
+import { loadWindow } from "./window";
 
 let overlayWindow: BrowserWindow | null = null;
 
@@ -22,6 +22,10 @@ export const showOverlayWindow = async (appState: AppState) => {
       frame: false,
       transparent: true,
       focusable: false,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+      },
     });
   }
   overlayWindow.setAlwaysOnTop(true, "screen-saver");
@@ -33,26 +37,23 @@ export const showOverlayWindow = async (appState: AppState) => {
   overlayWindow.show();
 };
 
-export const movePointer =
-  (appState: AppState) => (userId: User["id"], coordinate: Coordinate) => {
-    // TODO: overlayWindow に教えてあげる
-    if (appState.state.name !== "CREATED") {
-      throw new Error('な"ん"し"と"ん"ね"ん"');
-    }
-    appState.setState((state) => {
-      if (state.name !== "CREATED") {
-        throw new Error("んいやなんしとんねん");
-      }
-      return {
-        ...state,
-        pointers: state.pointers.set(userId, coordinate),
-      };
-    });
-  };
-
 export const toggleOverlayWindowDevTools = () => {
   if (overlayWindow === null) {
     return;
   }
   overlayWindow.webContents.toggleDevTools();
+};
+
+export const sendPointerPosition = (position: Coordinate) => {
+  if (overlayWindow === null) {
+    return;
+  }
+  overlayWindow.webContents.send("update-pointer-position", position);
+};
+
+export const sendHidePointer = () => {
+  if (overlayWindow === null) {
+    return;
+  }
+  overlayWindow.webContents.send("hide-pointer");
 };

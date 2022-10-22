@@ -1,7 +1,7 @@
 import { BrowserWindow } from "electron";
 
-import type { AppState } from "@/AppState";
-import { loadWindow } from "@/window";
+import type { AppState } from "./AppState";
+import { loadWindow } from "./window";
 
 let inviteLinkWindow: BrowserWindow | null = null;
 

@@ -1,7 +1,6 @@
 import { app, BrowserWindow } from "electron";
-import electronReload from "electron-reload";
 
-import { distPath } from "@/path";
+import { distPath } from "./path";
 
 const getURL = (fileName: string, params?: { [K in string]: string }) => {
   const url = new URL(
@@ -24,10 +23,4 @@ export const loadWindow = async (
   params?: { [K in string]: string }
 ) => {
   await window.loadURL(getURL(fileName, params));
-
-  if (!app.isPackaged) {
-    electronReload(__dirname, {
-      electron: require(`${__dirname}/../../node_modules/electron`),
-    });
-  }
 };

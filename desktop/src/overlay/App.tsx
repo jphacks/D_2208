@@ -1,16 +1,45 @@
-import { useWindowSize } from "@react-hook/window-size";
+import { ipcRenderer } from "electron";
+import { useEffect, useState } from "react";
+
+import { Pointer } from "./Pointer";
+import type { Coordinate } from "./types";
 
 export const App = () => {
-  const [width, height] = useWindowSize();
+  const [position, setPosition] = useState<Coordinate | null>(null);
+
+  const [showingPointer, setShowingPointer] = useState(false);
+
+  const [cnt, setCnt] = useState(0);
+
+  useEffect(() => {
+    ipcRenderer.on(
+      "update-pointer-position",
+      (_, position: Coordinate | null) => {
+        setPosition(position);
+        if (position === null) {
+          setShowingPointer(false);
+          setCnt(0);
+        } else {
+          setShowingPointer(true);
+          setCnt((cnt) => cnt + 1);
+        }
+      }
+    );
+
+    ipcRenderer.on("hide-pointer", () => {
+      setShowingPointer(false);
+      setCnt(0);
+      setPosition(null);
+    });
+  }, []);
+
+  console.log(position);
+
+  if (position === null) {
+    return <>うんこ</>;
+  }
 
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={width}
-      height={height}
-      viewBox={`0 0 ${width} ${height}`}
-    >
-      {<circle cx={20} cy={20} r={10} fill="red" />}
-    </svg>
+    <Pointer cnt={cnt} position={position} showingPointer={showingPointer} />
   );
 };

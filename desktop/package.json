@@ -1,7 +1,7 @@
 {
   "private": true,
   "version": "1.0.0-SNAPSHOT",
-  "main": "dist-electron/main/app.js",
+  "main": "dist-electron/electron/main/app.js",
   "scripts": {
     "dev": "NODE_ENV=development vite",
     "build": "tsc && vite build",
@@ -54,6 +54,7 @@
     "typescript": "4.8.4",
     "vite": "3.1.8",
     "vite-electron-plugin": "^0.4.6",
+    "vite-plugin-electron-renderer": "^0.10.1",
     "ws": "^8.9.0"
   },
   "debug": {

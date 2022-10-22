@@ -1,6 +1,6 @@
-import { roomApi } from "@/api";
-import type AppState from "@/AppState";
-import { showOverlayWindow } from "@/pointer";
+import { roomApi } from "./api";
+import type AppState from "./AppState";
+import { showOverlayWindow } from "./pointer";
 
 export const createRoom = async (appState: AppState): Promise<void> => {
   if (appState.state.name !== "READY") {
