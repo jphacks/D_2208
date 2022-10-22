@@ -29,7 +29,9 @@ export const showOverlayWindow = async (appState: AppState) => {
     });
   }
   overlayWindow.setAlwaysOnTop(true, "screen-saver");
-  overlayWindow.setVisibleOnAllWorkspaces(true);
+  overlayWindow.setVisibleOnAllWorkspaces(true, {
+    visibleOnFullScreen: true,
+  });
   overlayWindow.setIgnoreMouseEvents(true);
 
   loadWindow(overlayWindow, "overlay.html");
