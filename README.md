@@ -1,10 +1,10 @@
-# Smart Pointer
+# スマートポインター
 
 ![CI](https://github.com/jphacks/D_2208/workflows/CI/badge.svg)
 ![deploy](https://github.com/jphacks/D_2208/workflows/deploy/badge.svg)
 ![version](https://img.shields.io/badge/version-1.0.0__SNAPSHOT-blue.svg)
 
-[![IMAGE ALT TEXT HERE](https://jphacks.com/wp-content/uploads/2022/08/JPHACKS2022_ogp.jpg)](https://www.youtube.com/watch?v=LUPQFB4QyVo)
+[![IMAGE ALT TEXT HERE](https://jphacks.com/wp-content/uploads/2022/08/JPHACKS2022_ogp.jpg)](https://youtu.be/6NNR210ilGI)
 
 ## 製品概要
 
@@ -12,7 +12,7 @@
 
 あなたのスマホがリモコンに！？
 
-Smart Pointerは手元のスマホをリモコン化する、クラウドベースな共同プレゼンテーション支援ツールです。
+スマートポインターは手元のスマホをリモコン化する、クラウドベースな共同プレゼンテーション支援ツールです。
 
 > **Note**
 >
