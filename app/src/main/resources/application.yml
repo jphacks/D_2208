@@ -1,0 +1,71 @@
+spring:
+  datasource:
+    url:
+    username:
+    password:
+    driver-class-name:
+  session:
+    store-type: jdbc
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+  jackson:
+    date-format: yyyy-MM-dd'T'HH:mm:ss
+    time-zone: Asia/Tokyo
+  flyway:
+    baselineOnMigrate: true
+    validateOnMigrate: false
+    outOfOrder: false
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    locations: classpath:db/migration
+    enabled: true
+
+springdoc:
+  swagger-ui:
+    doc-expansion: none
+
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+  forward-headers-strategy: framework
+  reactive:
+    session:
+      timeout: 3h
+
+project:
+  name: smartpointer
+  version: 1.0.0
+  package: dev.abelab.smartpointer
+  mybatis:
+    config:
+      file: generatorConfig.xml
+    model:
+      package: infrastructure.db.entity
+    client:
+      package: infrastructure.db.mapper.base
+      type: XMLMAPPER
+    map:
+      package: db.mapper.base
+
+mybatis:
+  configuration:
+    mapUnderscoreToCamelCase: true
+  mapperLocations:
+    - classpath:/db/mapper/base/*Mapper.xml
+    - classpath:/db/mapper/*Mapper.xml
+
+logging:
+  level:
+    root: INFO
+
+auth:
+  ttl: 86400 # 24h
+  token-type: Bearer

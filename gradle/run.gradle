@@ -1,0 +1,4 @@
+bootRun {
+    systemProperty "spring.profiles.active", "local"
+    systemProperties System.properties
+}

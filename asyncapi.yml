@@ -1,0 +1,339 @@
+asyncapi: 2.5.0
+
+info:
+  title: Smart Pointer Internal API
+  version: 1.0.0
+
+servers:
+  local:
+    url: localhost:8080
+    description: ローカル環境
+    protocol: STOMP
+  dev:
+    url: smartpointer.abelab.de
+    description: 開発環境
+    protocol: STOMP
+  prod:
+    url: smartpointer-prod.an.r.appspot.com
+    description: 本番環境
+    protocol: STOMP
+
+channels:
+  /app/rooms/{room_id}/timer/start:
+    parameters:
+      room_id:
+        description: ルームID
+        schema:
+          type: string
+    publish:
+      description: タイマー開始トピック
+      message:
+        $ref: '#/components/messages/startTimer'
+  /app/rooms/{room_id}/timer/resume:
+    parameters:
+      room_id:
+        description: ルームID
+        schema:
+          type: string
+    publish:
+      description: タイマー再開トピック
+      message:
+        $ref: '#/components/messages/resumeTimer'
+  /app/rooms/{room_id}/timer/stop:
+    parameters:
+      room_id:
+        description: ルームID
+        schema:
+          type: string
+    publish:
+      description: タイマー停止トピック
+      message:
+        $ref: '#/components/messages/stopTimer'
+  /app/rooms/{room_id}/timer/reset:
+    parameters:
+      room_id:
+        description: ルームID
+        schema:
+          type: string
+    publish:
+      description: タイマーリセットトピック
+      message:
+        $ref: '#/components/messages/resetTimer'
+  /app/rooms/{room_id}/slides/next:
+    parameters:
+      room_id:
+        description: ルームID
+        schema:
+          type: string
+    publish:
+      description: スライドを進めるトピック
+      message:
+        $ref: '#/components/messages/goNextSlide'
+  /app/rooms/{room_id}/slides/previous:
+    parameters:
+      room_id:
+        description: ルームID
+        schema:
+          type: string
+    publish:
+      description: スライドを戻すトピック
+      message:
+        $ref: '#/components/messages/goPreviousSlide'
+  /app/rooms/{room_id}/pointer/control:
+    parameters:
+      room_id:
+        description: ルームID
+        schema:
+          type: string
+    publish:
+      description: ポインター操作トピック
+      message:
+        $ref: '#/components/messages/controlPointer'
+  /app/rooms/{room_id}/pointer/disconnect:
+    parameters:
+      room_id:
+        description: ルームID
+        schema:
+          type: string
+    publish:
+      description: ポインター切断トピック
+      message:
+        $ref: '#/components/messages/disconnectPointer'
+  /topic/rooms/{room_id}/timer:
+    parameters:
+      room_id:
+        description: ルームID
+        schema:
+          type: string
+    subscribe:
+      description: タイマー購読トピック
+      message:
+        $ref: '#/components/messages/broadcastTimer'
+  /topic/rooms/{room_id}/users:
+    parameters:
+      room_id:
+        description: ルームID
+        schema:
+          type: string
+    subscribe:
+      description: ユーザリスト購読トピック
+      message:
+        $ref: '#/components/messages/broadcastUsers'
+  /topic/rooms/{room_id}/slides/control:
+    parameters:
+      room_id:
+        description: ルームID
+        schema:
+          type: string
+    subscribe:
+      description: スライド操作購読トピック
+      message:
+        $ref: '#/components/messages/broadcastSlideControl'
+  /topic/rooms/{room_id}/pointer/control:
+    parameters:
+      room_id:
+        description: ルームID
+        schema:
+          type: string
+    subscribe:
+      description: ポインター操作購読トピック
+      message:
+        $ref: '#/components/messages/broadcastPointerControl'
+  /topic/exception:
+    subscribe:
+      description: 例外購読トピック
+      message:
+        $ref: '#/components/messages/broadcastException'
+
+components:
+  messages:
+    startTimer:
+      description: READY状態のタイマーを開始する
+      payload:
+        $ref: '#/components/schemas/TimerStartRequest'
+    resumeTimer:
+      description: READY状態のタイマーを再開する
+      payload:
+        $ref: '#/components/schemas/TimerResumeRequest'
+    stopTimer:
+      description: RUNNING状態のタイマーを停止する
+    resetTimer:
+      description: タイマーをリセットする
+    goNextSlide:
+      description: スライドを次ページへ進める
+    goPreviousSlide:
+      description: スライドを前ページへ戻す
+    controlPointer:
+      description: ポインターを操作する
+      payload:
+        $ref: '#/components/schemas/PointerControlRequest'
+    disconnectPointer:
+      description: ポインターを切断する
+    broadcastTimer:
+      description: タイマーを配信する
+      payload:
+        $ref: '#/components/schemas/TimerResponse'
+    broadcastUsers:
+      description: ユーザリストを配信する
+      payload:
+        $ref: '#/components/schemas/UsersResponse'
+    broadcastSlideControl:
+      description: スライド操作を配信する
+      payload:
+        $ref: '#/components/schemas/SlideControlResponse'
+    broadcastPointerControl:
+      description: ポインター操作を配信する
+      payload:
+        $ref: '#/components/schemas/PointerControlResponse'
+    broadcastException:
+      description: 例外を配信する
+      payload:
+        $ref: '#/components/schemas/ErrorResponse'
+
+  schemas:
+    TimerStartRequest:
+      description: タイマー開始リクエスト
+      type: object
+      properties:
+        value:
+          description: 設定時間[s]
+          type: integer
+          minimum: 1
+      required:
+        - value
+    TimerResumeRequest:
+      description: タイマー再開リクエスト
+      type: object
+      properties:
+        value:
+          description: 残り時間[s]
+          type: integer
+          minimum: 1
+      required:
+        - value
+    PointerControlRequest:
+      description: ポインター操作リクエスト
+      type: object
+      properties:
+        alpha:
+          description: α値
+          type: number
+        beta:
+          description: β値
+          type: number
+        gamma:
+          description: γ値
+          type: number
+      required:
+        - alpha
+        - beta
+        - gamma
+    UserResponse:
+      description: ユーザレスポンス
+      type: object
+      properties:
+        id:
+          description: ユーザID
+          type: string
+        name:
+          description: ユーザ名
+          type: string
+      required:
+        - id
+        - name
+    UsersResponse:
+      description: ユーザリストレスポンス
+      type: object
+      properties:
+        users:
+          description: ユーザリスト
+          type: array
+          $ref: '#/components/schemas/UserResponse'
+      required:
+        - users
+    TimerResponse:
+      description: タイマーレスポンス
+      type: object
+      properties:
+        status:
+          description: ステータスID
+          type: integer
+          enum:
+            - 0
+            - 1
+        value:
+          description: 残り時間[s]
+          type: integer
+          minimum: 1
+          nullable: true
+        finishAt:
+          description: 終了日時
+          type: string
+          format: yyyy-MM-dd'T'HH:mm:ss
+          nullable: true
+      required:
+        - status
+        - value
+        - finishAt
+    SlideControlResponse:
+      description: スライド操作レスポンス
+      type: object
+      properties:
+        control:
+          description: 操作ID
+          type: integer
+          enum:
+            - 0
+            - 1
+      required:
+        - control
+    PointerControlResponse:
+      description: ポインター操作レスポンス
+      type: object
+      properties:
+        user:
+          description: ユーザ
+          type: object
+          $ref: '#/components/schemas/UserResponse'
+        isActive:
+          description: ポインターがアクティブかどうか
+          type: boolean
+        rotation:
+          description: 回転数
+          type: object
+          nullable: true
+          $ref: '#/components/schemas/PointerRotationResponse'
+      required:
+        - user
+        - enabled
+        - rotation
+    PointerRotationResponse:
+      description: ポインター回転数レスポンス
+      type: object
+      properties:
+        alpha:
+          description: α値
+          type: number
+        beta:
+          description: β値
+          type: number
+        gamma:
+          description: γ値
+          type: number
+      required:
+        - alpha
+        - beta
+        - gamma
+    ErrorResponse:
+      description: エラーレスポンス
+      type: object
+      properties:
+        code:
+          description: エラーコード
+          type: integer
+        message:
+          description: エラーメッセージ
+          type: string
+      required:
+        - code
+        - message

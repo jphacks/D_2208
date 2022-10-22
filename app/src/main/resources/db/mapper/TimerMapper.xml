@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.abelab.smartpointer.infrastructure.db.mapper.TimerMapper">
+
+    <insert id="upsert" parameterType="dev.abelab.smartpointer.infrastructure.db.entity.Timer">
+        insert into `timer` (`room_id`, `status`, `value`, `finish_at`)
+        values (#{roomId}, #{status}, #{value}, #{finishAt})
+        ON DUPLICATE KEY UPDATE `room_id`   = #{roomId},
+                                `status`    = #{status},
+                                `value`     = #{value},
+                                `finish_at` = #{finishAt}
+    </insert>
+
+</mapper>

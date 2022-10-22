@@ -1,0 +1,5 @@
+flyway {
+    url = DATASOURCE_URL
+    user = DATASOURCE_USERNAME
+    password = DATASOURCE_PASSWORD
+}

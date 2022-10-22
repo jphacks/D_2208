@@ -1,0 +1,82 @@
+{
+  "private": true,
+  "version": "1.0.0",
+  "main": "dist-electron/electron/main/app.js",
+  "name": "smartpointer",
+  "productName": "smartpointer",
+  "description": "手元のスマホをリモコン化する、共同プレゼンテーション支援ツール",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=prod vite",
+    "build": "tsc && vite build",
+    "codegen": "openapi-generator-cli generate -g typescript-axios -i http://localhost:8080/v3/api-docs/Public%20API -o ./electron/main/generated/http-client",
+    "lint": "eslint src electron",
+    "format": "yarn check:format --write",
+    "code-check": "run-p lint check:*",
+    "check:format": "prettier src electron link.html --check",
+    "check:type": "tsc"
+  },
+  "build": {
+    "extraResources": [
+      "public/assets/**/*"
+    ],
+    "productName": "smartpointer",
+    "appId": "dev.abelab.smartpointer",
+    "mac": {
+      "artifactName": "${productName}-${version}-osx.${ext}",
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    }
+  },
+  "dependencies": {
+    "@chakra-ui/react": "2.3.6",
+    "@emotion/react": "11.10.4",
+    "@emotion/styled": "11.10.4",
+    "@heroicons/react": "^2.0.12",
+    "@nut-tree/nut-js": "^2.3.0",
+    "@react-hook/window-size": "3.1.1",
+    "@stomp/stompjs": "^6.1.2",
+    "axios": "^1.1.3",
+    "framer-motion": "7.6.1",
+    "qrcode": "^1.5.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "sockjs-client": "^1.6.1"
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "2.5.2",
+    "@tsconfig/strictest": "^1.0.2",
+    "@types/qrcode": "^1.5.0",
+    "@types/react": "18.0.21",
+    "@types/react-dom": "18.0.6",
+    "@types/sockjs-client": "^1.5.1",
+    "@types/ws": "^8.5.3",
+    "@typescript-eslint/eslint-plugin": "5.40.1",
+    "@typescript-eslint/parser": "5.40.1",
+    "@vitejs/plugin-react": "2.1.0",
+    "cross-env": "^7.0.3",
+    "electron": "^21.1.1",
+    "electron-builder": "^23.3.3",
+    "electron-reload": "^2.0.0-alpha.1",
+    "eslint": "8.25.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-import-resolver-typescript": "3.5.2",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-jsx-a11y": "6.6.1",
+    "eslint-plugin-react": "7.31.10",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "npm-run-all": "4.1.5",
+    "prettier": "2.7.1",
+    "typescript": "4.8.4",
+    "vite": "3.1.8",
+    "vite-electron-plugin": "^0.4.6",
+    "vite-plugin-electron-renderer": "^0.10.1"
+  },
+  "debug": {
+    "env": {
+      "VITE_DEV_SERVER_URL": "http://127.0.0.1:7777"
+    }
+  }
+}
