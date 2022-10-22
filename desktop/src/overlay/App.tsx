@@ -36,7 +36,7 @@ export const App = () => {
   console.log(position);
 
   if (position === null) {
-    return <>うんこ</>;
+    return null;
   }
 
   return (
