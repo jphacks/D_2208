@@ -152,7 +152,6 @@ export const Timer: FC<Props> = ({ authData }) => {
 
   return (
     <VStack gap={2}>
-      <Heading fontSize="xl">タイマー</Heading>
       <VStack gap={4} as="form" onSubmit={handleSubmit(onStartStop)}>
         <Flex justify="center" align="center">
           <NumberInput defaultValue={5} min={0} size="lg" flexGrow={1}>

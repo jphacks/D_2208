@@ -5,7 +5,7 @@ import { loadWindow } from "./window";
 
 let inviteLinkWindow: BrowserWindow | null = null;
 
-export const showInviteLinkWindow = (appState: AppState) => async () => {
+export const showInviteLinkWindow = async (appState: AppState) => {
   if (appState.state.name !== "CREATED") {
     throw new Error("んなんしとんねん");
   }
@@ -17,7 +17,7 @@ export const showInviteLinkWindow = (appState: AppState) => async () => {
     show: false,
   });
 
-  loadWindow(inviteLinkWindow, "link.html", {
+  await loadWindow(inviteLinkWindow, "link.html", {
     roomId: appState.state.room.id,
     passcode: appState.state.room.passcode,
   });

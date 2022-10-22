@@ -8,5 +8,5 @@ const brokerURL =
 
 export const stompClient = new Client({
   webSocketFactory: () => new SockJS(brokerURL),
-  debug: console.log,
+  // debug: console.log,
 });

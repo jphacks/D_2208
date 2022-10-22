@@ -12,10 +12,10 @@ export const App = () => {
   const [authData, setAuthData] = useState<AuthData | null>(null);
 
   return (
-    <Container size="md">
+    <Container size="md" w="full" h="full">
       {authData ? (
-        <VStack gap={6} align="stretch" py={4}>
-          <Header authData={authData} />
+        <VStack gap={6} align="stretch" py={4} h="full">
+          {/*<Header authData={authData} />*/}
           <Timer authData={authData} />
           <Pointer authData={authData} />
           <Paginator authData={authData} />

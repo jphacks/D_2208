@@ -27,6 +27,8 @@ app.once("ready", async () => {
       throw new Error("ぃやなんしとんねん");
     }
 
+    await showInviteLinkWindow(appState);
+
     // スライド操作を購読
     stompClient.subscribe(
       `/topic/rooms/${appState.state.room.id}/slides/control`,
@@ -77,7 +79,7 @@ app.once("ready", async () => {
   createTray({
     appState,
     handleClickCreateRoom,
-    handleClickShowInviteLink: showInviteLinkWindow(appState),
+    handleClickShowInviteLink: () => showInviteLinkWindow(appState),
   });
 });
 

@@ -28,9 +28,6 @@ export const Pointer: FC<Props> = ({ authData }) => {
 
   return (
     <VStack align="stretch">
-      <Heading fontSize="xl" textAlign="center">
-        ポインター
-      </Heading>
       <Flex justify="stretch">
         <IconButton
           aria-label={"ポインターを起動"}
