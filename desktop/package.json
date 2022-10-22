@@ -16,6 +16,9 @@
     "check:type": "tsc"
   },
   "build": {
+    "extraResources": [
+      "public/assets/**/*"
+    ],
     "productName": "smartpointer",
     "appId": "dev.abelab.smartpointer",
     "mac": {
