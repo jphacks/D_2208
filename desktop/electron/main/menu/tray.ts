@@ -1,7 +1,7 @@
 import { Menu, Tray } from "electron";
 import { join } from "path";
 
-import { publicPath } from "@/path";
+import { publicPath } from "../path";
 
 import { renderMenuTemplate } from "./template";
 

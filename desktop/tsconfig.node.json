@@ -4,12 +4,9 @@
     "target": "ESNext",
     "baseUrl": ".",
     "composite": true,
-    "module": "esnext",
+    "module": "CommonJS",
     "moduleResolution": "node",
-    "types": ["node"],
-    "paths": {
-      "@/*": ["electron/main/*"]
-    }
+    "types": ["node"]
   },
   "include": ["package.json", "electron"]
 }

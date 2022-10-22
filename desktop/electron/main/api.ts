@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Configuration, RoomApi } from "@/generated/http-client";
+import { Configuration, RoomApi } from "./generated/http-client";
 
 const API_URL =
   process.env["NODE_ENV"] === "development"

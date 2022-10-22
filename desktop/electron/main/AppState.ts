@@ -1,4 +1,4 @@
-import type { Room, User, Coordinate } from "@/types";
+import type { Room, User, Coordinate } from "./types";
 
 type State =
   | {
