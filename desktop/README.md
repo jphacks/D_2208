@@ -1,6 +1,6 @@
 # ホストPC用 デスクトップアプリケーション
 
-![version](https://img.shields.io/badge/version-1.0.0__SNAPSHOT-blue.svg)
+![version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 
 ## 概要
 
