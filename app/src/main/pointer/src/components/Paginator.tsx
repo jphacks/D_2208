@@ -24,7 +24,19 @@ export const Paginator: FC<Props> = ({ authData }) => {
     });
 
   return (
-    <Flex justify="center" gap={12} w="full">
+    <Flex
+      justify="center"
+      gap={12}
+      w="full"
+      flexGrow={1}
+      alignItems="stretch"
+      sx={{
+        "& button": {
+          height: "100%",
+          flexGrow: 1,
+        },
+      }}
+    >
       {[
         {
           icon: ChevronLeftIcon,
@@ -38,16 +50,12 @@ export const Paginator: FC<Props> = ({ authData }) => {
           text: "次へ",
           onClick: goNext,
         },
-      ].map(({ icon, label, text, onClick }, index) => (
-        <VStack key={`${index}`} flexGrow="1">
-          <Heading fontSize="xl">{text}</Heading>
-          <IconButton
-            aria-label={label}
-            w="full"
-            height={24}
-            icon={<Icon width={14} height={14} as={icon} onClick={onClick} />}
-          />
-        </VStack>
+      ].map(({ icon, label, onClick }, index) => (
+        <IconButton
+          key={`${index}`}
+          aria-label={label}
+          icon={<Icon width={14} height={14} as={icon} onClick={onClick} />}
+        />
       ))}
     </Flex>
   );
