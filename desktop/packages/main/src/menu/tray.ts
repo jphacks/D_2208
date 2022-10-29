@@ -1,7 +1,7 @@
-import { app, Menu, Tray } from "electron";
+import { Menu, Tray } from "electron";
 import { join } from "path";
 
-import { publicPath } from "../path";
+import { buildResourcesPath } from "../path";
 
 import { renderMenuTemplate } from "./template";
 
@@ -9,9 +9,7 @@ export const createTray = ({
   appState,
   ...menuTemplateParam
 }: Parameters<typeof renderMenuTemplate>[0]) => {
-  const iconPath = app.isPackaged
-    ? join(process.resourcesPath!, "public", "assets", "menu-bar-icon.png")
-    : join(publicPath, "assets", "menu-bar-icon.png");
+  const iconPath = join(buildResourcesPath, "menu-bar-icon.png");
   const tray = new Tray(iconPath);
   tray.setToolTip("スマートポインター");
 

@@ -1,7 +1,8 @@
-packages/main/src/generated/http-client/*
 **/node_modules
 **/dist
 **/*.svg
+
+**/vite.config.ts
 
 package-lock.json
 .electron-vendors.cache.json

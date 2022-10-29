@@ -1,8 +1,8 @@
 import type { MenuItemConstructorOptions } from "electron";
 
-import type AppState from "../AppState";
-// import { toggleInviteLinkWindowDevTools } from "../link";
-// import { toggleOverlayWindowDevTools } from "../pointer";
+import type { AppState } from "../AppState";
+import { toggleInviteLinkWindowDevTools } from "../link";
+import { toggleOverlayWindowDevTools } from "../pointer";
 
 const renderDefaultMenuTemplate = ({
   appState,
@@ -56,19 +56,19 @@ export const renderMenuTemplate = ({
     : renderDefaultMenuTemplate({ appState, handleClickCreateRoom })),
   { type: "separator" },
 
-  // {
-  //   label: "開発者ツールの表示切り替え",
-  //   submenu: [
-  //     {
-  //       label: "オーバレイ",
-  //       click: toggleOverlayWindowDevTools,
-  //     },
-  //     {
-  //       label: "招待リンク",
-  //       click: toggleInviteLinkWindowDevTools,
-  //     },
-  //   ],
-  // },
+  {
+    label: "開発者ツールの表示切り替え",
+    submenu: [
+      {
+        label: "オーバレイ",
+        click: toggleOverlayWindowDevTools,
+      },
+      {
+        label: "招待リンク",
+        click: toggleInviteLinkWindowDevTools,
+      },
+    ],
+  },
   { type: "separator" },
   {
     role: "quit",

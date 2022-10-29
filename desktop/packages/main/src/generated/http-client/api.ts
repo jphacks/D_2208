@@ -216,6 +216,40 @@ export const RoomApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
+         * ルーム削除API
+         * @summary ルーム削除API
+         * @param {string} roomId ルームID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteRoom: async (roomId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'roomId' is not null or undefined
+            assertParamExists('deleteRoom', 'roomId', roomId)
+            const localVarPath = `/api/rooms/{room_id}`
+                .replace(`{${"room_id"}}`, encodeURIComponent(String(roomId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * ルーム入室API
          * @summary ルーム入室API
          * @param {string} roomId ルームID
@@ -276,6 +310,17 @@ export const RoomApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * ルーム削除API
+         * @summary ルーム削除API
+         * @param {string} roomId ルームID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteRoom(roomId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteRoom(roomId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * ルーム入室API
          * @summary ルーム入室API
          * @param {string} roomId ルームID
@@ -307,6 +352,16 @@ export const RoomApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.createRoom(options).then((request) => request(axios, basePath));
         },
         /**
+         * ルーム削除API
+         * @summary ルーム削除API
+         * @param {string} roomId ルームID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteRoom(roomId: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteRoom(roomId, options).then((request) => request(axios, basePath));
+        },
+        /**
          * ルーム入室API
          * @summary ルーム入室API
          * @param {string} roomId ルームID
@@ -336,6 +391,18 @@ export class RoomApi extends BaseAPI {
      */
     public createRoom(options?: AxiosRequestConfig) {
         return RoomApiFp(this.configuration).createRoom(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * ルーム削除API
+     * @summary ルーム削除API
+     * @param {string} roomId ルームID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RoomApi
+     */
+    public deleteRoom(roomId: string, options?: AxiosRequestConfig) {
+        return RoomApiFp(this.configuration).deleteRoom(roomId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -46,19 +46,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: yarn
-          cache-dependency-path: ./desktop/yarn.lock
+          cache: npm
+          cache-dependency-path: ./desktop/package-lock.json
 
       - name: dependencies
-        run: yarn install
+        run: npm ci
 
       - name: code check
         run: |
-          yarn code-check
+          npm run code-check
 
       - name: build
         run: |
-          yarn build
+          npm run build
 
   pointer:
     runs-on: ubuntu-latest

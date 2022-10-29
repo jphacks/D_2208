@@ -2,7 +2,7 @@ import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
 const brokerURL =
-  process.env["NODE_ENV"] === "development"
+  process.env["USE_DEV_BACKEND"] === "true"
     ? "http://localhost:8080/ws"
     : "https://smartpointer.abelab.dev/ws";
 

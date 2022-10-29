@@ -6,7 +6,8 @@
     "composite": true,
     "module": "CommonJS",
     "moduleResolution": "node",
-    "types": ["node"]
+    "types": ["node"],
+    "resolveJsonModule": true
   },
-  "include": ["package.json", "electron"]
+  "include": ["vite.config.ts"]
 }
