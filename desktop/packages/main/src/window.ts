@@ -1,9 +1,9 @@
-import type { BrowserWindow } from "electron";
+import { app, BrowserWindow } from "electron";
 
 const base =
   import.meta.env.DEV && import.meta.env.VITE_DEV_SERVER_URL !== undefined
     ? import.meta.env.VITE_DEV_SERVER_URL
-    : new URL("../renderer/dist", "file://" + __dirname).toString();
+    : `file://${app.getAppPath()}/packages/renderer/dist/`;
 
 const getURL = (fileName: string, params?: { [K in string]: string }) => {
   const url = new URL(fileName, base);
