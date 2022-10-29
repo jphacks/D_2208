@@ -40,6 +40,12 @@ npm run code-check
 npm run build
 ```
 
+### パッケージング
+
+```sh
+npm run pack
+```
+
 ### 使用技術
 
 - Electron@^8.25.0
