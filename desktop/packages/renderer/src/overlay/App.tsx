@@ -1,8 +1,13 @@
-import { ipcRenderer } from "electron";
 import { useEffect, useState } from "react";
 
 import { Pointer } from "./Pointer";
-import type { Coordinate } from "./types";
+
+import {
+  Coordinate,
+  onHidePointer,
+  onUpdatePointerPosition,
+  // eslint-disable-next-line import/no-unresolved
+} from "#preload";
 
 export const App = () => {
   const [position, setPosition] = useState<Coordinate | null>(null);
@@ -12,21 +17,18 @@ export const App = () => {
   const [cnt, setCnt] = useState(0);
 
   useEffect(() => {
-    ipcRenderer.on(
-      "update-pointer-position",
-      (_, position: Coordinate | null) => {
-        setPosition(position);
-        if (position === null) {
-          setShowingPointer(false);
-          setCnt(0);
-        } else {
-          setShowingPointer(true);
-          setCnt((cnt) => cnt + 1);
-        }
+    onUpdatePointerPosition((position) => {
+      setPosition(position);
+      if (position === null) {
+        setShowingPointer(false);
+        setCnt(0);
+      } else {
+        setShowingPointer(true);
+        setCnt((cnt) => cnt + 1);
       }
-    );
+    });
 
-    ipcRenderer.on("hide-pointer", () => {
+    onHidePointer(() => {
       setShowingPointer(false);
       setCnt(0);
       setPosition(null);

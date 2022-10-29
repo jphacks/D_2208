@@ -1,4 +1,5 @@
-import { BrowserWindow, screen } from "electron";
+import { app, BrowserWindow, screen } from "electron";
+import { join } from "node:path";
 
 import type { AppState } from "./AppState";
 import type { Coordinate } from "./types";
@@ -23,8 +24,13 @@ export const showOverlayWindow = async (appState: AppState) => {
       transparent: true,
       focusable: false,
       webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
+        preload: join(
+          app.getAppPath(),
+          "packages",
+          "preload",
+          "dist",
+          "index.cjs"
+        ),
       },
     });
   }
@@ -43,7 +49,13 @@ export const toggleOverlayWindowDevTools = () => {
   if (overlayWindow === null) {
     return;
   }
-  overlayWindow.webContents.toggleDevTools();
+  if (overlayWindow.webContents.isDevToolsOpened()) {
+    overlayWindow.webContents.closeDevTools();
+  } else {
+    overlayWindow.webContents.openDevTools({
+      mode: "detach",
+    });
+  }
 };
 
 export const sendPointerPosition = (position: Coordinate) => {
