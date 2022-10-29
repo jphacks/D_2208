@@ -1,7 +1,7 @@
 import { app } from "electron";
 import { join } from "path";
 
-export const buildResourcesPath = join(
+export const assetsPath = join(
   app.isPackaged ? process.resourcesPath : app.getAppPath(),
-  "buildResources"
+  "assets"
 );
