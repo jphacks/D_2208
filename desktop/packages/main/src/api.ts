@@ -3,7 +3,7 @@ import axios from "axios";
 import { Configuration, RoomApi } from "./generated/http-client";
 
 const API_URL =
-  process.env["NODE_ENV"] === "development"
+  process.env["USE_DEV_BACKEND"] === "true"
     ? "http://localhost:8080"
     : "https://smartpointer.abelab.dev";
 

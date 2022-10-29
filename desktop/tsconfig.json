@@ -1,25 +1,5 @@
 {
-  "extends": "@tsconfig/strictest/tsconfig.json",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    },
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowSyntheticDefaultImports": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
-  },
-  "include": ["src"],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+  "extends": "@smartpointer-desktop/tsconfig/node",
+  "include": ["scripts/**/*"],
+  "exclude": ["packages/**/*"]
 }
