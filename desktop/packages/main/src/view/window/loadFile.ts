@@ -5,7 +5,11 @@ const base =
     ? import.meta.env.VITE_DEV_SERVER_URL
     : `file://${app.getAppPath()}/packages/renderer/dist/`;
 
-const getURL = (fileName: string, params?: { [K in string]: string }) => {
+export const loadFile = async (
+  window: BrowserWindow,
+  fileName: string,
+  params?: { [K in string]: string }
+) => {
   const url = new URL(fileName, base);
 
   if (params !== undefined) {
@@ -14,13 +18,5 @@ const getURL = (fileName: string, params?: { [K in string]: string }) => {
     });
   }
 
-  return url.toString();
-};
-
-export const loadWindow = async (
-  window: BrowserWindow,
-  fileName: string,
-  params?: { [K in string]: string }
-) => {
-  await window.loadURL(getURL(fileName, params));
+  await window.loadURL(url.toString());
 };

@@ -1,13 +1,17 @@
 import { useWindowSize } from "@react-hook/window-size";
-import type { PointerCoordinate } from "@smartpointer-desktop/shared";
+import type { Pointers } from "@smartpointer-desktop/shared";
 import type { FC } from "react";
 
 type Props = {
-  position: PointerCoordinate;
+  pointers: Pointers;
 };
-export const Pointer: FC<Props> = ({ position }) => {
+export const Pointer: FC<Props> = ({ pointers }) => {
   const [width, height] = useWindowSize();
   const radius = 100;
+
+  if (pointers.length === 0) {
+    return null;
+  }
 
   return (
     <svg
@@ -26,11 +30,15 @@ export const Pointer: FC<Props> = ({ position }) => {
         h ${-width}
         v ${-height}
         Z
-
-        M ${width / 2 + position.x * width} ${height / 2 + position.y * width}
-        a ${radius} ${radius} 0 1 1 1 0
-        Z
-        `}
+        ${pointers
+          .map(
+            ({ pointer }) => `
+          M ${width / 2 + pointer.x * width} ${height / 2 + pointer.y * width}
+          a ${radius} ${radius} 0 1 1 1 0
+          Z
+        `
+          )
+          .join("")}`}
         fill="rgba(0, 0, 0, 0.5)"
       />
     </svg>

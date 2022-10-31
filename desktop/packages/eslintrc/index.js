@@ -30,6 +30,7 @@ module.exports = {
     },
   },
   rules: {
+    "import/no-unresolved": "off",
     // restrict order of imports
     "import/order": [
       "error",
