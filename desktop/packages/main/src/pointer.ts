@@ -23,6 +23,7 @@ export const showOverlayWindow = async (appState: AppState) => {
       frame: false,
       transparent: true,
       focusable: false,
+      hasShadow: false,
       webPreferences: {
         preload: join(
           app.getAppPath(),
