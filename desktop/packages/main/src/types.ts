@@ -1,10 +1,29 @@
-export { PointerCoordinate } from "@smartpointer-desktop/shared";
+import { PointerCoordinate } from "@smartpointer-desktop/shared";
 
-export type Room = {
-  id: string;
-  passcode: string;
-};
+import { RoomResponse } from "./generated/http-client";
+
+export type Room = RoomResponse;
+
 export type User = {
   id: string;
   name: string;
 };
+
+export type State = Readonly<
+  | {
+      status: "READY" | "CREATING";
+      room?: undefined;
+      joinedUsers?: undefined;
+      activePointers?: undefined;
+      showInviteLink?: undefined;
+      showOverlayWindowDevTools?: undefined;
+    }
+  | {
+      status: "CREATED";
+      room: Room;
+      joinedUsers: Map<User["id"], User>;
+      activePointers: Map<User["id"], PointerCoordinate>;
+      showInviteLink: boolean;
+      showOverlayWindowDevTools: boolean;
+    }
+>;

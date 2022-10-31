@@ -3,4 +3,10 @@ declare module "@smartpointer-desktop/shared" {
     x: number;
     y: number;
   };
+
+  export type Pointers = {
+    userId: string;
+    name: string;
+    pointer: PointerCoordinate;
+  }[];
 }
