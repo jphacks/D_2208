@@ -4,17 +4,11 @@ import type { FC } from "react";
 
 type Props = {
   position: PointerCoordinate;
-  showingPointer: boolean;
-  cnt: number;
 };
-export const Pointer: FC<Props> = ({ position, showingPointer, cnt }) => {
+export const Pointer: FC<Props> = ({ position }) => {
   const [width, height] = useWindowSize();
   const radius = 100;
 
-  console.log(showingPointer);
-
-  // FIXME: クロップしたエリアが暗くなる
-  // TODO: 残像が残るので、初期描画位置を画面外に設定してごまかしてるので修正する
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -33,9 +27,7 @@ export const Pointer: FC<Props> = ({ position, showingPointer, cnt }) => {
         v ${-height}
         Z
 
-        M ${(cnt > 5 ? width / 2 : 0) + position.x * width} ${
-          (cnt > 5 ? height / 2 : 0) + position.y * width
-        }
+        M ${width / 2 + position.x * width} ${height / 2 + position.y * width}
         a ${radius} ${radius} 0 1 1 1 0
         Z
         `}

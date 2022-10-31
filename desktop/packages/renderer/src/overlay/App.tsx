@@ -12,25 +12,12 @@ import {
 export const App = () => {
   const [position, setPosition] = useState<PointerCoordinate | null>(null);
 
-  const [showingPointer, setShowingPointer] = useState(false);
-
-  const [cnt, setCnt] = useState(0);
-
   useEffect(() => {
     onUpdatePointerPosition((position) => {
       setPosition(position);
-      if (position === null) {
-        setShowingPointer(false);
-        setCnt(0);
-      } else {
-        setShowingPointer(true);
-        setCnt((cnt) => cnt + 1);
-      }
     });
 
     onHidePointer(() => {
-      setShowingPointer(false);
-      setCnt(0);
       setPosition(null);
     });
   }, []);
@@ -41,7 +28,5 @@ export const App = () => {
     return null;
   }
 
-  return (
-    <Pointer cnt={cnt} position={position} showingPointer={showingPointer} />
-  );
+  return <Pointer position={position} />;
 };
