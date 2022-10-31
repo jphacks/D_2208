@@ -3,12 +3,20 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "#preload": ["../preload/src/index"]
+      "@/*": [
+        "src/*"
+      ],
+      "#preload": [
+        "../preload/src/index"
+      ]
     },
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "allowSyntheticDefaultImports": true,
     "module": "ESNext",
     "moduleResolution": "Node",
@@ -17,7 +25,10 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"],
+  "include": [
+    "src",
+    "@smartpointer-desktop/shared"
+  ],
   "references": [
     {
       "path": "./tsconfig.node.json"

@@ -13,5 +13,8 @@
     "@smartpointer-desktop/eslintrc": "1.0.0",
     "@smartpointer-desktop/tsconfig": "1.0.0",
     "@types/sockjs-client": "1.5.1"
+  },
+  "dependencies": {
+    "@smartpointer-desktop/shared": "1.0.0"
   }
 }
