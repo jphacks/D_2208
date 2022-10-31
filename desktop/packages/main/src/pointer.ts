@@ -2,7 +2,7 @@ import { app, BrowserWindow, screen } from "electron";
 import { join } from "node:path";
 
 import type { AppState } from "./AppState";
-import type { Coordinate } from "./types";
+import type { PointerCoordinate } from "./types";
 import { loadWindow } from "./window";
 
 let overlayWindow: BrowserWindow | null = null;
@@ -58,7 +58,7 @@ export const toggleOverlayWindowDevTools = () => {
   }
 };
 
-export const sendPointerPosition = (position: Coordinate) => {
+export const sendPointerPosition = (position: PointerCoordinate) => {
   if (overlayWindow === null) {
     return;
   }

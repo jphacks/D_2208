@@ -1,3 +1,4 @@
+// @ts-expect-error
 import { preload } from "unplugin-auto-expose";
 import { defineConfig } from "vite";
 

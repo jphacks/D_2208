@@ -1,13 +1,15 @@
+import type { PointerCoordinate } from "@smartpointer-desktop/shared";
 import { ipcRenderer } from "electron";
 
-export type Coordinate = { x: number; y: number };
-
 export const onUpdatePointerPosition = (
-  callback: (position: Coordinate) => void
+  callback: (position: PointerCoordinate) => void
 ) => {
-  ipcRenderer.on("update-pointer-position", (_, position: Coordinate) => {
-    callback(position);
-  });
+  ipcRenderer.on(
+    "update-pointer-position",
+    (_, position: PointerCoordinate) => {
+      callback(position);
+    }
+  );
 };
 
 export const onHidePointer = (callback: () => void) => {

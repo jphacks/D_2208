@@ -6,6 +6,9 @@
     "@smartpointer-desktop/eslintrc": "1.0.0",
     "@smartpointer-desktop/tsconfig": "1.0.0",
     "@tsconfig/strictest": "1.0.2",
+    "@types/qrcode": "1.5.0",
+    "@types/react": "18.0.24",
+    "@types/react-dom": "18.0.8",
     "@vitejs/plugin-react": "2.2.0"
   },
   "scripts": {
@@ -19,6 +22,7 @@
     "@emotion/styled": "11.10.5",
     "@heroicons/react": "2.0.12",
     "@react-hook/window-size": "3.1.1",
+    "@smartpointer-desktop/shared": "1.0.0",
     "framer-motion": "7.6.2",
     "qrcode": "1.5.1",
     "react": "18.2.0",

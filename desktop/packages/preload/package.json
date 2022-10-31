@@ -12,6 +12,7 @@
   "keywords": [],
   "author": "",
   "dependencies": {
+    "@smartpointer-desktop/shared": "1.0.0",
     "unplugin-auto-expose": "0.0.3"
   }
 }

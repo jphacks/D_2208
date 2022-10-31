@@ -1,4 +1,4 @@
-import type { Room, User, Coordinate } from "./types";
+import type { Room, User, PointerCoordinate } from "./types";
 
 type State =
   | {
@@ -17,7 +17,7 @@ type State =
       name: "CREATED";
       room: Room;
       users: Map<User["id"], User>;
-      pointers: Map<User["id"], Coordinate>;
+      pointers: Map<User["id"], PointerCoordinate>;
     };
 
 export class AppState {

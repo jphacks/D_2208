@@ -2,6 +2,7 @@ packages/main/src/generated/http-client/*
 **/node_modules
 **/dist
 **/*.svg
+**/*.json
 
 package-lock.json
 .electron-vendors.cache.json
