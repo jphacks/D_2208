@@ -1,16 +1,16 @@
+import type { PointerCoordinate } from "@smartpointer-desktop/shared";
 import { useEffect, useState } from "react";
 
 import { Pointer } from "./Pointer";
 
 import {
-  Coordinate,
   onHidePointer,
   onUpdatePointerPosition,
   // eslint-disable-next-line import/no-unresolved
 } from "#preload";
 
 export const App = () => {
-  const [position, setPosition] = useState<Coordinate | null>(null);
+  const [position, setPosition] = useState<PointerCoordinate | null>(null);
 
   const [showingPointer, setShowingPointer] = useState(false);
 

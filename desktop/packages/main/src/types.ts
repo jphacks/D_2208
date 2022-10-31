@@ -1,3 +1,5 @@
+export { PointerCoordinate } from "@smartpointer-desktop/shared";
+
 export type Room = {
   id: string;
   passcode: string;
@@ -5,8 +7,4 @@ export type Room = {
 export type User = {
   id: string;
   name: string;
-};
-export type Coordinate = {
-  x: number;
-  y: number;
 };

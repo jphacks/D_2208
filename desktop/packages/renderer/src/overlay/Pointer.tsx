@@ -1,10 +1,9 @@
 import { useWindowSize } from "@react-hook/window-size";
+import type { PointerCoordinate } from "@smartpointer-desktop/shared";
 import type { FC } from "react";
 
-import type { Coordinate } from "./types";
-
 type Props = {
-  position: Coordinate;
+  position: PointerCoordinate;
   showingPointer: boolean;
   cnt: number;
 };
@@ -30,8 +29,8 @@ export const Pointer: FC<Props> = ({ position, showingPointer, cnt }) => {
         M 0 0
         h ${width}
         v ${height}
-        h ${-width} 
-        v ${-height} 
+        h ${-width}
+        v ${-height}
         Z
 
         M ${(cnt > 5 ? width / 2 : 0) + position.x * width} ${
