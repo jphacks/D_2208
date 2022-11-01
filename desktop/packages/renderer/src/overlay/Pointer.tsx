@@ -7,7 +7,7 @@ type Props = {
 };
 export const Pointer: FC<Props> = ({ pointers }) => {
   const [width, height] = useWindowSize();
-  const radius = 100;
+  const radiusRate = 0.1;
 
   if (pointers.length === 0) {
     return null;
@@ -20,26 +20,27 @@ export const Pointer: FC<Props> = ({ pointers }) => {
       height={height}
       viewBox={`0 0 ${width} ${height}`}
     >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d={`
-        M 0 0
-        h ${width}
-        v ${height}
-        h ${-width}
-        v ${-height}
-        Z
-        ${pointers
-          .map(
-            ({ pointer }) => `
-          M ${width / 2 + pointer.x * width} ${height / 2 + pointer.y * width}
-          a ${radius} ${radius} 0 1 1 1 0
-          Z
-        `
-          )
-          .join("")}`}
-        fill="rgba(0, 0, 0, 0.5)"
+      <defs>
+        <mask id="mask">
+          <rect x="0" y="0" width={width} height={height} fill="white" />
+          {pointers.map(({ pointer, userId }) => (
+            <circle
+              key={userId}
+              cx={width / 2 + pointer.x * width}
+              cy={height / 2 + pointer.y * height}
+              r={Math.min(width, height) * radiusRate}
+              fill="rgb(0 0 0 / 70%)"
+            />
+          ))}
+        </mask>
+      </defs>
+      <rect
+        x="0"
+        y="0"
+        width={width}
+        height={height}
+        fill="rgb(0 0 0 / 70%)"
+        mask="url(#mask)"
       />
     </svg>
   );
