@@ -17,9 +17,8 @@ export const renderOverlayWindow = async (state: State) => {
     return;
   }
 
-  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-
   if (overlayWindow === null || overlayWindow.isDestroyed()) {
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
     overlayWindow = new BrowserWindow({
       width,
       height,
