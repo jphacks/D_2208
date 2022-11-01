@@ -15,7 +15,5 @@ export const App = () => {
     onUpdatePointers(setPosition);
   }, []);
 
-  console.log(position);
-
   return <Pointer pointers={position} />;
 };
