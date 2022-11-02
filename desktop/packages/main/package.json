@@ -12,7 +12,7 @@
     "@openapitools/openapi-generator-cli": "2.5.2",
     "@smartpointer-desktop/eslintrc": "1.0.0",
     "@smartpointer-desktop/tsconfig": "1.0.0",
-    "@types/sockjs-client": "1.5.1"
+    "@types/ws": "8.5.3"
   },
   "dependencies": {
     "@smartpointer-desktop/shared": "1.0.0"

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "codegen": "openapi-generator-cli generate -g typescript-axios -i http://localhost:8080/v3/api-docs/Public%20API -o ./src/generated/http-client",
@@ -25,8 +25,7 @@
     "framer-motion": "7.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.38.0",
-    "sockjs-client": "^1.6.1"
+    "react-hook-form": "^7.38.0"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.2",
