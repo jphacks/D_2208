@@ -1,16 +1,18 @@
 import { Client, StompSubscription } from "@stomp/stompjs";
-import SockJS from "sockjs-client";
+import WebSocket from "ws";
 
 import * as controller from "./controller";
 import { goNext, goPrevious } from "./pagination";
 
+Object.assign(global, { WebSocket });
+
 const brokerURL =
   process.env["USE_DEV_BACKEND"] === "true"
-    ? "http://localhost:8080/ws"
-    : "https://smartpointer.abelab.dev/ws";
+    ? "ws://localhost:8080/ws"
+    : "wss://smartpointer.abelab.dev/ws";
 
 const stompClient = new Client({
-  webSocketFactory: () => new SockJS(brokerURL),
+  brokerURL,
 });
 
 enum SlideControl {

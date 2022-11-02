@@ -26,8 +26,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws") //
             // ハッカソンなので、全てのオリジンを許可してもOKとする
             .setAllowedOriginPatterns("*") //
-            .setHandshakeHandler(new StompHandshakeHandler()) //
-            .withSockJS();
+            .setHandshakeHandler(new StompHandshakeHandler());
     }
 
 }

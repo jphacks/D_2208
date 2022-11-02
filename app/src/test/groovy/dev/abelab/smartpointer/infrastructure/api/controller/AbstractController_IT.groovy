@@ -23,8 +23,6 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.messaging.WebSocketStompClient
-import org.springframework.web.socket.sockjs.client.SockJsClient
-import org.springframework.web.socket.sockjs.client.WebSocketTransport
 import spock.lang.Shared
 
 import java.util.concurrent.TimeUnit
@@ -231,7 +229,7 @@ abstract class AbstractController_IT extends AbstractDatabaseSpecification {
             }))
             .build()
 
-        this.stompClient = new WebSocketStompClient(new SockJsClient(List.of(new WebSocketTransport(new StandardWebSocketClient()))))
+        this.stompClient = new WebSocketStompClient(new StandardWebSocketClient())
         this.stompClient.setMessageConverter(new MappingJackson2MessageConverter())
     }
 
