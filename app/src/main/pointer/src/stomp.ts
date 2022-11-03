@@ -4,6 +4,7 @@ const brokerURL = `wss://${location.host}/ws`;
 
 export const stompClient = new Client({
   brokerURL,
+  debug: console.log,
 });
 
 export const activate = () =>
