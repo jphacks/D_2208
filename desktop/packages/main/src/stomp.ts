@@ -25,11 +25,35 @@ const tanDeg = (deg: number) => Math.tan((deg * Math.PI) / 180);
 let slidesControlSubscription: StompSubscription | null = null;
 let pointerControlSubscription: StompSubscription | null = null;
 
-export const activate = () => {
-  stompClient.activate();
-};
+const activate = () =>
+  new Promise<undefined>((resolve, reject) => {
+    if (stompClient.connected) {
+      resolve(undefined);
+    } else {
+      stompClient.onConnect = (frame) => {
+        console.log("Connected to broker:", frame);
+        resolve(undefined);
+      };
 
-export const listenRoomSubscription = (roomId: string) => {
+      stompClient.onStompError = (frame) => {
+        console.error("Broker reported error:");
+        console.error(frame.headers["message"]);
+        console.error("Additional details:");
+        console.error(frame.body);
+        reject(new Error(`STOMP error:\n${frame.headers["message"]}`));
+      };
+    }
+
+    stompClient.activate();
+  });
+
+export const listenRoomSubscription = async (roomId: string) => {
+  console.log(`[STOMP] Connecting to ${brokerURL}...`);
+
+  await activate();
+
+  console.log("[STOMP] Connected.");
+
   slidesControlSubscription = stompClient.subscribe(
     `/topic/rooms/${roomId}/slides/control`,
     (message) => {
