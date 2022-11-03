@@ -13,7 +13,7 @@
     "lint": "eslint . --ext .ts,.tsx,mts",
     "format": "yarn check:format --write",
     "check:format": "prettier . --check",
-    "check:type": "tsc",
+    "check:type": "npx --ws tsc",
     "code-check": "run-p lint check:*",
     "postinstall": "npm run generate-electron-vendors",
     "compile": "cross-env MODE=production npm run build && electron-builder build --config .electron-builder.config.js --dir --config.asar=false",
