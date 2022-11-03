@@ -1,3 +1,4 @@
+import { UpdatePointersMessage } from "@smartpointer-desktop/shared";
 import { app, BrowserWindow, screen } from "electron";
 import { join } from "node:path";
 
@@ -6,6 +7,8 @@ import { getState } from "@/model";
 import { loadFile } from "./loadFile";
 
 let overlayWindow: BrowserWindow | null = null;
+
+const tanDeg = (deg: number) => Math.tan((deg * Math.PI) / 180);
 
 export const showOverlayWindow = async () => {
   const state = getState();
@@ -71,12 +74,15 @@ export const updatePointerInOverlayWindow = () => {
     return;
   }
 
-  overlayWindow.webContents.send(
-    "pointers-updated",
-    [...state.activePointers.entries()].map(([userId, pointer]) => ({
-      userId,
-      pointer,
-      name: "test",
-    }))
+  const message: UpdatePointersMessage = [...state.activePointers.values()].map(
+    ({ user, orientation }) => ({
+      user,
+      coordinate: {
+        x: -tanDeg(orientation.alpha) / 2,
+        y: -tanDeg(orientation.beta) / 2,
+      },
+    })
   );
+
+  overlayWindow.webContents.send("pointers-updated", message);
 };

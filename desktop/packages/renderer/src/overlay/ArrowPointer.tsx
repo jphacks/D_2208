@@ -1,6 +1,6 @@
 import { Box, Text, useToken, VStack } from "@chakra-ui/react";
 import { useWindowSize } from "@react-hook/window-size";
-import type { Pointers } from "@smartpointer-desktop/shared";
+import type { UpdatePointersMessage } from "@smartpointer-desktop/shared";
 import type { FC } from "react";
 
 /**
@@ -18,7 +18,9 @@ function randomColorFromList(str: string, list: string[]): string {
   return list[index]!;
 }
 
-export const ArrowPointer: FC<{ pointers: Pointers }> = ({ pointers }) => {
+export const ArrowPointer: FC<{ pointers: UpdatePointersMessage }> = ({
+  pointers,
+}) => {
   const [width, height] = useWindowSize();
   const colors = useToken("colors", [
     "gray.500",
@@ -35,12 +37,12 @@ export const ArrowPointer: FC<{ pointers: Pointers }> = ({ pointers }) => {
 
   return (
     <Box w="full" h="full">
-      {pointers.map(({ pointer, userId, name }) => {
-        const color = randomColorFromList(userId, colors);
+      {pointers.map(({ user, coordinate }) => {
+        const color = randomColorFromList(user.id, colors);
 
         return (
           <VStack
-            key={userId}
+            key={user.id}
             position="absolute"
             top="0"
             left="0"
@@ -50,8 +52,8 @@ export const ArrowPointer: FC<{ pointers: Pointers }> = ({ pointers }) => {
             align="start"
             gap="0"
             transform={`translate(
-              ${width / 2 + pointer.x * width}px,
-              ${height / 2 + pointer.y * height}px
+              ${width / 2 + coordinate.x * width}px,
+              ${height / 2 + coordinate.y * height}px
             )`}
           >
             <svg
@@ -75,7 +77,7 @@ export const ArrowPointer: FC<{ pointers: Pointers }> = ({ pointers }) => {
             {pointers.length > 1 && (
               <Box paddingStart="8">
                 <Text bg={color} color="white" px="4" rounded="md">
-                  {name}
+                  {user.name}
                 </Text>
               </Box>
             )}

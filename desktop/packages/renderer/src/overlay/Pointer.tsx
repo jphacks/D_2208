@@ -1,9 +1,9 @@
 import { useWindowSize } from "@react-hook/window-size";
-import type { Pointers } from "@smartpointer-desktop/shared";
+import type { UpdatePointersMessage } from "@smartpointer-desktop/shared";
 import type { FC } from "react";
 
 type Props = {
-  pointers: Pointers;
+  pointers: UpdatePointersMessage;
 };
 export const Pointer: FC<Props> = ({ pointers }) => {
   const [width, height] = useWindowSize();
@@ -23,11 +23,11 @@ export const Pointer: FC<Props> = ({ pointers }) => {
       <defs>
         <mask id="mask">
           <rect x="0" y="0" width={width} height={height} fill="white" />
-          {pointers.map(({ pointer, userId }) => (
+          {pointers.map(({ coordinate, user }) => (
             <circle
-              key={userId}
-              cx={width / 2 + pointer.x * width}
-              cy={height / 2 + pointer.y * height}
+              key={user.id}
+              cx={width / 2 + coordinate.x * width}
+              cy={height / 2 + coordinate.y * height}
               r={Math.min(width, height) * radiusRate}
               fill="rgb(0 0 0 / 70%)"
             />
