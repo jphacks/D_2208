@@ -15,15 +15,11 @@ export type State = Readonly<
       room?: undefined;
       joinedUsers?: undefined;
       activePointers?: undefined;
-      showInviteLink?: undefined;
-      showOverlayWindowDevTools?: undefined;
     }
   | {
       status: "CREATED";
       room: Room;
       joinedUsers: Map<User["id"], User>;
       activePointers: Map<User["id"], PointerCoordinate>;
-      showInviteLink: boolean;
-      showOverlayWindowDevTools: boolean;
     }
 >;
