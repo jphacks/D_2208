@@ -44,7 +44,7 @@ const menuTemplate: MenuTemplate = (state) => [
     label: "アプリを終了",
     accelerator: "Cmd+Q",
   },
-  ...(import.meta.env.DEV
+  ...(import.meta.env.DEV && state.status === "CREATED"
     ? ([
         { type: "separator" },
         {
