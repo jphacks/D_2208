@@ -2,7 +2,7 @@ import { PointerCoordinate } from "@smartpointer-desktop/shared";
 
 import { roomApi } from "@/api";
 import * as model from "@/model";
-import { listenRoomSubscription } from "@/stomp";
+import { activate, listenRoomSubscription } from "@/stomp";
 import { User } from "@/types";
 
 export const initialize = () => {
@@ -13,6 +13,8 @@ export const createRoom = async () => {
   model.startCreatingRoom();
 
   const { data } = await roomApi.createRoom();
+
+  await activate();
 
   model.createdRoom(data);
 
