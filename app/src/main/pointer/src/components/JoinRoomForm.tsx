@@ -16,6 +16,7 @@ import { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { roomApi } from "@/api";
+import { activate } from "@/stomp";
 import { AuthData } from "@/types/AuthData";
 
 type Props = {
@@ -54,6 +55,9 @@ export const JoinRoomForm: FC<Props> = ({ onSubmit: onSubmitProps }) => {
         passcode: values.passcode,
         name: values.userName,
       });
+
+      await activate();
+
       localStorage.setItem(localStorageKey, values.userName);
       onSubmitProps({
         ...data,
