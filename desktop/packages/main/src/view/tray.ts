@@ -4,6 +4,7 @@ import { join } from "path";
 import { assetsPath } from "../path";
 
 import * as controller from "@/controller";
+import { getState } from "@/model";
 import { State } from "@/types";
 
 type MenuTemplate = (state: State) => MenuItemConstructorOptions[];
@@ -57,7 +58,9 @@ const menuTemplate: MenuTemplate = (state) => [
 
 let trayInstance: Tray | null = null;
 
-export const tray = (state: State) => {
+export const updateTray = () => {
+  const state = getState();
+
   if (trayInstance === null) {
     const iconPath = join(assetsPath, "menu-bar-icon.png");
 

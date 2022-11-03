@@ -4,9 +4,17 @@ import { roomApi } from "@/api";
 import * as model from "@/model";
 import { activate, listenRoomSubscription } from "@/stomp";
 import { User } from "@/types";
+import { updateTray } from "@/view/tray";
+import { showInviteLinkWindow } from "@/view/window/inviteLink";
+import {
+  showOverlayWindow,
+  updatePointerInOverlayWindow,
+} from "@/view/window/pointerOverlay";
 
 export const initialize = () => {
   model.initialize();
+
+  updateTray();
 };
 
 export const createRoom = async () => {
@@ -19,6 +27,10 @@ export const createRoom = async () => {
   model.createdRoom(data);
 
   listenRoomSubscription(data.roomId);
+
+  updateTray();
+  showInviteLink();
+  showOverlayWindow();
 };
 
 export const joinedRoom = (user: User) => {
@@ -34,28 +46,20 @@ export const pointerUpdated = (
   pointer: PointerCoordinate
 ) => {
   model.updatePointer(userId, pointer);
+
+  updatePointerInOverlayWindow();
 };
 
 export const pointerDeactivated = (userId: User["id"]) => {
   model.deactivatePointer(userId);
+
+  updatePointerInOverlayWindow();
 };
 
 export const showInviteLink = () => {
-  model.showInviteLink();
-};
-
-export const hideInviteLink = () => {
-  model.hideInviteLink();
-};
-
-export const closeOverlayWindowDevTools = () => {
-  model.closeOverlayWindowDevTools();
-};
-
-export const openOverlayWindowDevTools = () => {
-  model.openOverlayWindowDevTools();
+  showInviteLinkWindow();
 };
 
 export const toggleOverlayWindowDevTools = () => {
-  model.toggleOverlayWindowDevTools();
+  toggleOverlayWindowDevTools();
 };
