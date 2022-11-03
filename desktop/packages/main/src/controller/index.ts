@@ -1,9 +1,8 @@
-import { PointerCoordinate } from "@smartpointer-desktop/shared";
+import { PointerOrientation, User } from "@smartpointer-desktop/shared";
 
 import { roomApi } from "@/api";
 import * as model from "@/model";
 import { activate, listenRoomSubscription } from "@/stomp";
-import { User } from "@/types";
 import { updateTray } from "@/view/tray";
 import { showInviteLinkWindow } from "@/view/window/inviteLink";
 import {
@@ -41,17 +40,14 @@ export const leftRoom = (user: User) => {
   model.leftRoom(user);
 };
 
-export const pointerUpdated = (
-  userId: User["id"],
-  pointer: PointerCoordinate
-) => {
-  model.updatePointer(userId, pointer);
+export const pointerUpdated = (user: User, orientation: PointerOrientation) => {
+  model.updatePointer(user, orientation);
 
   updatePointerInOverlayWindow();
 };
 
-export const pointerDeactivated = (userId: User["id"]) => {
-  model.deactivatePointer(userId);
+export const pointerDeactivated = (user: User) => {
+  model.deactivatePointer(user);
 
   updatePointerInOverlayWindow();
 };

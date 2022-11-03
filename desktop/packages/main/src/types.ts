@@ -1,12 +1,12 @@
-import { PointerCoordinate } from "@smartpointer-desktop/shared";
+import { PointerOrientation, User } from "@smartpointer-desktop/shared";
 
 import { RoomResponse } from "./generated/http-client";
 
 export type Room = RoomResponse;
 
-export type User = {
-  id: string;
-  name: string;
+export type ActivePointer = {
+  user: User;
+  orientation: PointerOrientation;
 };
 
 export type State = Readonly<
@@ -20,6 +20,6 @@ export type State = Readonly<
       status: "CREATED";
       room: Room;
       joinedUsers: Map<User["id"], User>;
-      activePointers: Map<User["id"], PointerCoordinate>;
+      activePointers: Map<ActivePointer["user"]["id"], ActivePointer>;
     }
 >;

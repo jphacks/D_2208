@@ -1,4 +1,4 @@
-import type { Pointers } from "@smartpointer-desktop/shared";
+import type { UpdatePointersMessage } from "@smartpointer-desktop/shared";
 import { useEffect, useState } from "react";
 
 import { Pointer } from "./Pointer";
@@ -9,11 +9,11 @@ import {
 } from "#preload";
 
 export const App = () => {
-  const [position, setPosition] = useState<Pointers>([]);
+  const [pointers, setPointers] = useState<UpdatePointersMessage>([]);
 
   useEffect(() => {
-    onUpdatePointers(setPosition);
+    onUpdatePointers(setPointers);
   }, []);
 
-  return <Pointer pointers={position} />;
+  return <Pointer pointers={pointers} />;
 };

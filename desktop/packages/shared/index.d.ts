@@ -4,9 +4,19 @@ declare module "@smartpointer-desktop/shared" {
     y: number;
   };
 
-  export type Pointers = {
-    userId: string;
+  export type PointerOrientation = {
+    alpha: number;
+    beta: number;
+    gamma: number;
+  };
+
+  export type User = {
+    id: string;
     name: string;
-    pointer: PointerCoordinate;
+  };
+
+  export type UpdatePointersMessage = {
+    user: User;
+    coordinate: PointerCoordinate;
   }[];
 }

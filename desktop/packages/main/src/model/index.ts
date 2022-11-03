@@ -1,6 +1,6 @@
-import { PointerCoordinate } from "@smartpointer-desktop/shared";
+import { PointerOrientation, User } from "@smartpointer-desktop/shared";
 
-import { Room, State, User } from "@/types";
+import { Room, State } from "@/types";
 
 let state: State = {
   status: "READY",
@@ -63,28 +63,28 @@ export const leftRoom = (user: User) => {
   };
 };
 
-export const updatePointer = (
-  userId: User["id"],
-  pointer: PointerCoordinate
-) => {
+export const updatePointer = (user: User, orientation: PointerOrientation) => {
   if (state.status !== "CREATED") {
     throw new Error("Cannot update pointer when not in CREATED state");
   }
 
   state = {
     ...state,
-    activePointers: new Map(state.activePointers).set(userId, pointer),
+    activePointers: new Map(state.activePointers).set(user.id, {
+      orientation,
+      user,
+    }),
   };
 };
 
-export const deactivatePointer = (userId: User["id"]) => {
+export const deactivatePointer = (user: User) => {
   if (state.status !== "CREATED") {
     throw new Error("Cannot deactivate pointer when not in CREATED state");
   }
 
   const activePointers = new Map(state.activePointers);
 
-  activePointers.delete(userId);
+  activePointers.delete(user.id);
 
   state = {
     ...state,

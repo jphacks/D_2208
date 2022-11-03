@@ -20,8 +20,6 @@ enum SlideControl {
   PREVIOUS,
 }
 
-const tanDeg = (deg: number) => Math.tan((deg * Math.PI) / 180);
-
 let slidesControlSubscription: StompSubscription | null = null;
 let pointerControlSubscription: StompSubscription | null = null;
 
@@ -87,13 +85,23 @@ export const listenRoomSubscription = async (roomId: string) => {
 
       if (body.isActive) {
         // TODO: ポインターに認証情報が実装されたら、認証情報を使ってユーザーを特定する
-        controller.pointerUpdated("userId", {
-          x: -tanDeg(body.rotation.alpha) / 2,
-          y: -tanDeg(body.rotation.beta) / 2,
-        });
+        controller.pointerUpdated(
+          {
+            id: "user-id",
+            name: "user-name",
+          },
+          {
+            alpha: body.rotation.alpha,
+            beta: body.rotation.beta,
+            gamma: body.rotation.gamma,
+          }
+        );
       } else {
         // TODO: ポインターに認証情報が実装されたら、認証情報を使ってユーザーを特定する
-        controller.pointerDeactivated("userId");
+        controller.pointerDeactivated({
+          id: "user-id",
+          name: "user-name",
+        });
       }
     }
   );
