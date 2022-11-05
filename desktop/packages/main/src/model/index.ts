@@ -37,6 +37,16 @@ export const createdRoom = (room: Room) => {
   };
 };
 
+export const closeRoom = () => {
+  if (state.status !== "CREATED") {
+    throw new Error("Cannot close room when not in CREATED state");
+  }
+
+  state = {
+    status: "READY",
+  };
+};
+
 export const joinedRoom = (user: User) => {
   if (state.status !== "CREATED") {
     throw new Error("Cannot join room when not in CREATED state");

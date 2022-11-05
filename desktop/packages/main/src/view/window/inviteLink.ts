@@ -29,3 +29,7 @@ export const showInviteLinkWindow = async () => {
 
   inviteLinkWindow.show();
 };
+
+export const closeInviteLinkWindow = () => {
+  inviteLinkWindow?.close();
+};
