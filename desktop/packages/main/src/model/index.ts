@@ -1,4 +1,9 @@
-import { PointerOrientation, User } from "@smartpointer-desktop/shared";
+import {
+  PointerOrientation,
+  pointers,
+  PointerType,
+  User,
+} from "@smartpointer-desktop/shared";
 
 import { Room, State } from "@/types";
 
@@ -34,6 +39,7 @@ export const createdRoom = (room: Room) => {
     room,
     joinedUsers: new Map(),
     activePointers: new Map(),
+    selectedPointerType: pointers[0]!,
   };
 };
 
