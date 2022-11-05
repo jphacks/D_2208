@@ -43,8 +43,8 @@ export const createRoom = async () => {
   listenRoomSubscription(data.roomId);
 
   updateTray();
-  showInviteLink();
-  showOverlayWindow();
+  await showOverlayWindow();
+  await showInviteLink();
 };
 
 export const joinedRoom = (user: User) => {
@@ -81,8 +81,8 @@ export const selectedPointer = (selectedPointerType: PointerType) => {
   updatePointerTypeInOverlayWindow();
 };
 
-export const showInviteLink = () => {
-  showInviteLinkWindow();
+export const showInviteLink = async () => {
+  await showInviteLinkWindow();
 };
 
 export const toggleOverlayWindowDevTools = () => {
