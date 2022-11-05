@@ -42,7 +42,7 @@ server:
 
 project:
   name: smartpointer
-  version: 1.0.0
+  version: 1.1.0_SNAPSHOT
   package: dev.abelab.smartpointer
   mybatis:
     config:

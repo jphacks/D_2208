@@ -1,10 +1,10 @@
 {
   "name": "@smartpointer-desktop/renderer",
-  "version": "1.0.0",
+  "version": "1.1.0-NAPSHOT",
   "description": "",
   "devDependencies": {
-    "@smartpointer-desktop/eslintrc": "1.0.0",
-    "@smartpointer-desktop/tsconfig": "1.0.0",
+    "@smartpointer-desktop/eslintrc": "1.1.0-NAPSHOT",
+    "@smartpointer-desktop/tsconfig": "1.1.0-NAPSHOT",
     "@tsconfig/strictest": "1.0.2",
     "@types/qrcode": "1.5.0",
     "@types/react": "18.0.24",
@@ -22,7 +22,7 @@
     "@emotion/styled": "11.10.5",
     "@heroicons/react": "2.0.12",
     "@react-hook/window-size": "3.1.1",
-    "@smartpointer-desktop/shared": "1.0.0",
+    "@smartpointer-desktop/shared": "1.1.0-NAPSHOT",
     "framer-motion": "7.6.2",
     "qrcode": "1.5.1",
     "react": "18.2.0",

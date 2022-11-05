@@ -1,6 +1,6 @@
 {
   "name": "@smartpointer-desktop/main",
-  "version": "1.0.0",
+  "version": "1.1.0-SNAPSHOT",
   "description": "",
   "scripts": {
     "build": "vite build",
@@ -10,11 +10,11 @@
   "author": "",
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "2.5.2",
-    "@smartpointer-desktop/eslintrc": "1.0.0",
-    "@smartpointer-desktop/tsconfig": "1.0.0",
+    "@smartpointer-desktop/eslintrc": "1.1.0-NAPSHOT",
+    "@smartpointer-desktop/tsconfig": "1.1.0-NAPSHOT",
     "@types/ws": "8.5.3"
   },
   "dependencies": {
-    "@smartpointer-desktop/shared": "1.0.0"
+    "@smartpointer-desktop/shared": "1.1.0-NAPSHOT"
   }
 }
