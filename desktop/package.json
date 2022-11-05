@@ -3,7 +3,7 @@
   "version": "1.1.0-SNAPSHOT",
   "main": "packages/main/dist/index.cjs",
   "name": "smartpointer",
-  "productName": "smartpointer",
+  "productName": "スマートポインター",
   "description": "手元のスマホをリモコン化する、共同プレゼンテーション支援ツール",
   "scripts": {
     "generate-electron-vendors": "cross-env ELECTRON_RUN_AS_NODE=1 electron --experimental-loader ts-node/esm scripts/generate-electron-vendors.mts",
