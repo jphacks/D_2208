@@ -86,3 +86,7 @@ export const updatePointerInOverlayWindow = () => {
 
   overlayWindow.webContents.send("pointers-updated", message);
 };
+
+export const closeOverlayWindow = () => {
+  overlayWindow?.close();
+};

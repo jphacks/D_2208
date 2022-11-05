@@ -33,6 +33,12 @@ const createdRoomMenuTemplate: MenuTemplate = (state) => [
     accelerator: "CmdOrCtrl+S",
     click: controller.showInviteLink,
   },
+  { type: "separator" },
+  {
+    label: "ルームを終了",
+    accelerator: "CmdOrCtrl+W",
+    click: controller.closeRoom,
+  },
 ];
 
 const menuTemplate: MenuTemplate = (state) => [

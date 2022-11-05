@@ -2,10 +2,18 @@ import { PointerOrientation, User } from "@smartpointer-desktop/shared";
 
 import { roomApi } from "@/api";
 import * as model from "@/model";
-import { activate, listenRoomSubscription } from "@/stomp";
-import { updateTray } from "@/view/tray";
-import { showInviteLinkWindow } from "@/view/window/inviteLink";
 import {
+  activate,
+  listenRoomSubscription,
+  unsubscribeRoomSubscription,
+} from "@/stomp";
+import { updateTray } from "@/view/tray";
+import {
+  closeInviteLinkWindow,
+  showInviteLinkWindow,
+} from "@/view/window/inviteLink";
+import {
+  closeOverlayWindow,
   showOverlayWindow,
   updatePointerInOverlayWindow,
 } from "@/view/window/pointerOverlay";
@@ -38,6 +46,14 @@ export const joinedRoom = (user: User) => {
 
 export const leftRoom = (user: User) => {
   model.leftRoom(user);
+};
+
+export const closeRoom = () => {
+  closeOverlayWindow();
+  closeInviteLinkWindow();
+  unsubscribeRoomSubscription();
+
+  model.closeRoom();
 };
 
 export const pointerUpdated = (user: User, orientation: PointerOrientation) => {
