@@ -19,6 +19,11 @@ export type UpdatePointersMessage = {
   coordinate: PointerCoordinate;
 }[];
 
+export type GetPointerResult = {
+  pointers: UpdatePointersMessage;
+  pointerType: PointerType;
+};
+
 export type PointerId = "SPOTLIGHT" | "ARROW" | "FINGER";
 
 export type PointerType = {

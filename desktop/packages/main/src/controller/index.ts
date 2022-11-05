@@ -20,6 +20,7 @@ import {
   closeOverlayWindow,
   showOverlayWindow,
   updatePointerInOverlayWindow,
+  updatePointerTypeInOverlayWindow,
 } from "@/view/window/pointerOverlay";
 
 export const initialize = () => {
@@ -32,6 +33,8 @@ export const createRoom = async () => {
   model.startCreatingRoom();
 
   const { data } = await roomApi.createRoom();
+
+  console.log("created room", data);
 
   await activate();
 
@@ -74,6 +77,8 @@ export const pointerDeactivated = (user: User) => {
 
 export const selectedPointer = (selectedPointerType: PointerType) => {
   model.selectedPointer(selectedPointerType);
+
+  updatePointerTypeInOverlayWindow();
 };
 
 export const showInviteLink = () => {

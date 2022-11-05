@@ -1,4 +1,8 @@
-import type { UpdatePointersMessage } from "@smartpointer-desktop/shared";
+import type {
+  GetPointerResult,
+  PointerType,
+  UpdatePointersMessage,
+} from "@smartpointer-desktop/shared";
 import { ipcRenderer } from "electron";
 
 export const onUpdatePointers = (
@@ -9,9 +13,15 @@ export const onUpdatePointers = (
   });
 };
 
-export const getPointers = async (): Promise<UpdatePointersMessage> => {
-  const pointers: UpdatePointersMessage = await ipcRenderer.invoke(
-    "get-pointers"
-  );
+export const onUpdatePointerType = (
+  callback: (message: PointerType) => void
+) => {
+  ipcRenderer.on("pointer-type-updated", (_, message: PointerType) => {
+    callback(message);
+  });
+};
+
+export const getPointers = async (): Promise<GetPointerResult> => {
+  const pointers: GetPointerResult = await ipcRenderer.invoke("get-pointers");
   return pointers;
 };

@@ -13,6 +13,7 @@ const brokerURL =
 
 const stompClient = new Client({
   brokerURL,
+  debug: console.log,
 });
 
 enum SlideControl {
