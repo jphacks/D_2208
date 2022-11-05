@@ -15,16 +15,16 @@ const getQueryParam = (queryParamKey: string) => {
 
 const roomId: string = getQueryParam("roomId");
 const passcode: string = getQueryParam("passcode");
+const inviteLinkOrigin = getQueryParam("origin");
 
-const getInviteLink = (roomId: string, passcode: string) => {
-  const inviteLinkOrigin = "https://smartpointer.abelab.dev/";
+const getInviteLink = () => {
   const url = new URL(inviteLinkOrigin);
-  url.searchParams.append("roomId", roomId);
+  url.searchParams.set("roomId", roomId);
   url.searchParams.set("passcode", passcode);
   return url.toString();
 };
 
-const inviteLink: string = getInviteLink(roomId, passcode);
+const inviteLink: string = getInviteLink();
 
 export const InviteLink: FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
