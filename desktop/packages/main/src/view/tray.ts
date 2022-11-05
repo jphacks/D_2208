@@ -1,5 +1,5 @@
 import { pointers } from "@smartpointer-desktop/shared";
-import { Menu, MenuItemConstructorOptions, Tray } from "electron";
+import { Menu, MenuItemConstructorOptions, nativeTheme, Tray } from "electron";
 import { join } from "path";
 
 import { assetsPath } from "../path";
@@ -80,11 +80,21 @@ const menuTemplate: MenuTemplate = (state) => [
 
 let trayInstance: Tray | null = null;
 
+const getIconFileName = () => {
+  if (process.platform === "darwin") {
+    return "tray-iconTemplate.png";
+  }
+  if (nativeTheme.shouldUseDarkColors) {
+    return "tray-icon-white.png";
+  }
+  return "tray-icon.png";
+};
+
 export const updateTray = () => {
   const state = getState();
 
   if (trayInstance === null) {
-    const iconPath = join(assetsPath, "menu-bar-icon.png");
+    const iconPath = join(assetsPath, getIconFileName());
 
     trayInstance = new Tray(iconPath);
 
