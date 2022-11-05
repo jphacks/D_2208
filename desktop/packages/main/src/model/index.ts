@@ -1,4 +1,9 @@
-import { PointerOrientation, User } from "@smartpointer-desktop/shared";
+import {
+  PointerOrientation,
+  pointers,
+  PointerType,
+  User,
+} from "@smartpointer-desktop/shared";
 
 import { Room, State } from "@/types";
 
@@ -34,6 +39,7 @@ export const createdRoom = (room: Room) => {
     room,
     joinedUsers: new Map(),
     activePointers: new Map(),
+    selectedPointerType: pointers[0]!,
   };
 };
 
@@ -99,5 +105,16 @@ export const deactivatePointer = (user: User) => {
   state = {
     ...state,
     activePointers,
+  };
+};
+
+export const selectedPointer = (selectedPointerType: PointerType) => {
+  if (state.status !== "CREATED") {
+    throw new Error("Cannot select pointer when not in CREATED state");
+  }
+
+  state = {
+    ...state,
+    selectedPointerType,
   };
 };

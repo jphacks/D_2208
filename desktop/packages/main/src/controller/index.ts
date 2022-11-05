@@ -1,4 +1,8 @@
-import { PointerOrientation, User } from "@smartpointer-desktop/shared";
+import {
+  PointerOrientation,
+  PointerType,
+  User,
+} from "@smartpointer-desktop/shared";
 
 import { roomApi } from "@/api";
 import * as model from "@/model";
@@ -16,6 +20,7 @@ import {
   closeOverlayWindow,
   showOverlayWindow,
   updatePointerInOverlayWindow,
+  updatePointerTypeInOverlayWindow,
 } from "@/view/window/pointerOverlay";
 
 export const initialize = () => {
@@ -28,6 +33,8 @@ export const createRoom = async () => {
   model.startCreatingRoom();
 
   const { data } = await roomApi.createRoom();
+
+  console.log("created room", data);
 
   await activate();
 
@@ -66,6 +73,12 @@ export const pointerDeactivated = (user: User) => {
   model.deactivatePointer(user);
 
   updatePointerInOverlayWindow();
+};
+
+export const selectedPointer = (selectedPointerType: PointerType) => {
+  model.selectedPointer(selectedPointerType);
+
+  updatePointerTypeInOverlayWindow();
 };
 
 export const showInviteLink = () => {

@@ -5,7 +5,7 @@ import type { FC } from "react";
 type Props = {
   pointers: UpdatePointersMessage;
 };
-export const Pointer: FC<Props> = ({ pointers }) => {
+export const SpotlightPointer: FC<Props> = ({ pointers }) => {
   const [width, height] = useWindowSize();
   const radiusRate = 0.1;
 
