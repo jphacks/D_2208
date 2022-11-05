@@ -1,7 +1,7 @@
 import type { UpdatePointersMessage } from "@smartpointer-desktop/shared";
 import { useEffect, useState } from "react";
 
-import { Pointer } from "./Pointer";
+import { SpotlightPointer } from "./SpotlightPointer";
 
 import {
   onUpdatePointers,
@@ -15,5 +15,5 @@ export const App = () => {
     onUpdatePointers(setPointers);
   }, []);
 
-  return <Pointer pointers={pointers} />;
+  return <SpotlightPointer pointers={pointers} />;
 };
