@@ -1,3 +1,4 @@
+import { pointers } from "@smartpointer-desktop/shared";
 import { Menu, MenuItemConstructorOptions, Tray } from "electron";
 import { join } from "path";
 
@@ -7,9 +8,13 @@ import * as controller from "@/controller";
 import { getState } from "@/model";
 import { State } from "@/types";
 
-type MenuTemplate = (state: State) => MenuItemConstructorOptions[];
+type MenuTemplate<S extends State = State> = (
+  state: S
+) => MenuItemConstructorOptions[];
 
-const defaultMenuTemplate: MenuTemplate = (state) => [
+const defaultMenuTemplate: MenuTemplate<
+  State & { status: "CREATING" | "READY" }
+> = (state) => [
   {
     label: "ルームを作成",
     accelerator: "CmdOrCtrl+N",
@@ -18,7 +23,18 @@ const defaultMenuTemplate: MenuTemplate = (state) => [
   },
 ];
 
-const createdRoomMenuTemplate: MenuTemplate = (state) => [
+const createdRoomMenuTemplate: MenuTemplate<State & { status: "CREATED" }> = (
+  state
+) => [
+  {
+    label: "ポインター",
+    submenu: pointers.map((pointer) => ({
+      label: pointer.name,
+      type: "radio",
+      checked: state.selectedPointerType.id === pointer.id,
+      click: () => controller.selectedPointer(pointer),
+    })),
+  },
   {
     label: "参加者一覧",
     accelerator: "CmdOrCtrl+L",

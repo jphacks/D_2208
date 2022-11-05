@@ -107,3 +107,14 @@ export const deactivatePointer = (user: User) => {
     activePointers,
   };
 };
+
+export const selectedPointer = (selectedPointerType: PointerType) => {
+  if (state.status !== "CREATED") {
+    throw new Error("Cannot select pointer when not in CREATED state");
+  }
+
+  state = {
+    ...state,
+    selectedPointerType,
+  };
+};
