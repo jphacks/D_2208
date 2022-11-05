@@ -1,5 +1,5 @@
 import { UpdatePointersMessage } from "@smartpointer-desktop/shared";
-import { app, BrowserWindow, screen } from "electron";
+import { app, BrowserWindow, ipcMain, screen } from "electron";
 import { join } from "node:path";
 
 import { getState } from "@/model";
@@ -90,3 +90,23 @@ export const updatePointerInOverlayWindow = () => {
 export const closeOverlayWindow = () => {
   overlayWindow?.close();
 };
+
+ipcMain.handle("get-pointers", () => {
+  const state = getState();
+
+  if (state.status !== "CREATED") {
+    throw new Error("Cannot get pointers when not in CREATED state");
+  }
+
+  const pointers: UpdatePointersMessage = [
+    ...state.activePointers.values(),
+  ].map(({ user, orientation }) => ({
+    user,
+    coordinate: {
+      x: -tanDeg(orientation.alpha) / 2,
+      y: -tanDeg(orientation.beta) / 2,
+    },
+  }));
+
+  return pointers;
+});

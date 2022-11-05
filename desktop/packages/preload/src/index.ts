@@ -8,3 +8,10 @@ export const onUpdatePointers = (
     callback(message);
   });
 };
+
+export const getPointers = async (): Promise<UpdatePointersMessage> => {
+  const pointers: UpdatePointersMessage = await ipcRenderer.invoke(
+    "get-pointers"
+  );
+  return pointers;
+};
