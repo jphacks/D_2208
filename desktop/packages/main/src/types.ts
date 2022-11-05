@@ -1,5 +1,4 @@
 import {
-  PointerId,
   PointerOrientation,
   PointerType,
   User,
