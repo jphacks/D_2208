@@ -84,6 +84,11 @@ const getIconFileName = () => {
   if (process.platform === "darwin") {
     return "tray-iconTemplate.png";
   }
+
+  if (process.platform === "linux") {
+    return "tray-icon-white.png";
+  }
+
   if (nativeTheme.shouldUseDarkColors) {
     return "tray-icon-white.png";
   }
