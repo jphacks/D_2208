@@ -29,7 +29,7 @@ export const showOverlayWindow = async () => {
     show: false,
     frame: false,
     transparent: true,
-    focusable: process.platform === "linux",
+    focusable: false,
     hasShadow: false,
     webPreferences: {
       preload: join(
