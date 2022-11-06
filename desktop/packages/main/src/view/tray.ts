@@ -84,6 +84,18 @@ const getIconFileName = () => {
   if (process.platform === "darwin") {
     return "tray-iconTemplate.png";
   }
+
+  if (process.platform === "linux") {
+    return "tray-icon-white.png";
+  }
+
+  if (process.platform === "win32") {
+    if (nativeTheme.shouldUseDarkColors) {
+      return "tray-icon-white.ico";
+    }
+    return "tray-icon.ico";
+  }
+
   if (nativeTheme.shouldUseDarkColors) {
     return "tray-icon-white.png";
   }
@@ -103,3 +115,9 @@ export const updateTray = () => {
 
   trayInstance.setContextMenu(Menu.buildFromTemplate(menuTemplate(state)));
 };
+
+nativeTheme.on("updated", () => {
+  if (trayInstance !== null) {
+    trayInstance.setImage(join(assetsPath, getIconFileName()));
+  }
+});
