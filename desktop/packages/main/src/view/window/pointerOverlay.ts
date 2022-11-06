@@ -29,7 +29,7 @@ export const showOverlayWindow = async () => {
     show: false,
     frame: false,
     transparent: true,
-    focusable: process.platform === "linux",
+    focusable: false,
     hasShadow: false,
     webPreferences: {
       preload: join(
@@ -53,7 +53,7 @@ export const showOverlayWindow = async () => {
   overlayWindow.show();
 };
 
-export const toggleOverlayWindowDevTools = () => {
+export const toggleOverlayWindowDevToolsInOverlayWindow = () => {
   if (overlayWindow === null || overlayWindow.isDestroyed()) {
     return;
   }

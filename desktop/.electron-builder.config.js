@@ -9,6 +9,12 @@ const config = {
   },
   files: ["packages/**/dist/**"],
   extraResources: ["assets"],
+  snap: {
+    environment: {
+      // for libappindicator support
+      TMPDIR: "$XDG_RUNTIME_DIR",
+    },
+  },
 };
 
 module.exports = config;
