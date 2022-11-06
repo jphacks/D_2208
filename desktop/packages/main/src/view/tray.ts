@@ -89,6 +89,13 @@ const getIconFileName = () => {
     return "tray-icon-white.png";
   }
 
+  if (process.platform === "win32") {
+    if (nativeTheme.shouldUseDarkColors) {
+      return "tray-icon-white.ico";
+    }
+    return "tray-icon.ico";
+  }
+
   if (nativeTheme.shouldUseDarkColors) {
     return "tray-icon-white.png";
   }
