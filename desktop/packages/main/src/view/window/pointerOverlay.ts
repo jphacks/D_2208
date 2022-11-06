@@ -58,7 +58,7 @@ export const toggleOverlayWindowDevToolsInOverlayWindow = () => {
     return;
   }
 
-  if (overlayWindow.webContents.isDevToolsOpened()) {
+  if (!overlayWindow.webContents.isDevToolsOpened()) {
     overlayWindow.webContents.openDevTools({
       mode: "detach",
     });
