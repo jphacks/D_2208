@@ -59,13 +59,13 @@ export const PointerWrapper: FC<Props> = ({ pointers, renderPointer }) => {
             )`}
           >
             {renderPointer(color)}
-            {
+            {pointers.length > 1 && (
               <Box paddingStart="8">
                 <Text bg={color} color="white" px="2" rounded="sm">
                   {user.name}
                 </Text>
               </Box>
-            }
+            )}
           </Flex>
         );
       })}

@@ -1,10 +1,12 @@
 import type {
+  CustomPointerType,
   PointerType,
   UpdatePointersMessage,
 } from "@smartpointer-desktop/shared";
 import { useEffect, useState } from "react";
 
 import { ArrowPointer } from "./ArrowPointer";
+import { CustomPointer } from "./CustomPointer";
 import { FingerPointer } from "./FingerPointer";
 import { SpotlightPointer } from "./SpotlightPointer";
 
@@ -40,5 +42,12 @@ export const App = () => {
       return <ArrowPointer pointers={pointers} />;
     case "FINGER":
       return <FingerPointer pointers={pointers} />;
+    default:
+      return (
+        <CustomPointer
+          pointers={pointers}
+          pointerType={pointerType as CustomPointerType}
+        />
+      );
   }
 };

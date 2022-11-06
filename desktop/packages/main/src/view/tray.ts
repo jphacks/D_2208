@@ -1,4 +1,4 @@
-import { pointers } from "@smartpointer-desktop/shared";
+import { builtInPointers } from "@smartpointer-desktop/shared";
 import { Menu, MenuItemConstructorOptions, nativeTheme, Tray } from "electron";
 import { join } from "path";
 
@@ -28,12 +28,17 @@ const createdRoomMenuTemplate: MenuTemplate<State & { status: "CREATED" }> = (
 ) => [
   {
     label: "ポインター",
-    submenu: pointers.map((pointer) => ({
-      label: pointer.name,
-      type: "radio",
-      checked: state.selectedPointerType.id === pointer.id,
-      click: () => controller.selectedPointer(pointer),
-    })),
+    submenu: builtInPointers
+      .concat(state.customPointerTypes)
+      .map((pointer) => ({
+        label: pointer.name,
+        type: "radio",
+        checked: state.selectedPointerType.id === pointer.id,
+        click: () => controller.selectedPointer(pointer),
+      })),
+  },
+  {
+    label: "自作ポインターの設定",
   },
   {
     label: "参加者一覧",

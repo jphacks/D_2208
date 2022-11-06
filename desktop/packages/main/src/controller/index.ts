@@ -11,6 +11,7 @@ import {
   listenRoomSubscription,
   unsubscribeRoomSubscription,
 } from "@/stomp";
+import { store } from "@/store";
 import { updateTray } from "@/view/tray";
 import {
   closeInviteLinkWindow,
@@ -39,7 +40,7 @@ export const createRoom = async () => {
 
   await activate();
 
-  model.createdRoom(data);
+  model.createdRoom(data, store.get("customPointerTypes"));
 
   listenRoomSubscription(data.roomId);
 
