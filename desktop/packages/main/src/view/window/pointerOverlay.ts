@@ -53,7 +53,7 @@ export const showOverlayWindow = async () => {
   overlayWindow.show();
 };
 
-export const toggleOverlayWindowDevTools = () => {
+export const toggleOverlayWindowDevToolsInOverlayWindow = () => {
   if (overlayWindow === null || overlayWindow.isDestroyed()) {
     return;
   }

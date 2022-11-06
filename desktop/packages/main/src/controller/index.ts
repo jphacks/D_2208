@@ -21,6 +21,7 @@ import {
   showOverlayWindow,
   updatePointerInOverlayWindow,
   updatePointerTypeInOverlayWindow,
+  toggleOverlayWindowDevToolsInOverlayWindow,
 } from "@/view/window/pointerOverlay";
 
 export const initialize = () => {
@@ -86,5 +87,5 @@ export const showInviteLink = async () => {
 };
 
 export const toggleOverlayWindowDevTools = () => {
-  toggleOverlayWindowDevTools();
+  toggleOverlayWindowDevToolsInOverlayWindow();
 };
