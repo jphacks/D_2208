@@ -103,3 +103,9 @@ export const updateTray = () => {
 
   trayInstance.setContextMenu(Menu.buildFromTemplate(menuTemplate(state)));
 };
+
+nativeTheme.on("updated", () => {
+  if (trayInstance !== null) {
+    trayInstance.setImage(join(assetsPath, getIconFileName()));
+  }
+});
