@@ -32,6 +32,8 @@ export const showOverlayWindow = async () => {
     focusable: false,
     hasShadow: false,
     webPreferences: {
+      // load custom pointer image from local file
+      webSecurity: !import.meta.env.DEV,
       preload: join(
         app.getAppPath(),
         "packages",
@@ -58,7 +60,7 @@ export const toggleOverlayWindowDevToolsInOverlayWindow = () => {
     return;
   }
 
-  if (overlayWindow.webContents.isDevToolsOpened()) {
+  if (!overlayWindow.webContents.isDevToolsOpened()) {
     overlayWindow.webContents.openDevTools({
       mode: "detach",
     });

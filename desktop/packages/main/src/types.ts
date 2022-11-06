@@ -1,4 +1,5 @@
 import {
+  CustomPointerType,
   PointerOrientation,
   PointerType,
   User,
@@ -27,5 +28,6 @@ export type State = Readonly<
       joinedUsers: Map<User["id"], User>;
       activePointers: Map<ActivePointer["user"]["id"], ActivePointer>;
       selectedPointerType: PointerType;
+      customPointerTypes: CustomPointerType[];
     }
 >;

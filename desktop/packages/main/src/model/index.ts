@@ -1,8 +1,9 @@
 import {
   PointerOrientation,
-  pointers,
+  builtInPointers,
   PointerType,
   User,
+  CustomPointerType,
 } from "@smartpointer-desktop/shared";
 
 import { Room, State } from "@/types";
@@ -29,7 +30,10 @@ export const startCreatingRoom = () => {
   };
 };
 
-export const createdRoom = (room: Room) => {
+export const createdRoom = (
+  room: Room,
+  customPointerTypes: CustomPointerType[]
+) => {
   if (state.status !== "CREATING") {
     throw new Error("Cannot create room when not in CREATING state");
   }
@@ -39,7 +43,8 @@ export const createdRoom = (room: Room) => {
     room,
     joinedUsers: new Map(),
     activePointers: new Map(),
-    selectedPointerType: pointers[0]!,
+    selectedPointerType: builtInPointers[0]!,
+    customPointerTypes,
   };
 };
 

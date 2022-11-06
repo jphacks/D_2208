@@ -24,14 +24,22 @@ export type GetPointerResult = {
   pointerType: PointerType;
 };
 
-export type PointerId = "SPOTLIGHT" | "ARROW" | "FINGER";
+export type BuiltInPointerId = "SPOTLIGHT" | "ARROW" | "FINGER";
 
-export type PointerType = {
-  id: PointerId;
+export type BuiltInPointerType = {
+  id: BuiltInPointerId;
   name: string;
 };
 
-export const pointers: PointerType[] = [
+export type CustomPointerType = {
+  id: string;
+  name: string;
+  image: string;
+};
+
+export type PointerType = BuiltInPointerType | CustomPointerType;
+
+export const builtInPointers: PointerType[] = [
   {
     id: "SPOTLIGHT",
     name: "スポットライト",
