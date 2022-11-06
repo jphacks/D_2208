@@ -1,5 +1,6 @@
 package dev.abelab.smartpointer.exception;
 
+import org.springframework.graphql.execution.ErrorType;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -11,6 +12,11 @@ public class BaseException extends RuntimeException {
      * http status
      */
     private final HttpStatus httpStatus;
+
+    /**
+     * GraphQL error type
+     */
+    private final ErrorType errorType;
 
     /**
      * error code
@@ -28,8 +34,9 @@ public class BaseException extends RuntimeException {
      * @param httpStatus http status
      * @param errorCode error code
      */
-    public BaseException(final HttpStatus httpStatus, final ErrorCode errorCode, final String... args) {
+    public BaseException(final HttpStatus httpStatus, final ErrorType errorType, final ErrorCode errorCode, final String... args) {
         this.httpStatus = httpStatus;
+        this.errorType = errorType;
         this.errorCode = errorCode;
         this.args = args;
     }
@@ -39,6 +46,13 @@ public class BaseException extends RuntimeException {
      */
     public HttpStatus getHttpStatus() {
         return this.httpStatus;
+    }
+
+    /**
+     * getter of http status
+     */
+    public ErrorType getErrorType() {
+        return this.errorType;
     }
 
     /**

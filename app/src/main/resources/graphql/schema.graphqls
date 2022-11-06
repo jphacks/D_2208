@@ -1,0 +1,36 @@
+schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+}
+
+type Query {
+    health: Boolean
+}
+
+type Mutation {
+    createRoom: RoomResponse
+    deleteRoom(roomId: ID!): ID!
+    joinRoom(roomId: ID!, passcode: String, userName: String): AccessTokenResponse
+}
+
+type Subscription {
+    getUsers(roomId: ID!): [UserResponse]
+}
+
+type RoomResponse {
+    roomId: ID!
+    passcode: String
+}
+
+type AccessTokenResponse {
+    tokenType: String
+    accessToken: String
+    ttl: Int
+}
+
+type UserResponse {
+    id: ID!
+    roomId: String
+    name: String
+}

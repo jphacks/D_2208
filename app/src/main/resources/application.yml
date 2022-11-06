@@ -8,7 +8,7 @@ spring:
     store-type: jdbc
   mvc:
     pathmatch:
-      matching-strategy: ant_path_matcher
+      matching-strategy: ANT_PATH_MATCHER
   messages:
     basename: i18n/messages
     encoding: UTF-8
@@ -24,10 +24,12 @@ spring:
     password: ${spring.datasource.password}
     locations: classpath:db/migration
     enabled: true
-
-springdoc:
-  swagger-ui:
-    doc-expansion: none
+  graphql:
+    graphiql:
+      enabled: true
+    schema:
+      printer:
+        enabled: true
 
 server:
   port: 8080

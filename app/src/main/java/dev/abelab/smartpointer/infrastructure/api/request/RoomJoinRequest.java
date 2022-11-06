@@ -3,7 +3,6 @@ package dev.abelab.smartpointer.infrastructure.api.request;
 import dev.abelab.smartpointer.exception.BadRequestException;
 import dev.abelab.smartpointer.exception.ErrorCode;
 import dev.abelab.smartpointer.util.ValidationUtil;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,13 +20,11 @@ public class RoomJoinRequest implements BaseRequest {
     /**
      * パスコード
      */
-    @Schema(required = true)
     String passcode;
 
     /**
      * ユーザ名
      */
-    @Schema(required = true)
     String name;
 
     /**

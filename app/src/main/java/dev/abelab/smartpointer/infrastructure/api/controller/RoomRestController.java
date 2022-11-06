@@ -12,13 +12,11 @@ import dev.abelab.smartpointer.infrastructure.api.validation.RequestValidated;
 import dev.abelab.smartpointer.usecase.CreateRoomUseCase;
 import dev.abelab.smartpointer.usecase.DeleteRoomUseCase;
 import dev.abelab.smartpointer.usecase.JoinRoomUseCase;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 /**
  * ルームコントローラ
  */
-@Tag(name = "Room", description = "ルーム")
 @RestController
 @RequestMapping(path = "/api/rooms", produces = MediaType.APPLICATION_JSON_VALUE)
 @Validated

@@ -3,15 +3,15 @@ package dev.abelab.smartpointer.infrastructure.api.controller
 import dev.abelab.smartpointer.AbstractDatabaseSpecification
 import dev.abelab.smartpointer.exception.BaseException
 import dev.abelab.smartpointer.helper.JsonConvertHelper
+import dev.abelab.smartpointer.helper.graphql.GraphQLQuery
 import dev.abelab.smartpointer.infrastructure.api.response.ErrorResponse
 import dev.abelab.smartpointer.property.AuthProperty
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.context.MessageSource
+import org.springframework.graphql.test.tester.WebGraphQlTester
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.messaging.converter.MappingJackson2MessageConverter
-import org.springframework.messaging.simp.stomp.StompSession
-import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
 import org.springframework.mock.web.MockHttpSession
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MvcResult
@@ -21,20 +21,18 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.util.MultiValueMap
 import org.springframework.web.context.WebApplicationContext
-import org.springframework.web.socket.client.standard.StandardWebSocketClient
-import org.springframework.web.socket.messaging.WebSocketStompClient
 import spock.lang.Shared
-
-import java.util.concurrent.TimeUnit
 
 /**
  * Controller統合テストの基底クラス
  */
+@AutoConfigureHttpGraphQlTester
 abstract class AbstractController_IT extends AbstractDatabaseSpecification {
 
     private MockMvc mockMvc
 
-    private WebSocketStompClient stompClient
+    @Autowired
+    private WebGraphQlTester graphQlTester
 
     @Autowired
     private WebApplicationContext webApplicationContext
@@ -196,25 +194,33 @@ abstract class AbstractController_IT extends AbstractDatabaseSpecification {
     }
 
     /**
-     * STOMPのコネクションを開始
+     * Execute query / return response
      *
-     * @return session
+     * @param query query
+     * @return response
      */
-    protected StompSession connect() {
-        final stompSessionHandler = new StompSessionHandlerAdapter() {}
-        return this.stompClient.connect(String.format("ws://localhost:%d/ws", PORT), stompSessionHandler)
-            .get(1, TimeUnit.SECONDS)
+    def <T> T execute(final GraphQLQuery<T> query) {
+        final response = this.graphQlTester.document(query.document()).execute()
+            .path(query.operation.name)
+            .entity(query.responseType)
+
+        return response.get()
     }
 
     /**
-     * publish
+     * Execute query / verify exception
      *
-     * @param destination destination
-     * @param session stomp session
-     * @param payload payload
+     * @param query query
+     * @param exception expected exception
      */
-    protected void publish(final String destination, final StompSession session, final Object payload) {
-        session.send(destination, JsonConvertHelper.convertObjectToJson(payload))
+    def execute(final GraphQLQuery query, final BaseException exception) {
+        final expectedErrorMessage = this.getErrorMessage(exception)
+        this.graphQlTester.document(query.document()).execute()
+            .errors()
+            .satisfy({
+                assert it[0].errorType == exception.errorType
+                assert it[0].message == expectedErrorMessage
+            })
     }
 
     /**
@@ -228,9 +234,6 @@ abstract class AbstractController_IT extends AbstractDatabaseSpecification {
                 chain.doFilter(request, response)
             }))
             .build()
-
-        this.stompClient = new WebSocketStompClient(new StandardWebSocketClient())
-        this.stompClient.setMessageConverter(new MappingJackson2MessageConverter())
     }
 
 }
