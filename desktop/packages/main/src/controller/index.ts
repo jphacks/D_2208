@@ -1,4 +1,5 @@
 import {
+  CustomPointerType,
   PointerOrientation,
   PointerType,
   User,
@@ -26,7 +27,7 @@ import {
 } from "@/view/window/pointerOverlay";
 
 export const initialize = () => {
-  model.initialize();
+  model.initialize(store.get("customPointerTypes"));
 
   updateTray();
 };
@@ -40,7 +41,7 @@ export const createRoom = async () => {
 
   await activate();
 
-  model.createdRoom(data, store.get("customPointerTypes"));
+  model.createdRoom(data);
 
   listenRoomSubscription(data.roomId);
 
@@ -89,4 +90,32 @@ export const showInviteLink = async () => {
 
 export const toggleOverlayWindowDevTools = () => {
   toggleOverlayWindowDevToolsInOverlayWindow();
+};
+
+export const addCustomPointerType = (customPointerType: CustomPointerType) => {
+  model.addedCustomPointerType(customPointerType);
+
+  updateTray();
+
+  store.set("customPointerTypes", model.getState().customPointerTypes);
+};
+
+export const removeCustomPointerType = (
+  customPointerType: CustomPointerType
+) => {
+  model.removedCustomPointerType(customPointerType);
+
+  updateTray();
+
+  store.set("customPointerTypes", model.getState().customPointerTypes);
+};
+
+export const updateCustomPointerType = (
+  customPointerType: CustomPointerType
+) => {
+  model.updatedCustomPointerType(customPointerType);
+
+  updateTray();
+
+  store.set("customPointerTypes", model.getState().customPointerTypes);
 };
