@@ -139,7 +139,7 @@ export const addedCustomPointerType = (
 ) => {
   state = {
     ...state,
-    customPointerTypes: [...state.customPointerTypes, customPointerType],
+    customPointerTypes: [customPointerType, ...state.customPointerTypes],
   };
 };
 

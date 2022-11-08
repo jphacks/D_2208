@@ -4,6 +4,7 @@ import {
   PointerType,
   User,
 } from "@smartpointer-desktop/shared";
+import { nanoid } from "nanoid";
 
 import { roomApi } from "@/api";
 import * as model from "@/model";
@@ -92,7 +93,13 @@ export const toggleOverlayWindowDevTools = () => {
   toggleOverlayWindowDevToolsInOverlayWindow();
 };
 
-export const addCustomPointerType = (customPointerType: CustomPointerType) => {
+export const addCustomPointerType = () => {
+  const customPointerType: CustomPointerType = {
+    id: nanoid(),
+    name: "New Pointer",
+    image: "",
+  };
+
   model.addedCustomPointerType(customPointerType);
 
   updateTray();
