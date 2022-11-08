@@ -12,7 +12,6 @@ import dev.abelab.smartpointer.domain.service.UserService;
 import dev.abelab.smartpointer.exception.ErrorCode;
 import dev.abelab.smartpointer.exception.NotFoundException;
 import dev.abelab.smartpointer.exception.UnauthorizedException;
-import dev.abelab.smartpointer.infrastructure.api.request.RoomJoinRequest;
 import dev.abelab.smartpointer.infrastructure.api.response.AccessTokenResponse;
 import dev.abelab.smartpointer.property.AuthProperty;
 import io.jsonwebtoken.Jwts;
@@ -38,27 +37,30 @@ public class JoinRoomUseCase {
      * Handle UseCase
      *
      * @param roomId ルームID
-     * @param requestBody ルーム入室リクエスト
+     * @param passcode パスコード
+     * @param userName ユーザ名
      * @return アクセストークン
      */
     @Transactional
-    public AccessTokenResponse handle(final String roomId, final RoomJoinRequest requestBody) {
+    public AccessTokenResponse handle(final String roomId, final String passcode, final String userName) {
         // ルームの取得
         final var room = this.roomRepository.selectById(roomId) //
             .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_ROOM));
 
         // パスコードチェック
-        if (!room.isPasscodeValid(requestBody.getPasscode())) {
+        if (!room.isPasscodeValid(passcode)) {
             throw new UnauthorizedException(ErrorCode.INCORRECT_ROOM_PASSCODE);
         }
 
-        // ユーザ名が使われていないことをチェック
-        this.userService.checkIsNameAlreadyUsed(roomId, requestBody.getName());
+        // ユーザ名チェック
+        // TODO: Validatorを作成し、Controllerで400チェックする
+        this.userService.checkIsNameValid(userName);
+        this.userService.checkIsNameAlreadyUsed(roomId, userName);
 
         // ユーザを作成
         final var user = UserModel.builder() //
             .roomId(roomId) //
-            .name(requestBody.getName()) //
+            .name(userName) //
             .build();
         this.userRepository.insert(user);
 

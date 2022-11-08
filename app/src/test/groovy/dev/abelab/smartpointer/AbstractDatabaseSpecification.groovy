@@ -3,14 +3,12 @@ package dev.abelab.smartpointer
 import groovy.sql.Sql
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy
-import org.springframework.transaction.annotation.Transactional
 
 import javax.sql.DataSource
 
 /**
  * DBテストの基底クラス
  */
-@Transactional
 class AbstractDatabaseSpecification extends AbstractSpecification {
 
     /**
@@ -38,7 +36,14 @@ class AbstractDatabaseSpecification extends AbstractSpecification {
      */
     def cleanup() {
         // DBを初期化するために、テスト終了時にロールバック
-        sql.rollback()
+        // sql.rollback()
+
+        // GraphQLの統合テストが適切にロールバックされないので、無理矢理DBリセットする
+        sql.execute("SET SQL_SAFE_UPDATES = 0")
+        sql.execute("DELETE FROM room")
+        sql.execute("DELETE FROM user")
+        sql.execute("DELETE FROM timer")
+        sql.execute("SET SQL_SAFE_UPDATES = 1")
     }
 
 }

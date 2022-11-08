@@ -8,6 +8,7 @@ import dev.abelab.smartpointer.infrastructure.api.response.AccessTokenResponse;
 import dev.abelab.smartpointer.infrastructure.api.response.RoomResponse;
 import dev.abelab.smartpointer.usecase.CreateRoomUseCase;
 import dev.abelab.smartpointer.usecase.DeleteRoomUseCase;
+import dev.abelab.smartpointer.usecase.JoinRoomUseCase;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -20,6 +21,8 @@ public class RoomController {
     private final CreateRoomUseCase createRoomUseCase;
 
     private final DeleteRoomUseCase deleteRoomUseCase;
+
+    private final JoinRoomUseCase joinRoomUseCase;
 
     /**
      * ルーム作成API
@@ -57,8 +60,7 @@ public class RoomController {
         @Argument final String passcode, //
         @Argument final String userName //
     ) {
-        // TODO: ルーム入室APIを実装
-        return null;
+        return this.joinRoomUseCase.handle(roomId, passcode, userName);
     }
 
 }

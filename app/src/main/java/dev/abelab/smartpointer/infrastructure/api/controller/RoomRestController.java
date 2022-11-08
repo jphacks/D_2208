@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * ルームコントローラ
+ * 
+ * TODO: STOMPからGraphQLへの移行が完了したら削除する
  */
 @RestController
 @RequestMapping(path = "/api/rooms", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +67,7 @@ public class RoomRestController {
         @PathVariable("room_id") final String roomId, //
         @RequestValidated @RequestBody final RoomJoinRequest requestBody //
     ) {
-        return this.joinRoomUseCase.handle(roomId, requestBody);
+        return this.joinRoomUseCase.handle(roomId, requestBody.getPasscode(), requestBody.getName());
     }
 
 }
