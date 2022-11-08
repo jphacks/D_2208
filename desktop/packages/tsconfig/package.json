@@ -1,6 +1,6 @@
 {
   "name": "@smartpointer-desktop/tsconfig",
-  "version": "1.1.0-NAPSHOT",
+  "version": "1.1.0-SNAPSHOT",
   "description": "",
   "devDependencies": {
     "@tsconfig/node16-strictest-esm": "1.0.3",
