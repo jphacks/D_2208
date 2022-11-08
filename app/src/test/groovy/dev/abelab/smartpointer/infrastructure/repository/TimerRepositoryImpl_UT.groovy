@@ -15,7 +15,7 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
     @Autowired
     TimerRepositoryImpl sut
 
-    def "selectByRoomId: ルームIDからユーザを取得"() {
+    def "selectByRoomId: ルームIDからタイマーを取得"() {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
@@ -23,8 +23,8 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
             "00000000-0000-0000-0000-000000000000" | ""
         }
         TableHelper.insert sql, "timer", {
-            room_id                                | status               | value | finish_at
-            "00000000-0000-0000-0000-000000000000" | TimerStatus.READY.id | 60    | "2000-01-01 10:30:30"
+            room_id                                | status               | input_time | finish_at
+            "00000000-0000-0000-0000-000000000000" | TimerStatus.READY.id | 60         | "2000-01-01 10:30:30"
         }
         // @formatter:on
 
@@ -35,7 +35,7 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
         result.isPresent()
         result.get().roomId == "00000000-0000-0000-0000-000000000000"
         result.get().status == TimerStatus.READY
-        result.get().value == 60
+        result.get().inputTime == 60
         result.get().finishAt.toString() == "2000-01-01T10:30:30"
     }
 
@@ -47,8 +47,8 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
             "00000000-0000-0000-0000-000000000000" | ""
         }
         TableHelper.insert sql, "timer", {
-            room_id                                | status               | value | finish_at
-            "00000000-0000-0000-0000-000000000000" | TimerStatus.READY.id | 60    | "2000-01-01 00:00:00"
+            room_id                                | status               | input_time | finish_at
+            "00000000-0000-0000-0000-000000000000" | TimerStatus.READY.id | 60         | "2000-01-01 00:00:00"
         }
         // @formatter:on
 
@@ -59,7 +59,7 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
         result.isEmpty()
     }
 
-    def "insert: ルームを作成する"() {
+    def "insert: タイマーを作成する"() {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
@@ -71,7 +71,7 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
         final timer = TimerModel.builder()
             .roomId("00000000-0000-0000-0000-000000000000")
             .status(TimerStatus.READY)
-            .value(60)
+            .inputTime(60)
             .finishAt(LocalDateTime.now())
             .build()
 
@@ -82,10 +82,10 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
         final createdTimer = sql.firstRow("SELECT * FROM timer")
         createdTimer.room_id == timer.roomId
         createdTimer.status == timer.status.id
-        createdTimer.value == timer.value
+        createdTimer.input_time == timer.inputTime
     }
 
-    def "upsert: ルームが存在する場合は更新する"() {
+    def "upsert: タイマーが存在する場合は更新する"() {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
@@ -93,15 +93,15 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
             "00000000-0000-0000-0000-000000000000" | ""
         }
         TableHelper.insert sql, "timer", {
-            room_id                                | status               | value | finish_at
-            "00000000-0000-0000-0000-000000000000" | TimerStatus.READY.id | 60    | "2000-01-01 00:00:00"
+            room_id                                | status               | input_time | finish_at
+            "00000000-0000-0000-0000-000000000000" | TimerStatus.READY.id | 60         | "2000-01-01 00:00:00"
         }
         // @formatter:on
 
         final timer = TimerModel.builder()
             .roomId("00000000-0000-0000-0000-000000000000")
             .status(TimerStatus.RUNNING)
-            .value(120)
+            .inputTime(120)
             .finishAt(LocalDateTime.now())
             .build()
 
@@ -112,10 +112,10 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
         final upsertedTimer = sql.firstRow("SELECT * FROM timer")
         upsertedTimer.room_id == timer.roomId
         upsertedTimer.status == timer.status.id
-        upsertedTimer.value == timer.value
+        upsertedTimer.input_time == timer.inputTime
     }
 
-    def "upsert: ルームが存在しない場合は作成する"() {
+    def "upsert: タイマーが存在しない場合は作成する"() {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
@@ -127,7 +127,7 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
         final timer = TimerModel.builder()
             .roomId("00000000-0000-0000-0000-000000000000")
             .status(TimerStatus.RUNNING)
-            .value(120)
+            .inputTime(120)
             .finishAt(LocalDateTime.now())
             .build()
 
@@ -138,7 +138,7 @@ class TimerRepositoryImpl_UT extends AbstractRepository_UT {
         final upsertedTimer = sql.firstRow("SELECT * FROM timer")
         upsertedTimer.room_id == timer.roomId
         upsertedTimer.status == timer.status.id
-        upsertedTimer.value == timer.value
+        upsertedTimer.input_time == timer.inputTime
     }
 
 }

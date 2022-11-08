@@ -8,7 +8,7 @@ type Query {
     """
     ヘルスチェックAPI
     """
-    health: Boolean
+    health: Boolean!
 
     """
     ユーザリスト取得API
@@ -18,7 +18,7 @@ type Query {
         ルームID
         """
         roomId: ID!
-    ): Users
+    ): Users!
 
     """
     タイマー取得API
@@ -28,14 +28,14 @@ type Query {
         ルームID
         """
         roomId: ID!
-    ): Timer
+    ): Timer!
 }
 
 type Mutation {
     """
     ルーム作成API
     """
-    createRoom: Room
+    createRoom: Room!
 
     """
     ルーム削除API
@@ -59,13 +59,13 @@ type Mutation {
         """
         パスコード
         """
-        passcode: String,
+        passcode: String!,
 
         """
         ユーザ名
         """
-        userName: String
-    ): AccessToken
+        userName: String!
+    ): AccessToken!
 
     """
     タイマー開始API
@@ -74,13 +74,13 @@ type Mutation {
         """
         入力時間 [s]
         """
-        inputTime: Int
-    ): Timer
+        inputTime: Int!
+    ): Timer!
 
     """
     タイマー再開API
     """
-    resumeTimer: Timer
+    resumeTimer: Timer!
 
     """
     タイマー停止API
@@ -89,33 +89,33 @@ type Mutation {
         """
         一時停止時点での残り時間 [s]
         """
-        remainingTimeAtPaused: Int
-    ): Timer
+        remainingTimeAtPaused: Int!
+    ): Timer!
 
     """
     タイマーリセットAPI
     """
-    resetTimer: Timer
+    resetTimer: Timer!
 
     """
     スライドを進めるAPI
     """
-    goNextSlide: SlideControl
+    goNextSlide: SlideControl!
 
     """
     スライドを戻すAPI
     """
-    goPreviousSlide: SlideControl
+    goPreviousSlide: SlideControl!
 
     """
     ポインター操作API
     """
-    movePointer: PointerControl
+    movePointer: PointerControl!
 
     """
     ポインター切断API
     """
-    disconnectPointer: PointerControl
+    disconnectPointer: PointerControl!
 }
 
 type Subscription {
@@ -127,7 +127,7 @@ type Subscription {
         ルームID
         """
         roomId: ID!
-    ): [User]
+    ): [User!]!
 
     """
     タイマー購読API
@@ -137,7 +137,7 @@ type Subscription {
         ルームID
         """
         roomId: ID!
-    ): Timer
+    ): Timer!
 
     """
     スライド操作購読API
@@ -147,7 +147,7 @@ type Subscription {
         ルームID
         """
         roomId: ID!
-    ): SlideControl
+    ): SlideControl!
 
     """
     ポインター操作購読API
@@ -157,7 +157,7 @@ type Subscription {
         ルームID
         """
         roomId: ID!
-    ): PointerControl
+    ): PointerControl!
 
     """
     ポインター切断イベント購読API
@@ -167,7 +167,7 @@ type Subscription {
         ルームID
         """
         roomId: ID!
-    ): User
+    ): User!
 }
 
 """
@@ -182,7 +182,7 @@ type Room {
     """
     パスコード
     """
-    passcode: String
+    passcode: String!
 }
 
 """
@@ -192,17 +192,17 @@ type AccessToken {
     """
     トークンタイプ
     """
-    tokenType: String
+    tokenType: String!
 
     """
     アクセストークン
     """
-    accessToken: String
+    accessToken: String!
 
     """
     TTL [s]
     """
-    ttl: Int
+    ttl: Int!
 }
 
 """
@@ -217,7 +217,7 @@ type User {
     """
     ルーム名
     """
-    name: String
+    name: String!
 }
 
 """
@@ -227,7 +227,7 @@ type Users {
     """
     ユーザリスト
     """
-    users: [User]
+    users: [User!]!
 }
 
 """
@@ -237,12 +237,7 @@ type Timer {
     """
     入力時間 [s]
     """
-    inputTime: Int
-
-    """
-    終了時刻
-    """
-    finishAt: String
+    inputTime: Int!
 
     """
     一時停止時点での残り時間 [s]
@@ -250,9 +245,14 @@ type Timer {
     remainingTimeAtPaused: Int
 
     """
+    終了時刻
+    """
+    finishAt: String!
+
+    """
     ステータス
     """
-    status: TimerStatus
+    status: TimerStatus!
 }
 
 """
@@ -262,12 +262,12 @@ type PointerControl {
     """
     操作方向
     """
-    orientation: PointerControlOrientation
+    orientation: PointerControlOrientation!
 
     """
     操作者
     """
-    user: User
+    user: User!
 }
 
 """
@@ -277,17 +277,17 @@ type PointerControlOrientation {
     """
     α値
     """
-    alpha: Float
+    alpha: Float!
 
     """
     β値
     """
-    beta: Float
+    beta: Float!
 
     """
     γ値
     """
-    gamma: Float
+    gamma: Float!
 }
 
 """

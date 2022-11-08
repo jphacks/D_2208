@@ -325,66 +325,6 @@ public class TimerExample {
             return (Criteria) this;
         }
 
-        public Criteria andValueIsNull() {
-            addCriterion("`value` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andValueIsNotNull() {
-            addCriterion("`value` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andValueEqualTo(Integer value) {
-            addCriterion("`value` =", value, "value");
-            return (Criteria) this;
-        }
-
-        public Criteria andValueNotEqualTo(Integer value) {
-            addCriterion("`value` <>", value, "value");
-            return (Criteria) this;
-        }
-
-        public Criteria andValueGreaterThan(Integer value) {
-            addCriterion("`value` >", value, "value");
-            return (Criteria) this;
-        }
-
-        public Criteria andValueGreaterThanOrEqualTo(Integer value) {
-            addCriterion("`value` >=", value, "value");
-            return (Criteria) this;
-        }
-
-        public Criteria andValueLessThan(Integer value) {
-            addCriterion("`value` <", value, "value");
-            return (Criteria) this;
-        }
-
-        public Criteria andValueLessThanOrEqualTo(Integer value) {
-            addCriterion("`value` <=", value, "value");
-            return (Criteria) this;
-        }
-
-        public Criteria andValueIn(List<Integer> values) {
-            addCriterion("`value` in", values, "value");
-            return (Criteria) this;
-        }
-
-        public Criteria andValueNotIn(List<Integer> values) {
-            addCriterion("`value` not in", values, "value");
-            return (Criteria) this;
-        }
-
-        public Criteria andValueBetween(Integer value1, Integer value2) {
-            addCriterion("`value` between", value1, value2, "value");
-            return (Criteria) this;
-        }
-
-        public Criteria andValueNotBetween(Integer value1, Integer value2) {
-            addCriterion("`value` not between", value1, value2, "value");
-            return (Criteria) this;
-        }
-
         public Criteria andFinishAtIsNull() {
             addCriterion("`finish_at` is null");
             return (Criteria) this;
@@ -442,6 +382,126 @@ public class TimerExample {
 
         public Criteria andFinishAtNotBetween(LocalDateTime value1, LocalDateTime value2) {
             addCriterion("`finish_at` not between", value1, value2, "finishAt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInputTimeIsNull() {
+            addCriterion("`input_time` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInputTimeIsNotNull() {
+            addCriterion("`input_time` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInputTimeEqualTo(Integer value) {
+            addCriterion("`input_time` =", value, "inputTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInputTimeNotEqualTo(Integer value) {
+            addCriterion("`input_time` <>", value, "inputTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInputTimeGreaterThan(Integer value) {
+            addCriterion("`input_time` >", value, "inputTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInputTimeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("`input_time` >=", value, "inputTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInputTimeLessThan(Integer value) {
+            addCriterion("`input_time` <", value, "inputTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInputTimeLessThanOrEqualTo(Integer value) {
+            addCriterion("`input_time` <=", value, "inputTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInputTimeIn(List<Integer> values) {
+            addCriterion("`input_time` in", values, "inputTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInputTimeNotIn(List<Integer> values) {
+            addCriterion("`input_time` not in", values, "inputTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInputTimeBetween(Integer value1, Integer value2) {
+            addCriterion("`input_time` between", value1, value2, "inputTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInputTimeNotBetween(Integer value1, Integer value2) {
+            addCriterion("`input_time` not between", value1, value2, "inputTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemainingTimeAtPausedIsNull() {
+            addCriterion("`remaining_time_at_paused` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemainingTimeAtPausedIsNotNull() {
+            addCriterion("`remaining_time_at_paused` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemainingTimeAtPausedEqualTo(Integer value) {
+            addCriterion("`remaining_time_at_paused` =", value, "remainingTimeAtPaused");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemainingTimeAtPausedNotEqualTo(Integer value) {
+            addCriterion("`remaining_time_at_paused` <>", value, "remainingTimeAtPaused");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemainingTimeAtPausedGreaterThan(Integer value) {
+            addCriterion("`remaining_time_at_paused` >", value, "remainingTimeAtPaused");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemainingTimeAtPausedGreaterThanOrEqualTo(Integer value) {
+            addCriterion("`remaining_time_at_paused` >=", value, "remainingTimeAtPaused");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemainingTimeAtPausedLessThan(Integer value) {
+            addCriterion("`remaining_time_at_paused` <", value, "remainingTimeAtPaused");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemainingTimeAtPausedLessThanOrEqualTo(Integer value) {
+            addCriterion("`remaining_time_at_paused` <=", value, "remainingTimeAtPaused");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemainingTimeAtPausedIn(List<Integer> values) {
+            addCriterion("`remaining_time_at_paused` in", values, "remainingTimeAtPaused");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemainingTimeAtPausedNotIn(List<Integer> values) {
+            addCriterion("`remaining_time_at_paused` not in", values, "remainingTimeAtPaused");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemainingTimeAtPausedBetween(Integer value1, Integer value2) {
+            addCriterion("`remaining_time_at_paused` between", value1, value2, "remainingTimeAtPaused");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemainingTimeAtPausedNotBetween(Integer value1, Integer value2) {
+            addCriterion("`remaining_time_at_paused` not between", value1, value2, "remainingTimeAtPaused");
             return (Criteria) this;
         }
     }

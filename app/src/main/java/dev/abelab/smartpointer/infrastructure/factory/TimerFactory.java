@@ -21,7 +21,7 @@ public class TimerFactory {
         return Timer.builder() //
             .roomId(timerModel.getRoomId()) //
             .status(timerModel.getStatus().getId()) //
-            .value(timerModel.getValue()) //
+            .inputTime(timerModel.getInputTime()) //
             .finishAt(timerModel.getFinishAt()) //
             .build();
     }
