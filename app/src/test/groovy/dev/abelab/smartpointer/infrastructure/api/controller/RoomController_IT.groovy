@@ -25,7 +25,7 @@ class RoomController_IT extends AbstractController_IT {
         final rooms = sql.rows("SELECT * FROM room")
         rooms.size() == 1
 
-        response.roomId == rooms[0].id
+        response.id == rooms[0].id
         response.passcode == rooms[0].passcode
     }
 

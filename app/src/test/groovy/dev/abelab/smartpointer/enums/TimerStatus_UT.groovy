@@ -18,6 +18,7 @@ class TimerStatus_UT extends AbstractSpecification {
         inputId                || expectedResult
         TimerStatus.READY.id   || Optional.of(TimerStatus.READY)
         TimerStatus.RUNNING.id || Optional.of(TimerStatus.RUNNING)
+        TimerStatus.PAUSED.id  || Optional.of(TimerStatus.PAUSED)
         -1                     || Optional.empty()
     }
 
