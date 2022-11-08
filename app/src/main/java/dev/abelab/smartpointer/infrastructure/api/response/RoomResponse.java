@@ -18,7 +18,7 @@ public class RoomResponse {
     /**
      * ルームID
      */
-    String roomId;
+    String id;
 
     /**
      * パスコード
@@ -26,7 +26,7 @@ public class RoomResponse {
     String passcode;
 
     public RoomResponse(final RoomModel roomModel) {
-        this.roomId = roomModel.getId();
+        this.id = roomModel.getId();
         this.passcode = roomModel.getPasscode();
     }
 

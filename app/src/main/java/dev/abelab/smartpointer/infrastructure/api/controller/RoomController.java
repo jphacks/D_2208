@@ -6,9 +6,9 @@ import org.springframework.stereotype.Controller;
 
 import dev.abelab.smartpointer.infrastructure.api.response.AccessTokenResponse;
 import dev.abelab.smartpointer.infrastructure.api.response.RoomResponse;
-import dev.abelab.smartpointer.usecase.CreateRoomUseCase;
-import dev.abelab.smartpointer.usecase.DeleteRoomUseCase;
-import dev.abelab.smartpointer.usecase.JoinRoomUseCase;
+import dev.abelab.smartpointer.usecase.room.CreateRoomUseCase;
+import dev.abelab.smartpointer.usecase.room.DeleteRoomUseCase;
+import dev.abelab.smartpointer.usecase.user.JoinRoomUseCase;
 import lombok.RequiredArgsConstructor;
 
 /**

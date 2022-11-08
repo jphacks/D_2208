@@ -14,12 +14,12 @@ import lombok.Getter;
 public enum SlideControl {
 
     /**
-     * 準備中
+     * 進める
      */
     NEXT(0),
 
     /**
-     * 実行中
+     * 戻す
      */
     PREVIOUS(1);
 
