@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import dev.abelab.smartpointer.infrastructure.api.request.TimerResumeRequest;
 import dev.abelab.smartpointer.infrastructure.api.request.TimerStartRequest;
 import dev.abelab.smartpointer.infrastructure.api.validation.RequestValidated;
-import dev.abelab.smartpointer.usecase.*;
+import dev.abelab.smartpointer.usecase.timer.*;
 import lombok.RequiredArgsConstructor;
 
 /**

@@ -2,7 +2,6 @@ package dev.abelab.smartpointer.infrastructure.api.controller
 
 import dev.abelab.smartpointer.AbstractDatabaseSpecification
 import dev.abelab.smartpointer.exception.BaseException
-import dev.abelab.smartpointer.helper.graphql.GraphQLQuery
 import dev.abelab.smartpointer.property.AuthProperty
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
@@ -28,12 +27,14 @@ abstract class AbstractController_IT extends AbstractDatabaseSpecification {
      * Execute query / return response
      *
      * @param query query
+     * @param operation operation
+     * @param clazz clazz
      * @return response
      */
-    def <T> T execute(final GraphQLQuery<T> query) {
-        final response = this.graphQlTester.document(query.document()).execute()
-            .path(query.operation.name)
-            .entity(query.responseType)
+    def <T> T execute(final String query, final String operation, final Class<T> clazz) {
+        final response = this.graphQlTester.document(query).execute()
+            .path(operation)
+            .entity(clazz)
 
         return response.get()
     }
@@ -44,9 +45,9 @@ abstract class AbstractController_IT extends AbstractDatabaseSpecification {
      * @param query query
      * @param exception expected exception
      */
-    def execute(final GraphQLQuery query, final BaseException exception) {
+    def execute(final String query, final BaseException exception) {
         final expectedErrorMessage = this.getErrorMessage(exception)
-        this.graphQlTester.document(query.document()).execute()
+        this.graphQlTester.document(query).execute()
             .errors()
             .satisfy({
                 assert it[0].errorType == exception.errorType

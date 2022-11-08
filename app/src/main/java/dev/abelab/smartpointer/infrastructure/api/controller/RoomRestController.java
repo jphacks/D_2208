@@ -5,13 +5,9 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import dev.abelab.smartpointer.infrastructure.api.request.RoomJoinRequest;
-import dev.abelab.smartpointer.infrastructure.api.response.AccessTokenResponse;
 import dev.abelab.smartpointer.infrastructure.api.response.RoomResponse;
-import dev.abelab.smartpointer.infrastructure.api.validation.RequestValidated;
-import dev.abelab.smartpointer.usecase.CreateRoomUseCase;
-import dev.abelab.smartpointer.usecase.DeleteRoomUseCase;
-import dev.abelab.smartpointer.usecase.JoinRoomUseCase;
+import dev.abelab.smartpointer.usecase.room.CreateRoomUseCase;
+import dev.abelab.smartpointer.usecase.room.DeleteRoomUseCase;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -28,8 +24,6 @@ public class RoomRestController {
     private final CreateRoomUseCase createRoomUseCase;
 
     private final DeleteRoomUseCase deleteRoomUseCase;
-
-    private final JoinRoomUseCase joinRoomUseCase;
 
     /**
      * ルーム作成API
@@ -52,22 +46,6 @@ public class RoomRestController {
     public void deleteRoom(@PathVariable("room_id") final String roomId //
     ) {
         this.deleteRoomUseCase.handle(roomId);
-    }
-
-    /**
-     * ルーム入室API
-     *
-     * @param roomId ルームID
-     * @param requestBody ルーム入室リクエスト
-     * @return アクセストークン
-     */
-    @PostMapping("/{room_id}/join")
-    @ResponseStatus(HttpStatus.OK)
-    public AccessTokenResponse joinRoom( //
-        @PathVariable("room_id") final String roomId, //
-        @RequestValidated @RequestBody final RoomJoinRequest requestBody //
-    ) {
-        return this.joinRoomUseCase.handle(roomId, requestBody.getPasscode(), requestBody.getName());
     }
 
 }
