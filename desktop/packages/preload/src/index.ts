@@ -8,7 +8,7 @@ import { ipcRenderer } from "electron";
 export const onUpdatePointers = (
   callback: (message: UpdatePointersMessage) => void
 ) => {
-  ipcRenderer.on("pointers-updated", (_, message: UpdatePointersMessage) => {
+  ipcRenderer.on("onUpdatePointers", (_, message: UpdatePointersMessage) => {
     callback(message);
   });
 };
@@ -16,12 +16,12 @@ export const onUpdatePointers = (
 export const onUpdatePointerType = (
   callback: (message: PointerType) => void
 ) => {
-  ipcRenderer.on("pointer-type-updated", (_, message: PointerType) => {
+  ipcRenderer.on("onUpdatePointerType", (_, message: PointerType) => {
     callback(message);
   });
 };
 
 export const getPointers = async (): Promise<GetPointerResult> => {
-  const pointers: GetPointerResult = await ipcRenderer.invoke("get-pointers");
+  const pointers: GetPointerResult = await ipcRenderer.invoke("getPointers");
   return pointers;
 };
