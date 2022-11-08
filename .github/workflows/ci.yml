@@ -73,16 +73,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: yarn
-          cache-dependency-path: ./app/src/main/pointer/yarn.lock
+          cache: npm
+          cache-dependency-path: ./app/src/main/pointer/package-lock.json
 
       - name: dependencies
-        run: yarn install
+        run: npm install
 
       - name: code check
         run: |
-          yarn code-check
+          npm run code-check
 
       - name: build
         run: |
-          yarn build
+          npm run build

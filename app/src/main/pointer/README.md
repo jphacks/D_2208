@@ -13,7 +13,7 @@
 ### 環境構築
 
 ```sh
-yarn install
+npm install
 ```
 
 #### エディタの設定
@@ -39,19 +39,19 @@ yarn install
 ### 開発用サーバの起動
 
 ```sh
-yarn run dev
+npm run dev
 ```
 
 ### コードチェック
 
 ```sh
-yarn run code-check
+npm run code-check
 ```
 
 ### ビルド方法
 
 ```sh
-yarn build
+npm run build
 ```
 
 ### 使用技術

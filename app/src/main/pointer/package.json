@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "codegen": "openapi-generator-cli generate -g typescript-axios -i http://localhost:8080/v3/api-docs/Public%20API -o ./src/generated/http-client",
     "lint": "eslint src",
-    "format": "yarn check:format --write",
+    "format": "npm run check:format --write",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "code-check": "run-p lint check:*",
