@@ -10,11 +10,11 @@
   "author": "",
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "2.5.2",
-    "@smartpointer-desktop/eslintrc": "1.1.0-NAPSHOT",
-    "@smartpointer-desktop/tsconfig": "1.1.0-NAPSHOT",
+    "@smartpointer-desktop/eslintrc": "1.1.0-SNAPSHOT",
+    "@smartpointer-desktop/tsconfig": "1.1.0-SNAPSHOT",
     "@types/ws": "8.5.3"
   },
   "dependencies": {
-    "@smartpointer-desktop/shared": "1.1.0-NAPSHOT"
+    "@smartpointer-desktop/shared": "1.1.0-SNAPSHOT"
   }
 }

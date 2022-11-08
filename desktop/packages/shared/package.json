@@ -1,6 +1,6 @@
 {
   "name": "@smartpointer-desktop/shared",
-  "version": "1.1.0-NAPSHOT",
+  "version": "1.1.0-SNAPSHOT",
   "description": "",
   "main": "index.ts",
   "dependencies": {

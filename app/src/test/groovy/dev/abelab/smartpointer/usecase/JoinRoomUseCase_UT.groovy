@@ -6,7 +6,6 @@ import dev.abelab.smartpointer.exception.ErrorCode
 import dev.abelab.smartpointer.exception.NotFoundException
 import dev.abelab.smartpointer.exception.UnauthorizedException
 import dev.abelab.smartpointer.helper.RandomHelper
-import dev.abelab.smartpointer.infrastructure.api.request.RoomJoinRequest
 import dev.abelab.smartpointer.property.AuthProperty
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -24,15 +23,17 @@ class JoinRoomUseCase_UT extends AbstractUseCase_UT {
     def "handle: ログインに成功するとアクセストークンを返す"() {
         given:
         final room = Spy(RoomModel)
-        final requestBody = RandomHelper.mock(RoomJoinRequest)
+        final passcode = RandomHelper.alphanumeric(6)
+        final userName = RandomHelper.alphanumeric(10)
 
         when:
-        final result = this.sut.handle(room.id, requestBody)
+        final result = this.sut.handle(room.id, passcode, userName)
 
         then:
         1 * this.roomRepository.selectById(room.id) >> Optional.of(room)
-        1 * room.isPasscodeValid(requestBody.passcode) >> true
-        1 * this.userService.checkIsNameAlreadyUsed(room.id, requestBody.name) >> {}
+        1 * room.isPasscodeValid(passcode) >> true
+        1 * this.userService.checkIsNameValid(userName) >> {}
+        1 * this.userService.checkIsNameAlreadyUsed(room.id, userName) >> {}
         1 * this.userRepository.insert(_)
         result.tokenType == this.authProperty.tokenType
         result.ttl == this.authProperty.ttl
@@ -40,11 +41,12 @@ class JoinRoomUseCase_UT extends AbstractUseCase_UT {
 
     def "handle: ルームが存在しない場合は404エラー"() {
         given:
-        final room = RandomHelper.mock(RoomModel)
-        final requestBody = RandomHelper.mock(RoomJoinRequest)
+        final room = Spy(RoomModel)
+        final passcode = RandomHelper.alphanumeric(6)
+        final userName = RandomHelper.alphanumeric(10)
 
         when:
-        this.sut.handle(room.id, requestBody)
+        this.sut.handle(room.id, passcode, userName)
 
         then:
         1 * this.roomRepository.selectById(room.id) >> Optional.empty()
@@ -55,14 +57,15 @@ class JoinRoomUseCase_UT extends AbstractUseCase_UT {
     def "handle: パスコードが間違えている場合は401エラー"() {
         given:
         final room = Spy(RoomModel)
-        final requestBody = RandomHelper.mock(RoomJoinRequest)
+        final passcode = RandomHelper.alphanumeric(6)
+        final userName = RandomHelper.alphanumeric(10)
 
         when:
-        this.sut.handle(room.id, requestBody)
+        this.sut.handle(room.id, passcode, userName)
 
         then:
         1 * this.roomRepository.selectById(room.id) >> Optional.of(room)
-        room.isPasscodeValid(requestBody.passcode) >> false
+        room.isPasscodeValid(passcode) >> false
         final BaseException exception = thrown()
         verifyException(exception, new UnauthorizedException(ErrorCode.INCORRECT_ROOM_PASSCODE))
     }

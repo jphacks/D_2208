@@ -23,7 +23,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import dev.abelab.smartpointer.exception.*;
 import dev.abelab.smartpointer.infrastructure.api.response.ErrorResponse;
-import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,7 +30,6 @@ import lombok.extern.slf4j.Slf4j;
  * Global rest controller advice
  */
 @Slf4j
-@Hidden
 @Controller
 @RestControllerAdvice
 @RequiredArgsConstructor

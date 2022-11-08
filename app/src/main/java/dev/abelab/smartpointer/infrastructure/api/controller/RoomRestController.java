@@ -12,13 +12,13 @@ import dev.abelab.smartpointer.infrastructure.api.validation.RequestValidated;
 import dev.abelab.smartpointer.usecase.CreateRoomUseCase;
 import dev.abelab.smartpointer.usecase.DeleteRoomUseCase;
 import dev.abelab.smartpointer.usecase.JoinRoomUseCase;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 /**
  * ルームコントローラ
+ * 
+ * TODO: STOMPからGraphQLへの移行が完了したら削除する
  */
-@Tag(name = "Room", description = "ルーム")
 @RestController
 @RequestMapping(path = "/api/rooms", produces = MediaType.APPLICATION_JSON_VALUE)
 @Validated
@@ -67,7 +67,7 @@ public class RoomRestController {
         @PathVariable("room_id") final String roomId, //
         @RequestValidated @RequestBody final RoomJoinRequest requestBody //
     ) {
-        return this.joinRoomUseCase.handle(roomId, requestBody);
+        return this.joinRoomUseCase.handle(roomId, requestBody.getPasscode(), requestBody.getName());
     }
 
 }

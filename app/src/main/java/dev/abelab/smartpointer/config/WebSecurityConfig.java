@@ -19,7 +19,8 @@ public class WebSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("**.**", "/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**");
+        return (web) -> web.ignoring().antMatchers("**.**", "/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**",
+            "/graphiql/**", "/graphql/**");
     }
 
     @Bean
@@ -29,7 +30,7 @@ public class WebSecurityConfig {
 
         // アクセス許可
         http.authorizeRequests() //
-            .antMatchers("/", "/api/health", "/ws/**").permitAll() //
+            .antMatchers("/", "/api/health", "/ws/**", "/graphql/**").permitAll() //
             .antMatchers("/api/batch/**").hasIpAddress("::1") //
             .antMatchers("/**").permitAll() //
             .anyRequest().authenticated();

@@ -3,7 +3,6 @@ package dev.abelab.smartpointer.infrastructure.api.request;
 import dev.abelab.smartpointer.exception.BadRequestException;
 import dev.abelab.smartpointer.exception.ErrorCode;
 import dev.abelab.smartpointer.util.JsonMessageUtil;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +20,6 @@ public class TimerStartRequest implements BaseRequest {
     /**
      * 設定時間[s]
      */
-    @Schema(required = true)
     Integer value;
 
     public TimerStartRequest(final String payload) {
