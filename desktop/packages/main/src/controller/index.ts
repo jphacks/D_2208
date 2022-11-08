@@ -16,6 +16,10 @@ import {
 import { store } from "@/store";
 import { updateTray } from "@/view/tray";
 import {
+  showCustomPointerTypesWindow,
+  updateCustomPointerTypeInCustomPointerTypesWindow,
+} from "@/view/window/cumstomPointerType";
+import {
   closeInviteLinkWindow,
   showInviteLinkWindow,
 } from "@/view/window/inviteLink";
@@ -95,9 +99,8 @@ export const toggleOverlayWindowDevTools = () => {
 
 export const addCustomPointerType = () => {
   const customPointerType: CustomPointerType = {
-    id: nanoid(),
+    id: randomUUID(),
     name: "新規カスタムポインター",
-    image: "",
   };
 
   model.addedCustomPointerType(customPointerType);
@@ -105,6 +108,8 @@ export const addCustomPointerType = () => {
   updateTray();
 
   store.set("customPointerTypes", model.getState().customPointerTypes);
+
+  updateCustomPointerTypeInCustomPointerTypesWindow();
 };
 
 export const removeCustomPointerType = (
@@ -115,6 +120,8 @@ export const removeCustomPointerType = (
   updateTray();
 
   store.set("customPointerTypes", model.getState().customPointerTypes);
+
+  updateCustomPointerTypeInCustomPointerTypesWindow();
 };
 
 export const updateCustomPointerType = (
@@ -125,4 +132,10 @@ export const updateCustomPointerType = (
   updateTray();
 
   store.set("customPointerTypes", model.getState().customPointerTypes);
+
+  updateCustomPointerTypeInCustomPointerTypesWindow();
+};
+
+export const showCustomPointerTypes = () => {
+  showCustomPointerTypesWindow();
 };

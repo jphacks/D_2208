@@ -1,4 +1,5 @@
 import type {
+  CustomPointerType,
   GetPointerResult,
   PointerType,
   UpdatePointersMessage,
@@ -24,4 +25,38 @@ export const onUpdatePointerType = (
 export const getPointers = async (): Promise<GetPointerResult> => {
   const pointers: GetPointerResult = await ipcRenderer.invoke("getPointers");
   return pointers;
+};
+
+export const onUpdateCustomPointerTypes = (
+  callback: (customPointerTypes: CustomPointerType[]) => void
+) => {
+  ipcRenderer.on(
+    "onUpdateCustomPointerTypes",
+    (_, customPointerTypes: CustomPointerType[]) => {
+      callback(customPointerTypes);
+    }
+  );
+};
+
+export const getCustomPointerTypes = async (): Promise<CustomPointerType[]> => {
+  const customPointerTypes: CustomPointerType[] = await ipcRenderer.invoke(
+    "getCustomPointerTypes"
+  );
+  return customPointerTypes;
+};
+
+export const updateCustomPointerType = (
+  customPointerType: CustomPointerType
+) => {
+  ipcRenderer.send("updateCustomPointerType", customPointerType);
+};
+
+export const addCustomPointerType = () => {
+  ipcRenderer.send("addCustomPointerType");
+};
+
+export const removeCustomPointerType = (
+  customPointerType: CustomPointerType
+) => {
+  ipcRenderer.send("removeCustomPointerType", customPointerType);
 };
