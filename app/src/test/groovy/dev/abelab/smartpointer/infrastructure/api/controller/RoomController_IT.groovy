@@ -25,11 +25,14 @@ class RoomController_IT extends AbstractController_IT {
         final response = this.execute(query, "createRoom", RoomResponse)
 
         then:
-        final rooms = sql.rows("SELECT * FROM room")
-        rooms.size() == 1
+        final createdRoom = sql.firstRow("SELECT * FROM room")
+        createdRoom.id == response.id
+        createdRoom.passcode == response.passcode
 
-        response.id == rooms[0].id
-        response.passcode == rooms[0].passcode
+        final createdTimer = sql.firstRow("SELECT * FROM timer")
+        createdTimer.input_time == 300
+        createdTimer.remaining_time_at_paused == null
+        createdTimer.room_id == createdRoom.id
     }
 
     def "ルーム削除API: 正常系 ルームを削除できる"() {

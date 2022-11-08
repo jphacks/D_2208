@@ -2,6 +2,7 @@ package dev.abelab.smartpointer.domain.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import dev.abelab.smartpointer.enums.TimerStatus;
 import dev.abelab.smartpointer.exception.BadRequestException;
@@ -34,12 +35,17 @@ public class TimerModel implements Serializable {
     TimerStatus status = TimerStatus.READY;
 
     /**
-     * 初期値[s]
+     * 入力時間 [s]
      */
-    Integer value;
+    Integer inputTime;
 
     /**
-     * 終了日時
+     * 一時停止時点での残り時間 [s]
+     */
+    Optional<Integer> remainingTimeAtPaused;
+
+    /**
+     * 終了時刻
      */
     LocalDateTime finishAt;
 
@@ -47,7 +53,8 @@ public class TimerModel implements Serializable {
         this.roomId = timer.getRoomId();
         this.status = TimerStatus.find(timer.getStatus()) //
             .orElseThrow(() -> new InternalServerErrorException(ErrorCode.UNEXPECTED_ERROR));
-        this.value = timer.getValue();
+        this.inputTime = timer.getInputTime();
+        this.remainingTimeAtPaused = Optional.ofNullable(timer.getRemainingTimeAtPaused());
         this.finishAt = timer.getFinishAt();
     }
 
@@ -62,7 +69,7 @@ public class TimerModel implements Serializable {
         }
 
         this.setStatus(TimerStatus.RUNNING);
-        this.setValue(value);
+        this.setInputTime(value);
         this.setFinishAt(LocalDateTime.now().plusSeconds(value));
     }
 
@@ -99,7 +106,7 @@ public class TimerModel implements Serializable {
             throw new BadRequestException(ErrorCode.TIMER_CANNOT_BE_RESET);
         }
 
-        this.setFinishAt(LocalDateTime.now().plusSeconds(this.getValue()));
+        this.setFinishAt(LocalDateTime.now().plusSeconds(this.getInputTime()));
     }
 
 }

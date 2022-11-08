@@ -3,19 +3,19 @@ package dev.abelab.smartpointer.usecase.timer;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import dev.abelab.smartpointer.domain.model.TimerModel;
 import dev.abelab.smartpointer.domain.repository.RoomRepository;
 import dev.abelab.smartpointer.domain.repository.TimerRepository;
 import dev.abelab.smartpointer.exception.ErrorCode;
 import dev.abelab.smartpointer.exception.NotFoundException;
-import dev.abelab.smartpointer.infrastructure.api.request.TimerStartRequest;
 import lombok.RequiredArgsConstructor;
 
 /**
- * タイマー開始ユースケース
+ * タイマー取得ユースケース
  */
 @RequiredArgsConstructor
 @Component
-public class StartTimerUseCase {
+public class GetTimerUseCase {
 
     private final RoomRepository roomRepository;
 
@@ -25,22 +25,18 @@ public class StartTimerUseCase {
      * Handle UseCase
      * 
      * @param roomId ルームID
-     * @param requestBody タイマー開始リクエスト
+     * @return タイマー
      */
     @Transactional
-    public void handle(final String roomId, final TimerStartRequest requestBody) {
+    public TimerModel handle(final String roomId) {
         // ルームの存在チェック
         if (!this.roomRepository.existsById(roomId)) {
             throw new NotFoundException(ErrorCode.NOT_FOUND_ROOM);
         }
 
         // タイマーを取得
-        final var timer = this.timerRepository.selectByRoomId(roomId) //
+        return this.timerRepository.selectByRoomId(roomId) //
             .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_TIMER));
-
-        // タイマーを更新
-        timer.start(requestBody.getValue());
-        this.timerRepository.upsert(timer);
     }
 
 }

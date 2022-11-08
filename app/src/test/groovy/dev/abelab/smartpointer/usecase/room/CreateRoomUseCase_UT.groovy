@@ -17,6 +17,7 @@ class CreateRoomUseCase_UT extends AbstractUseCase_UT {
 
         then:
         1 * this.roomRepository.insert(_)
+        1 * this.timerRepository.insert(_)
     }
 
 }
