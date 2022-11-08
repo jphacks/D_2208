@@ -6,7 +6,7 @@
     "dev": "vite --host",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "codegen": "openapi-generator-cli generate -g typescript-axios -i http://localhost:8080/v3/api-docs/Public%20API -o ./src/generated/http-client",
+    "codegen": "gql-gen --config codegen.ts",
     "lint": "eslint src",
     "format": "npm run check:format --write",
     "test": "vitest",
@@ -23,12 +23,16 @@
     "@stomp/stompjs": "^6.1.2",
     "axios": "^1.1.3",
     "framer-motion": "7.5.3",
+    "graphql": "16.6.0",
+    "graphql-request": "5.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.38.0"
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.5.2",
+    "@graphql-codegen/cli": "2.13.11",
+    "@graphql-codegen/client-preset": "1.1.3",
+    "@openapitools/openapi-generator-cli": "2.5.2",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
@@ -45,7 +49,7 @@
     "msw": "^0.47.4",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
-    "typescript": "^4.6.4",
+    "typescript": "4.8.4",
     "vite": "^3.1.0",
     "vitest": "^0.24.3"
   }
