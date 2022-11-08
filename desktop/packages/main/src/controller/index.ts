@@ -96,7 +96,7 @@ export const toggleOverlayWindowDevTools = () => {
 export const addCustomPointerType = () => {
   const customPointerType: CustomPointerType = {
     id: nanoid(),
-    name: "New Pointer",
+    name: "新規カスタムポインター",
     image: "",
   };
 
