@@ -4,7 +4,7 @@ import {
   PointerType,
   User,
 } from "@smartpointer-desktop/shared";
-import { nanoid } from "nanoid";
+import { randomUUID } from "crypto";
 
 import { roomApi } from "@/api";
 import * as model from "@/model";
