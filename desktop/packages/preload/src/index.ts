@@ -1,4 +1,5 @@
 import type {
+  CustomPointerType,
   GetPointerResult,
   PointerType,
   UpdatePointersMessage,
@@ -8,7 +9,7 @@ import { ipcRenderer } from "electron";
 export const onUpdatePointers = (
   callback: (message: UpdatePointersMessage) => void
 ) => {
-  ipcRenderer.on("pointers-updated", (_, message: UpdatePointersMessage) => {
+  ipcRenderer.on("onUpdatePointers", (_, message: UpdatePointersMessage) => {
     callback(message);
   });
 };
@@ -16,12 +17,46 @@ export const onUpdatePointers = (
 export const onUpdatePointerType = (
   callback: (message: PointerType) => void
 ) => {
-  ipcRenderer.on("pointer-type-updated", (_, message: PointerType) => {
+  ipcRenderer.on("onUpdatePointerType", (_, message: PointerType) => {
     callback(message);
   });
 };
 
 export const getPointers = async (): Promise<GetPointerResult> => {
-  const pointers: GetPointerResult = await ipcRenderer.invoke("get-pointers");
+  const pointers: GetPointerResult = await ipcRenderer.invoke("getPointers");
   return pointers;
+};
+
+export const onUpdateCustomPointerTypes = (
+  callback: (customPointerTypes: CustomPointerType[]) => void
+) => {
+  ipcRenderer.on(
+    "onUpdateCustomPointerTypes",
+    (_, customPointerTypes: CustomPointerType[]) => {
+      callback(customPointerTypes);
+    }
+  );
+};
+
+export const getCustomPointerTypes = async (): Promise<CustomPointerType[]> => {
+  const customPointerTypes: CustomPointerType[] = await ipcRenderer.invoke(
+    "getCustomPointerTypes"
+  );
+  return customPointerTypes;
+};
+
+export const updateCustomPointerType = (
+  customPointerType: CustomPointerType
+) => {
+  ipcRenderer.send("updateCustomPointerType", customPointerType);
+};
+
+export const addCustomPointerType = () => {
+  ipcRenderer.send("addCustomPointerType");
+};
+
+export const removeCustomPointerType = (
+  customPointerType: CustomPointerType
+) => {
+  ipcRenderer.send("removeCustomPointerType", customPointerType);
 };

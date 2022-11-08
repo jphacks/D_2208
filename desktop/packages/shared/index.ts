@@ -34,7 +34,7 @@ export type BuiltInPointerType = {
 export type CustomPointerType = {
   id: string;
   name: string;
-  image: string;
+  image?: string;
 };
 
 export type PointerType = BuiltInPointerType | CustomPointerType;

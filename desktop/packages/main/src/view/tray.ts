@@ -29,16 +29,17 @@ const createdRoomMenuTemplate: MenuTemplate<State & { status: "CREATED" }> = (
   {
     label: "ポインター",
     submenu: builtInPointers
-      .concat(state.customPointerTypes)
+      .concat(
+        state.customPointerTypes.filter(
+          (pointerType) => pointerType.image !== undefined
+        )
+      )
       .map((pointer) => ({
         label: pointer.name,
         type: "radio",
         checked: state.selectedPointerType.id === pointer.id,
         click: () => controller.selectedPointer(pointer),
       })),
-  },
-  {
-    label: "自作ポインターの設定",
   },
   {
     label: "参加者一覧",
@@ -66,6 +67,11 @@ const menuTemplate: MenuTemplate = (state) => [
   ...(state.status === "CREATED"
     ? createdRoomMenuTemplate(state)
     : defaultMenuTemplate(state)),
+  { type: "separator" },
+  {
+    label: "自作ポインターの設定",
+    click: controller.showCustomPointerTypes,
+  },
   { type: "separator" },
   {
     role: "quit",

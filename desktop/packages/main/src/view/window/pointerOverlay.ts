@@ -90,7 +90,7 @@ export const updatePointerInOverlayWindow = () => {
     })
   );
 
-  overlayWindow.webContents.send("pointers-updated", message);
+  overlayWindow.webContents.send("onUpdatePointers", message);
 };
 
 export const updatePointerTypeInOverlayWindow = () => {
@@ -106,14 +106,14 @@ export const updatePointerTypeInOverlayWindow = () => {
 
   const message: PointerType = state.selectedPointerType;
 
-  overlayWindow.webContents.send("pointer-type-updated", message);
+  overlayWindow.webContents.send("onUpdatePointerType", message);
 };
 
 export const closeOverlayWindow = () => {
   overlayWindow?.close();
 };
 
-ipcMain.handle("get-pointers", (): GetPointerResult => {
+ipcMain.handle("getPointers", (): GetPointerResult => {
   const state = getState();
 
   if (state.status !== "CREATED") {

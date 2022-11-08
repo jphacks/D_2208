@@ -1,8 +1,10 @@
 import {
+  CustomPointerType,
   PointerOrientation,
   PointerType,
   User,
 } from "@smartpointer-desktop/shared";
+import { randomUUID } from "crypto";
 
 import { roomApi } from "@/api";
 import * as model from "@/model";
@@ -13,6 +15,10 @@ import {
 } from "@/stomp";
 import { store } from "@/store";
 import { updateTray } from "@/view/tray";
+import {
+  showCustomPointerTypesWindow,
+  updateCustomPointerTypeInCustomPointerTypesWindow,
+} from "@/view/window/cumstomPointerType";
 import {
   closeInviteLinkWindow,
   showInviteLinkWindow,
@@ -26,7 +32,7 @@ import {
 } from "@/view/window/pointerOverlay";
 
 export const initialize = () => {
-  model.initialize();
+  model.initialize(store.get("customPointerTypes"));
 
   updateTray();
 };
@@ -40,7 +46,7 @@ export const createRoom = async () => {
 
   await activate();
 
-  model.createdRoom(data, store.get("customPointerTypes"));
+  model.createdRoom(data);
 
   listenRoomSubscription(data.roomId);
 
@@ -89,4 +95,47 @@ export const showInviteLink = async () => {
 
 export const toggleOverlayWindowDevTools = () => {
   toggleOverlayWindowDevToolsInOverlayWindow();
+};
+
+export const addCustomPointerType = () => {
+  const customPointerType: CustomPointerType = {
+    id: randomUUID(),
+    name: "新規カスタムポインター",
+  };
+
+  model.addedCustomPointerType(customPointerType);
+
+  updateTray();
+
+  store.set("customPointerTypes", model.getState().customPointerTypes);
+
+  updateCustomPointerTypeInCustomPointerTypesWindow();
+};
+
+export const removeCustomPointerType = (
+  customPointerType: CustomPointerType
+) => {
+  model.removedCustomPointerType(customPointerType);
+
+  updateTray();
+
+  store.set("customPointerTypes", model.getState().customPointerTypes);
+
+  updateCustomPointerTypeInCustomPointerTypesWindow();
+};
+
+export const updateCustomPointerType = (
+  customPointerType: CustomPointerType
+) => {
+  model.updatedCustomPointerType(customPointerType);
+
+  updateTray();
+
+  store.set("customPointerTypes", model.getState().customPointerTypes);
+
+  updateCustomPointerTypeInCustomPointerTypesWindow();
+};
+
+export const showCustomPointerTypes = () => {
+  showCustomPointerTypesWindow();
 };

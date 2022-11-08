@@ -15,19 +15,21 @@ export type ActivePointer = {
 };
 
 export type State = Readonly<
-  | {
-      status: "READY" | "CREATING";
-      room?: undefined;
-      joinedUsers?: undefined;
-      activePointers?: undefined;
-      selectedPointerType?: undefined;
-    }
-  | {
-      status: "CREATED";
-      room: Room;
-      joinedUsers: Map<User["id"], User>;
-      activePointers: Map<ActivePointer["user"]["id"], ActivePointer>;
-      selectedPointerType: PointerType;
-      customPointerTypes: CustomPointerType[];
-    }
+  (
+    | {
+        status: "READY" | "CREATING";
+        room?: undefined;
+        joinedUsers?: undefined;
+        activePointers?: undefined;
+      }
+    | {
+        status: "CREATED";
+        room: Room;
+        joinedUsers: Map<User["id"], User>;
+        activePointers: Map<ActivePointer["user"]["id"], ActivePointer>;
+        selectedPointerType: PointerType;
+      }
+  ) & {
+    customPointerTypes: CustomPointerType[];
+  }
 >;

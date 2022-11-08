@@ -8,15 +8,14 @@ import {
 
 import { Room, State } from "@/types";
 
-let state: State = {
-  status: "READY",
-};
+let state: State;
 
 export const getState = (): State => state;
 
-export const initialize = () => {
+export const initialize = (customPointerTypes: CustomPointerType[]) => {
   state = {
     status: "READY",
+    customPointerTypes,
   };
 };
 
@@ -26,25 +25,23 @@ export const startCreatingRoom = () => {
   }
 
   state = {
+    ...state,
     status: "CREATING",
   };
 };
 
-export const createdRoom = (
-  room: Room,
-  customPointerTypes: CustomPointerType[]
-) => {
+export const createdRoom = (room: Room) => {
   if (state.status !== "CREATING") {
     throw new Error("Cannot create room when not in CREATING state");
   }
 
   state = {
+    ...state,
     status: "CREATED",
     room,
     joinedUsers: new Map(),
     activePointers: new Map(),
     selectedPointerType: builtInPointers[0]!,
-    customPointerTypes,
   };
 };
 
@@ -54,7 +51,11 @@ export const closeRoom = () => {
   }
 
   state = {
+    ...state,
     status: "READY",
+    room: undefined,
+    joinedUsers: undefined,
+    activePointers: undefined,
   };
 };
 
@@ -121,5 +122,45 @@ export const selectedPointer = (selectedPointerType: PointerType) => {
   state = {
     ...state,
     selectedPointerType,
+  };
+};
+
+export const updatedCustomPointerTypes = (
+  customPointerTypes: CustomPointerType[]
+) => {
+  state = {
+    ...state,
+    customPointerTypes,
+  };
+};
+
+export const addedCustomPointerType = (
+  customPointerType: CustomPointerType
+) => {
+  state = {
+    ...state,
+    customPointerTypes: [customPointerType, ...state.customPointerTypes],
+  };
+};
+
+export const removedCustomPointerType = (
+  customPointerType: CustomPointerType
+) => {
+  state = {
+    ...state,
+    customPointerTypes: state.customPointerTypes.filter(
+      (type) => type.id !== customPointerType.id
+    ),
+  };
+};
+
+export const updatedCustomPointerType = (
+  customPointerType: CustomPointerType
+) => {
+  state = {
+    ...state,
+    customPointerTypes: state.customPointerTypes.map((type) =>
+      type.id === customPointerType.id ? customPointerType : type
+    ),
   };
 };
