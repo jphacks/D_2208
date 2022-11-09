@@ -28,7 +28,7 @@ export const inviteLink = {
         passcode: state.room.passcode,
         origin:
           process.env["USE_DEV_BACKEND"] === "true"
-            ? "https://REPLACE_HERE_TO_ADDR:8080"
+            ? "https://DEV_HOST"
             : "https://smartpointer.abelab.dev",
       });
     }
