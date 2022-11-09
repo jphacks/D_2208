@@ -1,4 +1,12 @@
-import { Button, Flex, Input, Text, useClipboard } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Text,
+  useClipboard,
+} from "@chakra-ui/react";
 import type { FC } from "react";
 
 import { ClipboardIcon } from "./ClipboardIcon";
@@ -17,16 +25,20 @@ export const Clipboard: FC<Props> = ({ title, text }) => {
         {title}
       </Text>
 
-      <Input value={text} isReadOnly />
+      <InputGroup flexGrow="1">
+        <Input value={text} isReadOnly />
 
-      <Button
-        leftIcon={<ClipboardIcon />}
-        colorScheme="green"
-        onClick={onCopy}
-        width="48"
-      >
-        {hasCopied ? "コピーした" : "コピー"}
-      </Button>
+        <InputRightElement w="9.25em">
+          <Button
+            h="1.75rem"
+            leftIcon={<ClipboardIcon />}
+            colorScheme="green"
+            onClick={onCopy}
+          >
+            {hasCopied ? "コピー完了" : "コピーする"}
+          </Button>
+        </InputRightElement>
+      </InputGroup>
     </Flex>
   );
 };
