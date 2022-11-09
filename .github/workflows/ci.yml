@@ -86,3 +86,28 @@ jobs:
       - name: build
         run: |
           yarn build
+
+  help:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+
+      - name: dependencies
+        run: |
+          pip install pipenv
+          pipenv install
+          pipenv shell
+      - name: build
+        run: |
+          mkdocs build --strict
+      - name: deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
