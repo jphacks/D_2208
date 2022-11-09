@@ -2,6 +2,8 @@ import { app } from "electron";
 
 import { controller } from "./controller";
 
+import "./security-restrictions";
+
 app.once("ready", async () => {
   controller.initialize();
 });
