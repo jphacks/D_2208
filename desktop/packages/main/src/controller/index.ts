@@ -7,7 +7,7 @@ import {
 import { randomUUID } from "crypto";
 
 import { roomApi } from "@/api";
-import * as model from "@/model";
+import { model } from "@/model";
 import {
   activate,
   listenRoomSubscription,
@@ -107,7 +107,7 @@ export const addCustomPointerType = () => {
 
   updateTray();
 
-  store.set("customPointerTypes", model.getState().customPointerTypes);
+  store.set("customPointerTypes", model.state.customPointerTypes);
 
   updateCustomPointerTypeInCustomPointerTypesWindow();
 };
@@ -119,7 +119,7 @@ export const removeCustomPointerType = (
 
   updateTray();
 
-  store.set("customPointerTypes", model.getState().customPointerTypes);
+  store.set("customPointerTypes", model.state.customPointerTypes);
 
   updateCustomPointerTypeInCustomPointerTypesWindow();
 };
@@ -131,7 +131,7 @@ export const updateCustomPointerType = (
 
   updateTray();
 
-  store.set("customPointerTypes", model.getState().customPointerTypes);
+  store.set("customPointerTypes", model.state.customPointerTypes);
 
   updateCustomPointerTypeInCustomPointerTypesWindow();
 };

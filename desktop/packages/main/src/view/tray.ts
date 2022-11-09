@@ -5,7 +5,7 @@ import { join } from "path";
 import { assetsPath } from "../path";
 
 import * as controller from "@/controller";
-import { getState } from "@/model";
+import { model } from "@/model";
 import { State } from "@/types";
 
 type MenuTemplate<S extends State = State> = (
@@ -114,7 +114,7 @@ const getIconFileName = () => {
 };
 
 export const updateTray = () => {
-  const state = getState();
+  const state = model.state;
 
   if (trayInstance === null) {
     const iconPath = join(assetsPath, getIconFileName());

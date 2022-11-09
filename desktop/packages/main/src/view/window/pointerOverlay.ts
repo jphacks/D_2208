@@ -6,7 +6,7 @@ import {
 import { app, BrowserWindow, ipcMain, screen } from "electron";
 import { join } from "node:path";
 
-import { getState } from "@/model";
+import { model } from "@/model";
 
 import { loadFile } from "./loadFile";
 
@@ -15,7 +15,7 @@ let overlayWindow: BrowserWindow | null = null;
 const tanDeg = (deg: number) => Math.tan((deg * Math.PI) / 180);
 
 export const showOverlayWindow = async () => {
-  const state = getState();
+  const state = model.state;
 
   if (state.status !== "CREATED") {
     throw new Error("Cannot show overlay window when not in CREATED state");
@@ -70,7 +70,7 @@ export const toggleOverlayWindowDevToolsInOverlayWindow = () => {
 };
 
 export const updatePointerInOverlayWindow = () => {
-  const state = getState();
+  const state = model.state;
 
   if (state.status !== "CREATED") {
     throw new Error("Cannot update pointer when not in CREATED state");
@@ -94,7 +94,7 @@ export const updatePointerInOverlayWindow = () => {
 };
 
 export const updatePointerTypeInOverlayWindow = () => {
-  const state = getState();
+  const state = model.state;
 
   if (state.status !== "CREATED") {
     throw new Error("Cannot update pointer type when not in CREATED state");
@@ -114,7 +114,7 @@ export const closeOverlayWindow = () => {
 };
 
 ipcMain.handle("getPointers", (): GetPointerResult => {
-  const state = getState();
+  const state = model.state;
 
   if (state.status !== "CREATED") {
     throw new Error("Cannot get pointers when not in CREATED state");

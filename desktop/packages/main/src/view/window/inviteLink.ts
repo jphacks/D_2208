@@ -1,13 +1,13 @@
 import { BrowserWindow } from "electron";
 
-import { getState } from "@/model";
+import { model } from "@/model";
 
 import { loadFile } from "./loadFile";
 
 let inviteLinkWindow: BrowserWindow | null = null;
 
 export const showInviteLinkWindow = async () => {
-  const state = getState();
+  const state = model.state;
 
   if (state.status !== "CREATED") {
     throw new Error("Cannot show invite link window when not in CREATED state");

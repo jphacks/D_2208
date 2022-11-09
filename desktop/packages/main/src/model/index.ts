@@ -10,157 +10,153 @@ import { Room, State } from "@/types";
 
 let state: State;
 
-export const getState = (): State => state;
+export const model = {
+  get state() {
+    return state;
+  },
 
-export const initialize = (customPointerTypes: CustomPointerType[]) => {
-  state = {
-    status: "READY",
-    customPointerTypes,
-  };
-};
+  initialize: (customPointerTypes: CustomPointerType[]) => {
+    state = {
+      status: "READY",
+      customPointerTypes,
+    };
+  },
 
-export const startCreatingRoom = () => {
-  if (state.status !== "READY") {
-    throw new Error("Cannot start creating room when not in READY state");
-  }
+  startCreatingRoom: () => {
+    if (state.status !== "READY") {
+      throw new Error("Cannot start creating room when not in READY state");
+    }
 
-  state = {
-    ...state,
-    status: "CREATING",
-  };
-};
+    state = {
+      ...state,
+      status: "CREATING",
+    };
+  },
 
-export const createdRoom = (room: Room) => {
-  if (state.status !== "CREATING") {
-    throw new Error("Cannot create room when not in CREATING state");
-  }
+  createdRoom: (room: Room) => {
+    if (state.status !== "CREATING") {
+      throw new Error("Cannot create room when not in CREATING state");
+    }
 
-  state = {
-    ...state,
-    status: "CREATED",
-    room,
-    joinedUsers: new Map(),
-    activePointers: new Map(),
-    selectedPointerType: builtInPointers[0]!,
-  };
-};
+    state = {
+      ...state,
+      status: "CREATED",
+      room,
+      joinedUsers: new Map(),
+      activePointers: new Map(),
+      selectedPointerType: builtInPointers[0]!,
+    };
+  },
 
-export const closeRoom = () => {
-  if (state.status !== "CREATED") {
-    throw new Error("Cannot close room when not in CREATED state");
-  }
+  closeRoom: () => {
+    if (state.status !== "CREATED") {
+      throw new Error("Cannot close room when not in CREATED state");
+    }
 
-  state = {
-    ...state,
-    status: "READY",
-    room: undefined,
-    joinedUsers: undefined,
-    activePointers: undefined,
-  };
-};
+    state = {
+      ...state,
+      status: "READY",
+      room: undefined,
+      joinedUsers: undefined,
+      activePointers: undefined,
+    };
+  },
 
-export const joinedRoom = (user: User) => {
-  if (state.status !== "CREATED") {
-    throw new Error("Cannot join room when not in CREATED state");
-  }
+  joinedRoom: (user: User) => {
+    if (state.status !== "CREATED") {
+      throw new Error("Cannot join room when not in CREATED state");
+    }
 
-  state = {
-    ...state,
-    joinedUsers: new Map(state.joinedUsers).set(user.id, user),
-  };
-};
+    state = {
+      ...state,
+      joinedUsers: new Map(state.joinedUsers).set(user.id, user),
+    };
+  },
 
-export const leftRoom = (user: User) => {
-  if (state.status !== "CREATED") {
-    throw new Error("Cannot leave room when not in CREATED state");
-  }
+  leftRoom: (user: User) => {
+    if (state.status !== "CREATED") {
+      throw new Error("Cannot leave room when not in CREATED state");
+    }
 
-  const joinedUsers = new Map(state.joinedUsers);
+    const joinedUsers = new Map(state.joinedUsers);
 
-  joinedUsers.delete(user.id);
+    joinedUsers.delete(user.id);
 
-  state = {
-    ...state,
-    joinedUsers,
-  };
-};
+    state = {
+      ...state,
+      joinedUsers,
+    };
+  },
 
-export const updatePointer = (user: User, orientation: PointerOrientation) => {
-  if (state.status !== "CREATED") {
-    throw new Error("Cannot update pointer when not in CREATED state");
-  }
+  updatePointer: (user: User, orientation: PointerOrientation) => {
+    if (state.status !== "CREATED") {
+      throw new Error("Cannot update pointer when not in CREATED state");
+    }
 
-  state = {
-    ...state,
-    activePointers: new Map(state.activePointers).set(user.id, {
-      orientation,
-      user,
-    }),
-  };
-};
+    state = {
+      ...state,
+      activePointers: new Map(state.activePointers).set(user.id, {
+        orientation,
+        user,
+      }),
+    };
+  },
 
-export const deactivatePointer = (user: User) => {
-  if (state.status !== "CREATED") {
-    throw new Error("Cannot deactivate pointer when not in CREATED state");
-  }
+  deactivatePointer: (user: User) => {
+    if (state.status !== "CREATED") {
+      throw new Error("Cannot deactivate pointer when not in CREATED state");
+    }
 
-  const activePointers = new Map(state.activePointers);
+    const activePointers = new Map(state.activePointers);
 
-  activePointers.delete(user.id);
+    activePointers.delete(user.id);
 
-  state = {
-    ...state,
-    activePointers,
-  };
-};
+    state = {
+      ...state,
+      activePointers,
+    };
+  },
 
-export const selectedPointer = (selectedPointerType: PointerType) => {
-  if (state.status !== "CREATED") {
-    throw new Error("Cannot select pointer when not in CREATED state");
-  }
+  selectedPointer: (selectedPointerType: PointerType) => {
+    if (state.status !== "CREATED") {
+      throw new Error("Cannot select pointer when not in CREATED state");
+    }
 
-  state = {
-    ...state,
-    selectedPointerType,
-  };
-};
+    state = {
+      ...state,
+      selectedPointerType,
+    };
+  },
 
-export const updatedCustomPointerTypes = (
-  customPointerTypes: CustomPointerType[]
-) => {
-  state = {
-    ...state,
-    customPointerTypes,
-  };
-};
+  updatedCustomPointerTypes: (customPointerTypes: CustomPointerType[]) => {
+    state = {
+      ...state,
+      customPointerTypes,
+    };
+  },
 
-export const addedCustomPointerType = (
-  customPointerType: CustomPointerType
-) => {
-  state = {
-    ...state,
-    customPointerTypes: [customPointerType, ...state.customPointerTypes],
-  };
-};
+  addedCustomPointerType: (customPointerType: CustomPointerType) => {
+    state = {
+      ...state,
+      customPointerTypes: [customPointerType, ...state.customPointerTypes],
+    };
+  },
 
-export const removedCustomPointerType = (
-  customPointerType: CustomPointerType
-) => {
-  state = {
-    ...state,
-    customPointerTypes: state.customPointerTypes.filter(
-      (type) => type.id !== customPointerType.id
-    ),
-  };
-};
+  removedCustomPointerType: (customPointerType: CustomPointerType) => {
+    state = {
+      ...state,
+      customPointerTypes: state.customPointerTypes.filter(
+        (type) => type.id !== customPointerType.id
+      ),
+    };
+  },
 
-export const updatedCustomPointerType = (
-  customPointerType: CustomPointerType
-) => {
-  state = {
-    ...state,
-    customPointerTypes: state.customPointerTypes.map((type) =>
-      type.id === customPointerType.id ? customPointerType : type
-    ),
-  };
+  updatedCustomPointerType: (customPointerType: CustomPointerType) => {
+    state = {
+      ...state,
+      customPointerTypes: state.customPointerTypes.map((type) =>
+        type.id === customPointerType.id ? customPointerType : type
+      ),
+    };
+  },
 };

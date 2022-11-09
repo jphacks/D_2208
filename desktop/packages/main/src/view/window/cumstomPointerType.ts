@@ -3,7 +3,7 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
 
 import * as controller from "@/controller";
-import { getState } from "@/model";
+import { model } from "@/model";
 
 import { loadFile } from "./loadFile";
 
@@ -41,7 +41,7 @@ export const closeInviteLinkWindow = () => {
 };
 
 export const updateCustomPointerTypeInCustomPointerTypesWindow = () => {
-  const { customPointerTypes } = getState();
+  const { customPointerTypes } = model.state;
   customPointerTypesWindow?.webContents.send(
     "onUpdateCustomPointerTypes",
     customPointerTypes
@@ -49,7 +49,7 @@ export const updateCustomPointerTypeInCustomPointerTypesWindow = () => {
 };
 
 ipcMain.handle("getCustomPointerTypes", () => {
-  return getState().customPointerTypes;
+  return model.state.customPointerTypes;
 });
 
 ipcMain.on(
