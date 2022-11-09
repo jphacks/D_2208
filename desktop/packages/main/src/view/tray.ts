@@ -113,18 +113,20 @@ const getIconFileName = () => {
   return "tray-icon.png";
 };
 
-export const updateTray = () => {
-  const state = model.state;
+export const tray = {
+  update: () => {
+    const state = model.state;
 
-  if (trayInstance === null) {
-    const iconPath = join(assetsPath, getIconFileName());
+    if (trayInstance === null) {
+      const iconPath = join(assetsPath, getIconFileName());
 
-    trayInstance = new Tray(iconPath);
+      trayInstance = new Tray(iconPath);
 
-    trayInstance.setToolTip("スマートポインター");
-  }
+      trayInstance.setToolTip("スマートポインター");
+    }
 
-  trayInstance.setContextMenu(Menu.buildFromTemplate(menuTemplate(state)));
+    trayInstance.setContextMenu(Menu.buildFromTemplate(menuTemplate(state)));
+  },
 };
 
 nativeTheme.on("updated", () => {

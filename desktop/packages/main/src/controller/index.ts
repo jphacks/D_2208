@@ -14,27 +14,12 @@ import {
   unsubscribeRoomSubscription,
 } from "@/stomp";
 import { store } from "@/store";
-import { updateTray } from "@/view/tray";
-import {
-  showCustomPointerTypesWindow,
-  updateCustomPointerTypeInCustomPointerTypesWindow,
-} from "@/view/window/cumstomPointerType";
-import {
-  closeInviteLinkWindow,
-  showInviteLinkWindow,
-} from "@/view/window/inviteLink";
-import {
-  closeOverlayWindow,
-  showOverlayWindow,
-  updatePointerInOverlayWindow,
-  updatePointerTypeInOverlayWindow,
-  toggleOverlayWindowDevToolsInOverlayWindow,
-} from "@/view/window/pointerOverlay";
+import { view } from "@/view";
 
 export const initialize = () => {
   model.initialize(store.get("customPointerTypes"));
 
-  updateTray();
+  view.tray.update();
 };
 
 export const createRoom = async () => {
@@ -50,8 +35,8 @@ export const createRoom = async () => {
 
   listenRoomSubscription(data.roomId);
 
-  updateTray();
-  await showOverlayWindow();
+  view.tray.update();
+  await view.window.pointerOverlay.show();
   await showInviteLink();
 };
 
@@ -64,8 +49,8 @@ export const leftRoom = (user: User) => {
 };
 
 export const closeRoom = () => {
-  closeOverlayWindow();
-  closeInviteLinkWindow();
+  view.window.pointerOverlay.close();
+  view.window.inviteLink.close();
   unsubscribeRoomSubscription();
 
   model.closeRoom();
@@ -74,27 +59,27 @@ export const closeRoom = () => {
 export const pointerUpdated = (user: User, orientation: PointerOrientation) => {
   model.updatePointer(user, orientation);
 
-  updatePointerInOverlayWindow();
+  view.window.pointerOverlay.updatePointer();
 };
 
 export const pointerDeactivated = (user: User) => {
   model.deactivatePointer(user);
 
-  updatePointerInOverlayWindow();
+  view.window.pointerOverlay.updatePointer();
 };
 
 export const selectedPointer = (selectedPointerType: PointerType) => {
   model.selectedPointer(selectedPointerType);
 
-  updatePointerTypeInOverlayWindow();
+  view.window.pointerOverlay.updatePointerType();
 };
 
 export const showInviteLink = async () => {
-  await showInviteLinkWindow();
+  await view.window.inviteLink.show();
 };
 
 export const toggleOverlayWindowDevTools = () => {
-  toggleOverlayWindowDevToolsInOverlayWindow();
+  view.window.pointerOverlay.toggleDevTools();
 };
 
 export const addCustomPointerType = () => {
@@ -105,11 +90,11 @@ export const addCustomPointerType = () => {
 
   model.addedCustomPointerType(customPointerType);
 
-  updateTray();
+  view.tray.update();
 
   store.set("customPointerTypes", model.state.customPointerTypes);
 
-  updateCustomPointerTypeInCustomPointerTypesWindow();
+  view.window.customPointerType.updateCustomPointerType();
 };
 
 export const removeCustomPointerType = (
@@ -117,11 +102,11 @@ export const removeCustomPointerType = (
 ) => {
   model.removedCustomPointerType(customPointerType);
 
-  updateTray();
+  view.tray.update();
 
   store.set("customPointerTypes", model.state.customPointerTypes);
 
-  updateCustomPointerTypeInCustomPointerTypesWindow();
+  view.window.customPointerType.updateCustomPointerType();
 };
 
 export const updateCustomPointerType = (
@@ -129,13 +114,13 @@ export const updateCustomPointerType = (
 ) => {
   model.updatedCustomPointerType(customPointerType);
 
-  updateTray();
+  view.tray.update();
 
   store.set("customPointerTypes", model.state.customPointerTypes);
 
-  updateCustomPointerTypeInCustomPointerTypesWindow();
+  view.window.customPointerType.updateCustomPointerType();
 };
 
 export const showCustomPointerTypes = () => {
-  showCustomPointerTypesWindow();
+  view.window.customPointerType.show();
 };
