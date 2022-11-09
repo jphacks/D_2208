@@ -1,0 +1,76 @@
+site_name: membership console
+repo_url: https://github.com/membership-console/docs
+site_url: https://membership-console.github.com/docs
+site_dir: public
+
+theme:
+  language: ja
+  name: material
+  palette:
+    primary: Indigo
+    accent: Indigo
+  features:
+    - navigation.top
+    - navigation.instant
+  icon:
+    repo: fontawesome/brands/github
+  favicon: assets/favicon.svg
+
+extra:
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/fereria
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/fereria
+    - icon: fontawesome/solid/bookmark
+      link: https://zenn.dev/remiria
+  analytics:
+    provider: google
+    property: G-0Z0ZWECHNT
+
+extra_css:
+  - stylesheets/extra.css
+  - https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css
+  - https://unpkg.com/mermaid@8.0.0/dist/mermaid.css
+
+extra_javascript:
+  - https://unpkg.com/mermaid@8.0.0/dist/mermaid.min.js
+
+plugins:
+  - search:
+      lang:
+        - ja
+  - awesome-pages
+
+markdown_extensions:
+  - hbfm.quote_uri_hash
+  - hbfm.inline_coloring
+  - pymdownx.tilde
+  - pymdownx.mark
+  - pymdownx.magiclink
+  - pymdownx.emoji
+  - pymdownx.keys
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+  - markdown.extensions.nl2br
+  - fontawesome_markdown
+  - def_list
+  - admonition
+  - meta
+  - footnotes
+  - pymdownx.critic
+  - markdown_blockdiag:
+      format: svg
+  - toc:
+      permalink: "¶"
+  - pymdownx.tasklist:
+      clickable_checkbox: true
+  - pymdownx.highlight:
+      linenums: true
+  - plantuml_markdown:
+      server: http://www.plantuml.com/plantuml
+  - mdx_truly_sane_lists:
+      nested_indent: 2
