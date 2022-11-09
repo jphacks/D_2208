@@ -1,22 +1,25 @@
-# ドキュメント
+# デスクトップアプリケーション ヘルプページ
 
-![deploy](https://github.com/membership-console/docs/workflows/deploy/badge.svg)
+![version](https://img.shields.io/badge/version-1.1.0__SNAPSHOT-blue.svg)
 
-本リポジトリは Membership Console のドキュメントです。
+## 開発
 
-## ビルド方法
+### 環境構築
 
 ```sh
-$ pip install -r requirements.txt
+$ pipenv install
+$ pipenv shell
 $ mkdocs build --strict
 ```
 
-## サーバを起動
+### ビルド方法
+
+```sh
+$ mkdocs build --strict
+```
+
+### 開発用サーバを起動
 
 ```sh
 $ mkdocs serve
 ```
-
-## 公開先
-
-- [membership-console.github.io/docs](https://membership-console.github.io/docs/)
