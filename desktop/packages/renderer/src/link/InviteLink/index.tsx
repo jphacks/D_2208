@@ -49,7 +49,7 @@ export const InviteLink: FC = () => {
         />
       </Center>
 
-      <VStack gap="2">
+      <VStack gap="2" w="full" align="stretch">
         <Clipboard title="URL" text={inviteLink} />
         <Clipboard title="ルームID" text={roomId} />
         <Clipboard title="passcode" text={passcode} />
