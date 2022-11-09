@@ -13,18 +13,41 @@ export type Scalars = {
   Float: number;
 };
 
-export type AccessTokenResponse = {
-  __typename?: 'AccessTokenResponse';
-  accessToken?: Maybe<Scalars['String']>;
-  tokenType?: Maybe<Scalars['String']>;
-  ttl?: Maybe<Scalars['Int']>;
+/** アクセストークン */
+export type AccessToken = {
+  __typename?: 'AccessToken';
+  /** アクセストークン */
+  accessToken: Scalars['String'];
+  /** トークンタイプ */
+  tokenType: Scalars['String'];
+  /** TTL [s] */
+  ttl: Scalars['Int'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createRoom?: Maybe<RoomResponse>;
+  /** ルーム作成API */
+  createRoom: Room;
+  /** ルーム削除API */
   deleteRoom: Scalars['ID'];
-  joinRoom?: Maybe<AccessTokenResponse>;
+  /** ポインター切断API */
+  disconnectPointer: PointerControl;
+  /** スライドを進めるAPI */
+  goNextSlide: SlideControl;
+  /** スライドを戻すAPI */
+  goPreviousSlide: SlideControl;
+  /** ルーム入室API */
+  joinRoom: AccessToken;
+  /** ポインター操作API */
+  movePointer: PointerControl;
+  /** タイマーリセットAPI */
+  resetTimer: Timer;
+  /** タイマー再開API */
+  resumeTimer: Timer;
+  /** タイマー開始API */
+  startTimer: Timer;
+  /** タイマー停止API */
+  stopTimer: Timer;
 };
 
 
@@ -34,35 +57,152 @@ export type MutationDeleteRoomArgs = {
 
 
 export type MutationJoinRoomArgs = {
-  passcode?: InputMaybe<Scalars['String']>;
+  passcode: Scalars['String'];
   roomId: Scalars['ID'];
-  userName?: InputMaybe<Scalars['String']>;
+  userName: Scalars['String'];
+};
+
+
+export type MutationStartTimerArgs = {
+  inputTime: Scalars['Int'];
+};
+
+
+export type MutationStopTimerArgs = {
+  remainingTimeAtPaused: Scalars['Int'];
+};
+
+/** ポインター操作 */
+export type PointerControl = {
+  __typename?: 'PointerControl';
+  /** 操作方向 */
+  orientation: PointerControlOrientation;
+  /** 操作者 */
+  user: User;
+};
+
+/** ポインター操作方向 */
+export type PointerControlOrientation = {
+  __typename?: 'PointerControlOrientation';
+  /** α値 */
+  alpha: Scalars['Float'];
+  /** β値 */
+  beta: Scalars['Float'];
+  /** γ値 */
+  gamma: Scalars['Float'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  health?: Maybe<Scalars['Boolean']>;
+  /** タイマー取得API */
+  getTimer: Timer;
+  /** ユーザリスト取得API */
+  getUsers: Users;
+  /** ヘルスチェックAPI */
+  health: Scalars['Boolean'];
 };
 
-export type RoomResponse = {
-  __typename?: 'RoomResponse';
-  passcode?: Maybe<Scalars['String']>;
+
+export type QueryGetTimerArgs = {
   roomId: Scalars['ID'];
 };
+
+
+export type QueryGetUsersArgs = {
+  roomId: Scalars['ID'];
+};
+
+/** ルーム */
+export type Room = {
+  __typename?: 'Room';
+  /** ルームID */
+  id: Scalars['ID'];
+  /** パスコード */
+  passcode: Scalars['String'];
+};
+
+/** スライド操作 */
+export enum SlideControl {
+  /** 進める */
+  Next = 'NEXT',
+  /** 戻す */
+  Previous = 'PREVIOUS'
+}
 
 export type Subscription = {
   __typename?: 'Subscription';
-  getUsers?: Maybe<Array<Maybe<UserResponse>>>;
+  /** ポインター操作購読API */
+  subscribeToPointer: PointerControl;
+  /** ポインター切断イベント購読API */
+  subscribeToPointerDisconnectEvent: User;
+  /** スライド操作購読API */
+  subscribeToSlideControl: SlideControl;
+  /** タイマー購読API */
+  subscribeToTimer: Timer;
+  /** ユーザリスト購読API */
+  subscribeToUsers: Array<User>;
 };
 
 
-export type SubscriptionGetUsersArgs = {
+export type SubscriptionSubscribeToPointerArgs = {
   roomId: Scalars['ID'];
 };
 
-export type UserResponse = {
-  __typename?: 'UserResponse';
+
+export type SubscriptionSubscribeToPointerDisconnectEventArgs = {
+  roomId: Scalars['ID'];
+};
+
+
+export type SubscriptionSubscribeToSlideControlArgs = {
+  roomId: Scalars['ID'];
+};
+
+
+export type SubscriptionSubscribeToTimerArgs = {
+  roomId: Scalars['ID'];
+};
+
+
+export type SubscriptionSubscribeToUsersArgs = {
+  roomId: Scalars['ID'];
+};
+
+/** タイマー */
+export type Timer = {
+  __typename?: 'Timer';
+  /** 終了時刻 */
+  finishAt: Scalars['String'];
+  /** 入力時間 [s] */
+  inputTime: Scalars['Int'];
+  /** 一時停止時点での残り時間 [s] */
+  remainingTimeAtPaused?: Maybe<Scalars['Int']>;
+  /** ステータス */
+  status: TimerStatus;
+};
+
+/** タイマーステータス */
+export enum TimerStatus {
+  /** 一時停止中 */
+  Paused = 'PAUSED',
+  /** 準備中 */
+  Ready = 'READY',
+  /** 実行中 */
+  Running = 'RUNNING'
+}
+
+/** ユーザ */
+export type User = {
+  __typename?: 'User';
+  /** ユーザID */
   id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  roomId?: Maybe<Scalars['String']>;
+  /** ルーム名 */
+  name: Scalars['String'];
+};
+
+/** ユーザリスト */
+export type Users = {
+  __typename?: 'Users';
+  /** ユーザリスト */
+  users: Array<User>;
 };
