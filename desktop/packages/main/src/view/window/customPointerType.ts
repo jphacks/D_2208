@@ -2,7 +2,7 @@ import { CustomPointerType } from "@smartpointer-desktop/shared";
 import { app, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
 
-import * as controller from "@/controller";
+import { controller } from "@/controller";
 import { model } from "@/model";
 import { loadFile } from "@/utils/window/loadFile";
 

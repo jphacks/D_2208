@@ -4,7 +4,7 @@ import { join } from "path";
 
 import { assetsPath } from "../path";
 
-import * as controller from "@/controller";
+import { controller } from "@/controller";
 import { model } from "@/model";
 import { State } from "@/types";
 
