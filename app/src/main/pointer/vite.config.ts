@@ -16,7 +16,14 @@ export default defineConfig({
       "/api": {
         target: "http://localhost:8080",
       },
+      "/graphql": {
+        target: "http://localhost:8080",
+      },
       "/ws": {
+        target: "ws://localhost:8080",
+        ws: true,
+      },
+      "/graphql-ws": {
         target: "ws://localhost:8080",
         ws: true,
       },
