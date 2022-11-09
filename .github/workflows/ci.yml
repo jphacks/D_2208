@@ -85,4 +85,4 @@ jobs:
 
       - name: build
         run: |
-          yarn build
+          npm run build
