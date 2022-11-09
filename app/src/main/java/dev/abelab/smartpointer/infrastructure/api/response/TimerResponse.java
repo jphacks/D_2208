@@ -28,13 +28,13 @@ public class TimerResponse {
     Integer value;
 
     /**
-     * 終了日時
+     * 終了時刻
      */
     LocalDateTime finishAt;
 
     public TimerResponse(final TimerModel timerModel) {
         this.status = timerModel.getStatus().getId();
-        this.value = timerModel.getValue();
+        this.value = timerModel.getInputTime();
         this.finishAt = timerModel.getFinishAt();
     }
 

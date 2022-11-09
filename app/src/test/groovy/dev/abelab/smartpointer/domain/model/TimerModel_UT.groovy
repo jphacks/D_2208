@@ -32,7 +32,7 @@ class TimerModel_UT extends AbstractSpecification {
         timer.start(60)
 
         then:
-        timer.value == 60
+        timer.inputTime == 60
     }
 
     def "start: 実行中のタイマーは開始不可"() {
@@ -52,7 +52,7 @@ class TimerModel_UT extends AbstractSpecification {
     def "resume: タイマーを再開する"() {
         given:
         final timer = TimerModel.builder()
-            .value(120)
+            .inputTime(120)
             .status(TimerStatus.READY)
             .build()
 
@@ -60,7 +60,7 @@ class TimerModel_UT extends AbstractSpecification {
         timer.resume(60)
 
         then:
-        timer.value == 120
+        timer.inputTime == 120
     }
 
     def "resume: 実行中のタイマーは再開不可"() {
@@ -109,7 +109,7 @@ class TimerModel_UT extends AbstractSpecification {
         final oldFinishAt = RandomHelper.mock(LocalDateTime)
         final timer = TimerModel.builder()
             .status(TimerStatus.READY)
-            .value(60)
+            .inputTime(60)
             .finishAt(oldFinishAt)
             .build()
 

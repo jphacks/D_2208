@@ -8,8 +8,8 @@ import org.springframework.stereotype.Controller;
 
 import dev.abelab.smartpointer.infrastructure.api.request.PointerControlRequest;
 import dev.abelab.smartpointer.infrastructure.api.validation.RequestValidated;
-import dev.abelab.smartpointer.usecase.ControlPointerUseCase;
-import dev.abelab.smartpointer.usecase.DisconnectPointerUseCase;
+import dev.abelab.smartpointer.usecase.pointer.ControlPointerUseCase;
+import dev.abelab.smartpointer.usecase.pointer.DisconnectPointerUseCase;
 import lombok.RequiredArgsConstructor;
 
 /**

@@ -21,8 +21,8 @@ pipeline {
             }
             steps {
                 dir("app/src/main/pointer") {
-                    sh "yarn install"
-                    sh "yarn build"
+                    sh "npm ci"
+                    sh "npm run build"
                 }
             }
         }

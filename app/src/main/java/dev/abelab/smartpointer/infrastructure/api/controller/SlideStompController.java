@@ -5,8 +5,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import dev.abelab.smartpointer.usecase.GoNextSlideUseCase;
-import dev.abelab.smartpointer.usecase.GoPreviousSlideUseCase;
+import dev.abelab.smartpointer.usecase.slide.GoNextSlideUseCase;
+import dev.abelab.smartpointer.usecase.slide.GoPreviousSlideUseCase;
 import lombok.RequiredArgsConstructor;
 
 /**

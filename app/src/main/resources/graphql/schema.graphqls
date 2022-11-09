@@ -5,32 +5,322 @@ schema {
 }
 
 type Query {
-    health: Boolean
+    """
+    ヘルスチェックAPI
+    """
+    health: Boolean!
+
+    """
+    ユーザリスト取得API
+    """
+    getUsers(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): Users!
+
+    """
+    タイマー取得API
+    """
+    getTimer(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): Timer!
 }
 
 type Mutation {
-    createRoom: RoomResponse
-    deleteRoom(roomId: ID!): ID!
-    joinRoom(roomId: ID!, passcode: String, userName: String): AccessTokenResponse
+    """
+    ルーム作成API
+    """
+    createRoom: Room!
+
+    """
+    ルーム削除API
+    """
+    deleteRoom(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): ID!
+
+    """
+    ルーム入室API
+    """
+    joinRoom(
+        """
+        ルームID
+        """
+        roomId: ID!,
+
+        """
+        パスコード
+        """
+        passcode: String!,
+
+        """
+        ユーザ名
+        """
+        userName: String!
+    ): AccessToken!
+
+    """
+    タイマー開始API
+    """
+    startTimer(
+        """
+        入力時間 [s]
+        """
+        inputTime: Int!
+    ): Timer!
+
+    """
+    タイマー再開API
+    """
+    resumeTimer: Timer!
+
+    """
+    タイマー停止API
+    """
+    stopTimer(
+        """
+        一時停止時点での残り時間 [s]
+        """
+        remainingTimeAtPaused: Int!
+    ): Timer!
+
+    """
+    タイマーリセットAPI
+    """
+    resetTimer: Timer!
+
+    """
+    スライドを進めるAPI
+    """
+    goNextSlide: SlideControl!
+
+    """
+    スライドを戻すAPI
+    """
+    goPreviousSlide: SlideControl!
+
+    """
+    ポインター操作API
+    """
+    movePointer: PointerControl!
+
+    """
+    ポインター切断API
+    """
+    disconnectPointer: PointerControl!
 }
 
 type Subscription {
-    getUsers(roomId: ID!): [UserResponse]
+    """
+    ユーザリスト購読API
+    """
+    subscribeToUsers(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): [User!]!
+
+    """
+    タイマー購読API
+    """
+    subscribeToTimer(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): Timer!
+
+    """
+    スライド操作購読API
+    """
+    subscribeToSlideControl(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): SlideControl!
+
+    """
+    ポインター操作購読API
+    """
+    subscribeToPointer(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): PointerControl!
+
+    """
+    ポインター切断イベント購読API
+    """
+    subscribeToPointerDisconnectEvent(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): User!
 }
 
-type RoomResponse {
-    roomId: ID!
-    passcode: String
-}
-
-type AccessTokenResponse {
-    tokenType: String
-    accessToken: String
-    ttl: Int
-}
-
-type UserResponse {
+"""
+ルーム
+"""
+type Room {
+    """
+    ルームID
+    """
     id: ID!
-    roomId: String
-    name: String
+
+    """
+    パスコード
+    """
+    passcode: String!
+}
+
+"""
+アクセストークン
+"""
+type AccessToken {
+    """
+    トークンタイプ
+    """
+    tokenType: String!
+
+    """
+    アクセストークン
+    """
+    accessToken: String!
+
+    """
+    TTL [s]
+    """
+    ttl: Int!
+}
+
+"""
+ユーザ
+"""
+type User {
+    """
+    ユーザID
+    """
+    id: ID!
+
+    """
+    ルーム名
+    """
+    name: String!
+}
+
+"""
+ユーザリスト
+"""
+type Users {
+    """
+    ユーザリスト
+    """
+    users: [User!]!
+}
+
+"""
+タイマー
+"""
+type Timer {
+    """
+    入力時間 [s]
+    """
+    inputTime: Int!
+
+    """
+    一時停止時点での残り時間 [s]
+    """
+    remainingTimeAtPaused: Int
+
+    """
+    終了時刻
+    """
+    finishAt: String!
+
+    """
+    ステータス
+    """
+    status: TimerStatus!
+}
+
+"""
+ポインター操作
+"""
+type PointerControl {
+    """
+    操作方向
+    """
+    orientation: PointerControlOrientation!
+
+    """
+    操作者
+    """
+    user: User!
+}
+
+"""
+ポインター操作方向
+"""
+type PointerControlOrientation {
+    """
+    α値
+    """
+    alpha: Float!
+
+    """
+    β値
+    """
+    beta: Float!
+
+    """
+    γ値
+    """
+    gamma: Float!
+}
+
+"""
+タイマーステータス
+"""
+enum TimerStatus {
+    """
+    準備中
+    """
+    READY
+
+    """
+    実行中
+    """
+    RUNNING
+
+    """
+    一時停止中
+    """
+    PAUSED
+}
+
+"""
+スライド操作
+"""
+enum SlideControl {
+    """
+    進める
+    """
+    NEXT
+
+    """
+    戻す
+    """
+    PREVIOUS
 }
