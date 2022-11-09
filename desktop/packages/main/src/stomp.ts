@@ -1,7 +1,7 @@
 import { Client, StompSubscription } from "@stomp/stompjs";
 import WebSocket from "ws";
 
-import * as controller from "./controller";
+import { controller } from "./controller";
 import { goNext, goPrevious } from "./pagination";
 
 Object.assign(global, { WebSocket });

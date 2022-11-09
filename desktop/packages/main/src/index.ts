@@ -1,9 +1,9 @@
 import { app } from "electron";
 
-import { initialize } from "./controller";
+import { controller } from "./controller";
 
 app.once("ready", async () => {
-  initialize();
+  controller.initialize();
 });
 
 app.on("window-all-closed", () => {
