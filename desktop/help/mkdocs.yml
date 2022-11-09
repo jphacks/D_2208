@@ -1,6 +1,5 @@
-site_name: membership console
-repo_url: https://github.com/membership-console/docs
-site_url: https://membership-console.github.com/docs
+site_name: スマートポインター
+site_url: https://smartpointer.abelab.dev/help
 site_dir: public
 
 theme:
@@ -15,18 +14,6 @@ theme:
   icon:
     repo: fontawesome/brands/github
   favicon: assets/favicon.svg
-
-extra:
-  social:
-    - icon: fontawesome/brands/github-alt
-      link: https://github.com/fereria
-    - icon: fontawesome/brands/twitter
-      link: https://twitter.com/fereria
-    - icon: fontawesome/solid/bookmark
-      link: https://zenn.dev/remiria
-  analytics:
-    provider: google
-    property: G-0Z0ZWECHNT
 
 extra_css:
   - stylesheets/extra.css
