@@ -1,4 +1,4 @@
-# デスクトップアプリケーション ヘルプページ
+# ヘルプページ
 
 ![version](https://img.shields.io/badge/version-1.1.0__SNAPSHOT-blue.svg)
 
