@@ -72,4 +72,55 @@ class SlideController_IT extends AbstractController_IT {
         this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
     }
 
+    def "スライドを戻すAPI: 正常系 スライドを戻す"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
+        }
+        // @formatter:on
+
+        final loginUser = this.login("00000000-0000-0000-0000-000000000000")
+        this.connectWebSocketGraphQL(loginUser)
+
+        when:
+        final query =
+            """
+                mutation {
+                    goPreviousSlide
+                }
+            """
+        final response = this.executeWebSocket(query, "goPreviousSlide", SlideControl)
+
+        then:
+        response == SlideControl.PREVIOUS
+
+        StepVerifier.create(this.slideControlFlux)
+            .expectNext(SlideControl.PREVIOUS)
+            .thenCancel()
+            .verify()
+    }
+
+    def "スライドを戻すAPI: 異常系 未認証の場合は401エラー"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
+        }
+        // @formatter:on
+
+        this.connectWebSocketGraphQL()
+
+        expect:
+        final query =
+            """
+                mutation {
+                    goPreviousSlide
+                }
+            """
+        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
+    }
+
 }

@@ -11,6 +11,7 @@ import dev.abelab.smartpointer.enums.SlideControl;
 import dev.abelab.smartpointer.exception.ErrorCode;
 import dev.abelab.smartpointer.exception.UnauthorizedException;
 import dev.abelab.smartpointer.usecase.slide.GoNextSlideUseCase;
+import dev.abelab.smartpointer.usecase.slide.GoPreviousSlideUseCase;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
@@ -28,6 +29,8 @@ public class SlideController {
 
     private final GoNextSlideUseCase goNextSlideUseCase;
 
+    private final GoPreviousSlideUseCase goPreviousSlideUseCase;
+
     /**
      * スライドを進めるAPI
      *
@@ -43,6 +46,25 @@ public class SlideController {
         }
 
         final var slideControl = this.goNextSlideUseCase.handle(loginUser.getRoomId());
+        this.slideControlSink.tryEmitNext(slideControl);
+        return slideControl;
+    }
+
+    /**
+     * スライドを戻すAPI
+     *
+     * @param loginUser ログインユーザ
+     * @return スライド操作
+     */
+    @MutationMapping
+    public SlideControl goPreviousSlide( //
+        @AuthenticationPrincipal final LoginUserDetails loginUser //
+    ) {
+        if (Objects.isNull(loginUser)) {
+            throw new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN);
+        }
+
+        final var slideControl = this.goPreviousSlideUseCase.handle(loginUser.getRoomId());
         this.slideControlSink.tryEmitNext(slideControl);
         return slideControl;
     }
