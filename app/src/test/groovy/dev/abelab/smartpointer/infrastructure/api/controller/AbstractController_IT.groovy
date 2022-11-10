@@ -4,18 +4,17 @@ import dev.abelab.smartpointer.AbstractDatabaseSpecification
 import dev.abelab.smartpointer.exception.BaseException
 import dev.abelab.smartpointer.property.AuthProperty
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.context.MessageSource
-import org.springframework.graphql.test.tester.WebGraphQlTester
+import org.springframework.graphql.test.tester.GraphQlTester
+import org.springframework.graphql.test.tester.WebSocketGraphQlTester
+import org.springframework.web.reactive.socket.client.ReactorNettyWebSocketClient
 
 /**
  * Controller統合テストの基底クラス
  */
-@AutoConfigureHttpGraphQlTester
 abstract class AbstractController_IT extends AbstractDatabaseSpecification {
 
-    @Autowired
-    private WebGraphQlTester graphQlTester
+    private GraphQlTester graphQlTester
 
     @Autowired
     private MessageSource messageSource
@@ -65,6 +64,16 @@ abstract class AbstractController_IT extends AbstractDatabaseSpecification {
         final messageKey = exception.errorCode.messageKey
         final args = exception.args
         return this.messageSource.getMessage(messageKey, args, Locale.ENGLISH)
+    }
+
+    /**
+     * setup before test class
+     */
+    def setup() {
+        this.graphQlTester = WebSocketGraphQlTester.builder( //
+            "ws://localhost:${PORT}/graphql-ws",
+            new ReactorNettyWebSocketClient() //
+        ).build()
     }
 
 }

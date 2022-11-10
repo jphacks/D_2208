@@ -30,6 +30,11 @@ spring:
     schema:
       printer:
         enabled: true
+    websocket:
+      path: /graphql-ws
+    cors:
+      allowed-origins: "*"
+      allowed-methods: "*"
 
 server:
   port: 8080
