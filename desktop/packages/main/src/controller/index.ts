@@ -5,6 +5,7 @@ import {
   User,
 } from "@smartpointer-desktop/shared";
 import { randomUUID } from "crypto";
+import { screen } from "electron";
 
 import { request } from "@/api";
 import { graphql } from "@/gql";
@@ -22,6 +23,36 @@ export const controller = {
     model.initialize(store.get("customPointerTypes"));
 
     view.tray.update();
+
+    screen.on("display-added", () => {
+      view.tray.update();
+    });
+
+    screen.on("display-removed", (_, oldDisplay) => {
+      const state = model.state;
+      if (state.status !== "CREATED") {
+        return;
+      }
+
+      if (state.displayToShowPointer === oldDisplay.id) {
+        controller.updateDisplayToShowPointer(screen.getPrimaryDisplay().id);
+      } else {
+        view.tray.update();
+      }
+    });
+
+    screen.on("display-metrics-changed", (_, display) => {
+      const state = model.state;
+      if (state.status !== "CREATED") {
+        return;
+      }
+
+      if (state.displayToShowPointer === display.id) {
+        view.window.pointerOverlay.setBoundsToDisplay();
+      }
+
+      view.tray.update();
+    });
   },
 
   createRoom: async () => {
@@ -42,7 +73,7 @@ export const controller = {
 
     await activate();
 
-    model.createdRoom(data.createRoom);
+    model.createdRoom(data.createRoom, screen.getPrimaryDisplay().id);
 
     listenRoomSubscription(data.createRoom.id);
 
@@ -130,5 +161,13 @@ export const controller = {
 
   showCustomPointerTypes: () => {
     view.window.customPointerType.show();
+  },
+
+  updateDisplayToShowPointer: (displayId: number) => {
+    model.updatedDisplayToShowPointer(displayId);
+
+    view.window.pointerOverlay.setBoundsToDisplay();
+
+    view.tray.update();
   },
 };

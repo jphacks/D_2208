@@ -5,6 +5,7 @@ import {
   User,
   CustomPointerType,
 } from "@smartpointer-desktop/shared";
+import { Display } from "electron";
 
 import { Room, State } from "@/types";
 
@@ -33,7 +34,7 @@ export const model = {
     };
   },
 
-  createdRoom: (room: Room) => {
+  createdRoom: (room: Room, displayToShowPointer: Display["id"]) => {
     if (state.status !== "CREATING") {
       throw new Error("Cannot create room when not in CREATING state");
     }
@@ -45,6 +46,7 @@ export const model = {
       joinedUsers: new Map(),
       activePointers: new Map(),
       selectedPointerType: builtInPointers[0]!,
+      displayToShowPointer,
     };
   },
 
@@ -59,6 +61,8 @@ export const model = {
       room: undefined,
       joinedUsers: undefined,
       activePointers: undefined,
+      selectedPointerType: undefined,
+      displayToShowPointer: undefined,
     };
   },
 
@@ -157,6 +161,19 @@ export const model = {
       customPointerTypes: state.customPointerTypes.map((type) =>
         type.id === customPointerType.id ? customPointerType : type
       ),
+    };
+  },
+
+  updatedDisplayToShowPointer: (displayToShowPointer: Display["id"]) => {
+    if (state.status !== "CREATED") {
+      throw new Error(
+        "Cannot update display to show pointer when not in CREATED state"
+      );
+    }
+
+    state = {
+      ...state,
+      displayToShowPointer,
     };
   },
 };

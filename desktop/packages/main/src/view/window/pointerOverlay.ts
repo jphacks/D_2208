@@ -109,6 +109,24 @@ export const pointerOverlay = {
     overlayWindow.webContents.send("onUpdatePointerType", message);
   },
 
+  setBoundsToDisplay: () => {
+    const state = model.state;
+
+    if (state.status !== "CREATED") {
+      throw new Error("Cannot set bounds when not in CREATED state");
+    }
+
+    if (overlayWindow === null || overlayWindow.isDestroyed()) {
+      return;
+    }
+
+    const bounds = screen
+      .getAllDisplays()
+      .find((display) => display.id === state.displayToShowPointer)!.workArea;
+
+    overlayWindow.setBounds(bounds, false);
+  },
+
   close: () => {
     overlayWindow?.close();
   },
