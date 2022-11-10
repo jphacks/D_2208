@@ -26,7 +26,7 @@ class GoNextSlideUseCase_UT extends AbstractUseCase_UT {
 
         then:
         1 * this.roomRepository.existsById(room.id) >> true
-        result.control == SlideControl.NEXT.id
+        result == SlideControl.NEXT
     }
 
     def "handle: ルームが存在しない場合は404エラー"() {

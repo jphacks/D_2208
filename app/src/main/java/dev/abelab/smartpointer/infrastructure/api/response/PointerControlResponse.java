@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ポインター操作レスポンス
+ * ポインター操作
  */
 @Data
 @Builder
