@@ -12,6 +12,10 @@ import org.springframework.context.MessageSource
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.graphql.test.tester.WebSocketGraphQlTester
 import org.springframework.web.reactive.socket.client.ReactorNettyWebSocketClient
+import reactor.core.publisher.Flux
+import reactor.test.StepVerifier
+
+import java.time.Duration
 
 /**
  * Controller統合テストの基底クラス
@@ -103,6 +107,19 @@ abstract class AbstractController_IT extends AbstractDatabaseSpecification {
     }
 
     /**
+     * Execute subscription query with WebSocket / return response
+     *
+     * @param query query
+     * @param operation operation
+     * @param clazz clazz
+     * @return response
+     */
+    protected <T> Flux<T> executeWebSocketSubscription(final String query, final String operation, final Class<T> clazz) {
+        return this.webSocketGraphQlTester.document(query).executeSubscription()
+            .toFlux(operation, clazz)
+    }
+
+    /**
      * エラーメッセージを取得
      *
      * @param exception exception
@@ -162,6 +179,10 @@ abstract class AbstractController_IT extends AbstractDatabaseSpecification {
         this.webSocketGraphQlTester = WebSocketGraphQlTester
             .builder("ws://localhost:${PORT}/graphql-ws", new ReactorNettyWebSocketClient())
             .build()
+    }
+
+    def setup() {
+        StepVerifier.setDefaultTimeout(Duration.ofSeconds(5))
     }
 
 }

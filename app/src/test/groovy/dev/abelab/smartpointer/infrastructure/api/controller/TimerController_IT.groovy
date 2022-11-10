@@ -1,6 +1,6 @@
 package dev.abelab.smartpointer.infrastructure.api.controller
 
-
+import dev.abelab.smartpointer.domain.model.TimerModel
 import dev.abelab.smartpointer.enums.TimerStatus
 import dev.abelab.smartpointer.exception.BadRequestException
 import dev.abelab.smartpointer.exception.ErrorCode
@@ -9,11 +9,23 @@ import dev.abelab.smartpointer.exception.UnauthorizedException
 import dev.abelab.smartpointer.helper.RandomHelper
 import dev.abelab.smartpointer.helper.TableHelper
 import dev.abelab.smartpointer.infrastructure.api.type.Timer
+import org.springframework.beans.factory.annotation.Autowired
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Sinks
+import reactor.test.StepVerifier
+
+import java.time.LocalDateTime
 
 /**
  * TimerControllerの統合テスト
  */
 class TimerController_IT extends AbstractController_IT {
+
+    @Autowired
+    Flux<TimerModel> timerFlux
+
+    @Autowired
+    Sinks.Many<TimerModel> timerSink
 
     def "タイマー取得API: 正常系 タイマーを取得できる"() {
         given:
@@ -128,6 +140,13 @@ class TimerController_IT extends AbstractController_IT {
         response.inputTime == inputTime
         response.remainingTimeAtPaused == null
 
+        StepVerifier.create(this.timerFlux)
+            .expectNextMatches({
+                it.inputTime == inputTime && it.remainingTimeAtPaused == Optional.empty() && it.status == TimerStatus.RUNNING
+            })
+            .thenCancel()
+            .verify()
+
         where:
         inputTime << [1, 3600]
     }
@@ -232,6 +251,98 @@ class TimerController_IT extends AbstractController_IT {
                 }
             """
         this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
+    }
+
+    def "タイマー購読API: 正常系 タイマー変更イベントを購読できる"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
+        }
+        TableHelper.insert sql, "timer", {
+            room_id                                | status               | input_time | remaining_time_at_paused | finish_at
+            "00000000-0000-0000-0000-000000000000" | TimerStatus.READY.id | 60         | 30                       | "2000-01-01 10:30:30"
+        }
+        // @formatter:on
+
+        final loginUser = this.login("00000000-0000-0000-0000-000000000000")
+        this.connectWebSocketGraphQL(loginUser)
+
+        final query = """
+                subscription {
+                    subscribeToTimer(roomId: "${loginUser.roomId}") {
+                        inputTime
+                        remainingTimeAtPaused
+                        finishAt
+                        status
+                    }
+                }
+            """
+        final response = this.executeWebSocketSubscription(query, "subscribeToTimer", Timer)
+
+        when:
+        final timer = TimerModel.builder()
+            .roomId(loginUser.roomId)
+            .inputTime(100)
+            .remainingTimeAtPaused(Optional.empty())
+            .finishAt(LocalDateTime.now())
+            .status(TimerStatus.RUNNING)
+            .build()
+        this.timerSink.tryEmitNext(timer)
+
+        then:
+        StepVerifier.create(response)
+            .expectNext(new Timer(timer))
+            .thenCancel()
+            .verify()
+    }
+
+    def "タイマー購読API: 正常系 別ルームのタイマー変更は通知されない"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
+            "00000000-0000-0000-0000-000000000001" | RandomHelper.numeric(6)
+        }
+        TableHelper.insert sql, "timer", {
+            room_id                                | status               | input_time | remaining_time_at_paused | finish_at
+            "00000000-0000-0000-0000-000000000000" | TimerStatus.READY.id | 60         | 30                       | "2000-01-01 10:30:30"
+            "00000000-0000-0000-0000-000000000001" | TimerStatus.READY.id | 60         | 30                       | "2000-01-01 10:30:30"
+        }
+        // @formatter:on
+
+        final loginUser = this.login("00000000-0000-0000-0000-000000000000")
+        this.connectWebSocketGraphQL(loginUser)
+
+        final query = """
+                subscription {
+                    subscribeToTimer(roomId: "${loginUser.roomId}") {
+                        inputTime
+                        remainingTimeAtPaused
+                        finishAt
+                        status
+                    }
+                }
+            """
+        final response = this.executeWebSocketSubscription(query, "subscribeToTimer", Timer)
+
+        when:
+        final timer = TimerModel.builder()
+            .roomId(loginUser.roomId + "...")
+            .inputTime(100)
+            .remainingTimeAtPaused(Optional.empty())
+            .finishAt(LocalDateTime.now())
+            .status(TimerStatus.RUNNING)
+            .build()
+        this.timerSink.tryEmitNext(timer)
+
+        then:
+        StepVerifier.create(response)
+            .expectNextCount(0)
+            .thenCancel()
+            .verify()
     }
 
 }
