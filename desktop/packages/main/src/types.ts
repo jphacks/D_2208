@@ -4,6 +4,7 @@ import {
   PointerType,
   User,
 } from "@smartpointer-desktop/shared";
+import { Display } from "electron";
 
 export type Room = {
   id: string;
@@ -22,6 +23,8 @@ export type State = Readonly<
         room?: undefined;
         joinedUsers?: undefined;
         activePointers?: undefined;
+        selectedPointerType?: undefined;
+        displayToShowPointer?: undefined;
       }
     | {
         status: "CREATED";
@@ -29,6 +32,7 @@ export type State = Readonly<
         joinedUsers: Map<User["id"], User>;
         activePointers: Map<ActivePointer["user"]["id"], ActivePointer>;
         selectedPointerType: PointerType;
+        displayToShowPointer: Display["id"];
       }
   ) & {
     customPointerTypes: CustomPointerType[];

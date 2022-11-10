@@ -1,5 +1,11 @@
 import { builtInPointers } from "@smartpointer-desktop/shared";
-import { Menu, MenuItemConstructorOptions, nativeTheme, Tray } from "electron";
+import {
+  Menu,
+  MenuItemConstructorOptions,
+  nativeTheme,
+  screen,
+  Tray,
+} from "electron";
 import { join } from "path";
 
 import { assetsPath } from "../path";
@@ -67,6 +73,27 @@ const showInviteLinkWindowTemplate: MenuTemplate = () => [
   },
 ];
 
+const displayListTemplate: MenuTemplateWithState<
+  State & { status: "CREATED" }
+> = (state) => [
+  {
+    label: "ディスプレイ",
+    submenu: screen.getAllDisplays().map((display, index) => ({
+      label: [
+        "ディスプレイ",
+        index + 1,
+        `(${display.bounds.width}x${display.bounds.height})`,
+        display.internal ? "(内蔵)" : "",
+      ]
+        .filter(Boolean)
+        .join(" "),
+      type: "radio",
+      checked: state.displayToShowPointer === display.id,
+      click: () => controller.updateDisplayToShowPointer(display.id),
+    })),
+  },
+];
+
 const closeRoomTemplate: MenuTemplate = () => [
   {
     label: "ルームを終了",
@@ -114,6 +141,7 @@ const createdRoomMenuTemplate: MenuTemplateWithState<
   ...customPointerSetting(),
   ...memberListTemplate(state),
   ...showInviteLinkWindowTemplate(),
+  ...displayListTemplate(state),
   { type: "separator" },
   ...closeRoomTemplate(),
   { type: "separator" },
