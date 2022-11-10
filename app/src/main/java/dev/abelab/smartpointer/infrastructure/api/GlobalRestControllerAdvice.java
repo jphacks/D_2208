@@ -22,7 +22,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import dev.abelab.smartpointer.exception.*;
-import dev.abelab.smartpointer.infrastructure.api.response.ErrorResponse;
+import dev.abelab.smartpointer.infrastructure.api.type.Error;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -157,7 +157,7 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
      */
     private ResponseEntity<Object> buildResponseEntity(final BaseException exception) {
         final var message = this.messageSource.getMessage(exception.getErrorCode().getMessageKey(), null, Locale.ENGLISH);
-        final var body = ErrorResponse.builder() //
+        final var body = Error.builder() //
             .code(exception.getErrorCode().getCode()) //
             .message(message) //
             .build();

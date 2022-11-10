@@ -4,7 +4,7 @@ import dev.abelab.smartpointer.exception.ErrorCode
 import dev.abelab.smartpointer.exception.NotFoundException
 import dev.abelab.smartpointer.helper.RandomHelper
 import dev.abelab.smartpointer.helper.TableHelper
-import dev.abelab.smartpointer.infrastructure.api.response.RoomResponse
+import dev.abelab.smartpointer.infrastructure.api.type.Room
 
 /**
  * RoomControllerの統合テスト
@@ -22,7 +22,7 @@ class RoomController_IT extends AbstractController_IT {
                     }
                 }
             """
-        final response = this.executeHttp(query, "createRoom", RoomResponse)
+        final response = this.executeHttp(query, "createRoom", Room)
 
         then:
         final createdRoom = sql.firstRow("SELECT * FROM room")

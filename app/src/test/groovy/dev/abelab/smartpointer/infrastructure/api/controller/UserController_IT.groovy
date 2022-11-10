@@ -6,8 +6,8 @@ import dev.abelab.smartpointer.exception.NotFoundException
 import dev.abelab.smartpointer.exception.UnauthorizedException
 import dev.abelab.smartpointer.helper.RandomHelper
 import dev.abelab.smartpointer.helper.TableHelper
-import dev.abelab.smartpointer.infrastructure.api.response.AccessTokenResponse
-import dev.abelab.smartpointer.infrastructure.api.response.UsersResponse
+import dev.abelab.smartpointer.infrastructure.api.type.AccessToken
+import dev.abelab.smartpointer.infrastructure.api.type.Users
 
 /**
  * UserControllerの統合テスト
@@ -43,7 +43,7 @@ class UserController_IT extends AbstractController_IT {
                     }
                 }
             """
-        final response = this.executeHttp(query, "getUsers", UsersResponse)
+        final response = this.executeHttp(query, "getUsers", Users)
 
         then:
         response.users*.name == expectedUserNames
@@ -94,7 +94,7 @@ class UserController_IT extends AbstractController_IT {
                     }
                 }
             """
-        final response = this.executeHttp(query, "joinRoom", AccessTokenResponse)
+        final response = this.executeHttp(query, "joinRoom", AccessToken)
 
         then:
         response.tokenType == this.authProperty.tokenType

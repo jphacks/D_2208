@@ -7,7 +7,7 @@ import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter
 import org.springframework.stereotype.Component;
 
 import dev.abelab.smartpointer.exception.BaseException;
-import dev.abelab.smartpointer.infrastructure.api.response.ErrorResponse;
+import dev.abelab.smartpointer.infrastructure.api.type.Error;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
@@ -46,9 +46,9 @@ public class GraphQLExceptionResolver extends DataFetcherExceptionResolverAdapte
      * @param exception 例外
      * @return エラーレスポンス
      */
-    private ErrorResponse buildResponseEntity(final BaseException exception) {
+    private Error buildResponseEntity(final BaseException exception) {
         final var message = this.messageSource.getMessage(exception.getErrorCode().getMessageKey(), null, Locale.ENGLISH);
-        final var response = ErrorResponse.builder() //
+        final var response = Error.builder() //
             .code(exception.getErrorCode().getCode()) //
             .message(message) //
             .build();

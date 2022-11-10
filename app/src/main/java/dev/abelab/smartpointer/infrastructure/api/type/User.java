@@ -1,4 +1,4 @@
-package dev.abelab.smartpointer.infrastructure.api.response;
+package dev.abelab.smartpointer.infrastructure.api.type;
 
 import dev.abelab.smartpointer.domain.model.UserModel;
 import lombok.AllArgsConstructor;
@@ -7,13 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ユーザレスポンス
+ * ユーザ
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponse {
+public class User {
 
     /**
      * ユーザID
@@ -25,7 +25,7 @@ public class UserResponse {
      */
     String name;
 
-    public UserResponse(final UserModel userModel) {
+    public User(final UserModel userModel) {
         this.id = userModel.getId();
         this.name = userModel.getName();
     }
