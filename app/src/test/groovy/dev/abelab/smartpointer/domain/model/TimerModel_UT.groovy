@@ -5,6 +5,7 @@ import dev.abelab.smartpointer.enums.TimerStatus
 import dev.abelab.smartpointer.exception.BadRequestException
 import dev.abelab.smartpointer.exception.BaseException
 import dev.abelab.smartpointer.exception.ErrorCode
+import dev.abelab.smartpointer.helper.DateHelper
 import dev.abelab.smartpointer.helper.RandomHelper
 
 import java.time.LocalDateTime
@@ -79,31 +80,34 @@ class TimerModel_UT extends AbstractSpecification {
         verifyException(exception, new BadRequestException(ErrorCode.TIMER_CANNOT_BE_STARTED))
     }
 
-    def "stop: 実行中のタイマーを停止する"() {
+    def "pause: 実行中のタイマーを停止する"() {
         given:
         final timer = TimerModel.builder()
             .status(TimerStatus.RUNNING)
+            .remainingTimeAtPaused(Optional.empty())
+            .finishAt(DateHelper.tomorrow())
             .build()
 
         when:
-        timer.stop()
+        timer.pause()
 
         then:
         timer.status == TimerStatus.READY
+        timer.remainingTimeAtPaused.isPresent()
     }
 
-    def "stop: 準備中のタイマーは停止不可"() {
+    def "pause: 準備中のタイマーは停止不可"() {
         given:
         final timer = TimerModel.builder()
             .status(TimerStatus.READY)
             .build()
 
         when:
-        timer.stop()
+        timer.pause()
 
         then:
         final BaseException exception = thrown()
-        verifyException(exception, new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STOPPED))
+        verifyException(exception, new BadRequestException(ErrorCode.TIMER_CANNOT_BE_PAUSED))
     }
 
     def "reset: 準備中のタイマーをリセットする"() {

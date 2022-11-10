@@ -10,12 +10,12 @@ import dev.abelab.smartpointer.usecase.AbstractUseCase_UT
 import org.springframework.beans.factory.annotation.Autowired
 
 /**
- * StopTimerUseCaseUseCaseの単体テスト
+ * PauseTimerUseCaseUseCaseの単体テスト
  */
-class StopTimerUseCase_UT extends AbstractUseCase_UT {
+class PauseTimerUseCase_UT extends AbstractUseCase_UT {
 
     @Autowired
-    StopTimerUseCase sut
+    PauseTimerUseCase sut
 
     def "handle: タイマーを停止する"() {
         given:
@@ -29,7 +29,7 @@ class StopTimerUseCase_UT extends AbstractUseCase_UT {
         noExceptionThrown()
         1 * this.roomRepository.existsById(room.id) >> true
         1 * this.timerRepository.selectByRoomId(room.id) >> Optional.of(timer)
-        1 * timer.stop() >> {}
+        1 * timer.pause() >> {}
         this.timerRepository.upsert(timer)
     }
 

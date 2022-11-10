@@ -4,7 +4,7 @@ exception:
     invalid_request_parameter: 不正なリクエストです。
     invalid_user_name: ユーザ名は1~255文字にしてください。
     timer_cannot_be_started: タイマーを開始できません。
-    timer_is_already_stopped: タイマーは既に停止済みです。
+    timer_cannot_be_paused: タイマーを一時停止できません。
     timer_cannot_be_reset: 実行中のタイマーはリセットできません。
     invalid_timer_input_time: 1〜3600秒にしてください。
   unauthorized:

@@ -3,6 +3,7 @@ package dev.abelab.smartpointer.usecase.timer;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import dev.abelab.smartpointer.domain.model.TimerModel;
 import dev.abelab.smartpointer.domain.repository.RoomRepository;
 import dev.abelab.smartpointer.domain.repository.TimerRepository;
 import dev.abelab.smartpointer.exception.ErrorCode;
@@ -10,11 +11,11 @@ import dev.abelab.smartpointer.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 
 /**
- * タイマー停止ユースケース
+ * タイマー一時停止ユースケース
  */
 @RequiredArgsConstructor
 @Component
-public class StopTimerUseCase {
+public class PauseTimerUseCase {
 
     private final RoomRepository roomRepository;
 
@@ -24,9 +25,10 @@ public class StopTimerUseCase {
      * Handle UseCase
      * 
      * @param roomId ルームID
+     * @return タイマー
      */
     @Transactional
-    public void handle(final String roomId) {
+    public TimerModel handle(final String roomId) {
         // ルームの存在チェック
         if (!this.roomRepository.existsById(roomId)) {
             throw new NotFoundException(ErrorCode.NOT_FOUND_ROOM);
@@ -37,8 +39,10 @@ public class StopTimerUseCase {
             .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_TIMER));
 
         // タイマーを更新
-        timer.stop();
+        timer.pause();
         this.timerRepository.upsert(timer);
+
+        return timer;
     }
 
 }

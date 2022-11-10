@@ -24,7 +24,7 @@ public class TimerStompController {
 
     private final ResumeTimerUseCase resumeTimerUseCase;
 
-    private final StopTimerUseCase stopTimerUseCase;
+    private final PauseTimerUseCase pauseTimerUseCase;
 
     private final ResetTimerUseCase resetTimerUseCase;
 
@@ -67,7 +67,7 @@ public class TimerStompController {
     public void stopTimer( //
         @DestinationVariable final String roomId //
     ) {
-        this.stopTimerUseCase.handle(roomId);
+        this.pauseTimerUseCase.handle(roomId);
         this.broadcastTimerUseCase.handle(roomId);
     }
 
