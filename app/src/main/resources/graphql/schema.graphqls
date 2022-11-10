@@ -83,14 +83,9 @@ type Mutation {
     resumeTimer: Timer!
 
     """
-    タイマー停止API
+    タイマー一時停止API
     """
-    stopTimer(
-        """
-        一時停止時点での残り時間 [s]
-        """
-        remainingTimeAtPaused: Int!
-    ): Timer!
+    pauseTimer: Timer!
 
     """
     タイマーリセットAPI

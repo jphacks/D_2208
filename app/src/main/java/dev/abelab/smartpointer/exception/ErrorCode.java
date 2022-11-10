@@ -21,7 +21,7 @@ public enum ErrorCode {
 
     TIMER_CANNOT_BE_STARTED(1003, "exception.bad_request.timer_cannot_be_started"),
 
-    TIMER_IS_ALREADY_STOPPED(1004, "exception.bad_request.timer_is_already_stopped"),
+    TIMER_CANNOT_BE_PAUSED(1004, "exception.bad_request.timer_cannot_be_paused"),
 
     TIMER_CANNOT_BE_RESET(1005, "exception.bad_request.timer_cannot_be_reset"),
 

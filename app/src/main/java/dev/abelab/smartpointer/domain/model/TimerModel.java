@@ -2,6 +2,7 @@ package dev.abelab.smartpointer.domain.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import dev.abelab.smartpointer.enums.TimerStatus;
@@ -90,13 +91,15 @@ public class TimerModel implements Serializable {
     }
 
     /**
-     * タイマーを停止
+     * タイマーを一時停止
      */
-    public void stop() {
+    public void pause() {
         if (!this.getStatus().equals(TimerStatus.RUNNING)) {
-            throw new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STOPPED);
+            throw new BadRequestException(ErrorCode.TIMER_CANNOT_BE_PAUSED);
         }
 
+        // レイテンシによっては残り時間が0sを下回る可能性があるが、とりあえず考慮しない
+        this.setRemainingTimeAtPaused(Optional.of(Math.toIntExact(ChronoUnit.SECONDS.between(LocalDateTime.now(), this.finishAt))));
         this.setStatus(TimerStatus.READY);
     }
 
