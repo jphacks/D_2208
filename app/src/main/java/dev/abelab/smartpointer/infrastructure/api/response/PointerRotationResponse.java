@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ポインター回転数レスポンス
+ * ポインター回転数
  */
 @Data
 @Builder

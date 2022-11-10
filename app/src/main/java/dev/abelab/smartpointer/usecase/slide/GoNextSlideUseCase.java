@@ -7,7 +7,6 @@ import dev.abelab.smartpointer.domain.repository.RoomRepository;
 import dev.abelab.smartpointer.enums.SlideControl;
 import dev.abelab.smartpointer.exception.ErrorCode;
 import dev.abelab.smartpointer.exception.NotFoundException;
-import dev.abelab.smartpointer.infrastructure.api.response.SlideControlResponse;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -23,16 +22,16 @@ public class GoNextSlideUseCase {
      * Handle UseCase
      * 
      * @param roomId ルームID
-     * @return スライド操作レスポンス
+     * @return スライド操作
      */
     @Transactional
-    public SlideControlResponse handle(final String roomId) {
+    public SlideControl handle(final String roomId) {
         // ルームの存在チェック
         if (!this.roomRepository.existsById(roomId)) {
             throw new NotFoundException(ErrorCode.NOT_FOUND_ROOM);
         }
 
-        return new SlideControlResponse(SlideControl.NEXT);
+        return SlideControl.NEXT;
     }
 
 }
