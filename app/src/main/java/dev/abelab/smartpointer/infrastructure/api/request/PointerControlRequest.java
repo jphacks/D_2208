@@ -32,6 +32,7 @@ public class PointerControlRequest implements BaseRequest {
     /**
      * バリデーション
      */
+    @Override
     public void validate() {}
 
 }

@@ -65,7 +65,6 @@ public class GlobalStompControllerAdvice {
             log.error(String.format("%d: %s", exception.getErrorCode().getCode(), message));
         }
 
-        // TODO: 対象ユーザのみに例外を配信する
         this.simpMessagingTemplate.convertAndSend("/topic/exception", body);
     }
 

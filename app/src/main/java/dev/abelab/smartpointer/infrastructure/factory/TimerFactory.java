@@ -22,6 +22,7 @@ public class TimerFactory {
             .roomId(timerModel.getRoomId()) //
             .status(timerModel.getStatus().getId()) //
             .inputTime(timerModel.getInputTime()) //
+            .remainingTimeAtPaused(timerModel.getRemainingTimeAtPaused().orElse(null)) //
             .finishAt(timerModel.getFinishAt()) //
             .build();
     }

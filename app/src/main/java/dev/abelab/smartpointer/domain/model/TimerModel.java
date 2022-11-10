@@ -61,16 +61,17 @@ public class TimerModel implements Serializable {
     /**
      * タイマーを開始
      * 
-     * @param value タイマー時間[s]
+     * @param inputTime 入力時間
      */
-    public void start(final Integer value) {
+    public void start(final Integer inputTime) {
         if (!this.getStatus().equals(TimerStatus.READY)) {
-            throw new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STARTED);
+            throw new BadRequestException(ErrorCode.TIMER_CANNOT_BE_STARTED);
         }
 
         this.setStatus(TimerStatus.RUNNING);
-        this.setInputTime(value);
-        this.setFinishAt(LocalDateTime.now().plusSeconds(value));
+        this.setInputTime(inputTime);
+        this.setRemainingTimeAtPaused(Optional.empty());
+        this.setFinishAt(LocalDateTime.now().plusSeconds(inputTime));
     }
 
     /**
@@ -80,7 +81,7 @@ public class TimerModel implements Serializable {
      */
     public void resume(final Integer value) {
         if (!this.getStatus().equals(TimerStatus.READY)) {
-            throw new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STARTED);
+            throw new BadRequestException(ErrorCode.TIMER_CANNOT_BE_STARTED);
         }
 
         this.setStatus(TimerStatus.RUNNING);
