@@ -83,6 +83,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-devtools:${SPRING_BOOT_VERSION}"
     testImplementation "org.springframework.boot:spring-boot-starter-test:${SPRING_BOOT_VERSION}"
     testImplementation "org.springframework.graphql:spring-graphql-test:1.0.2"
+    testImplementation "io.projectreactor:reactor-test:3.5.0"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${SPRING_BOOT_VERSION}"
 
     // spring security

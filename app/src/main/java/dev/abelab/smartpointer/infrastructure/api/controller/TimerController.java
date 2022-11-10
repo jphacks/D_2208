@@ -33,6 +33,7 @@ public class TimerController {
     private final Sinks.Many<TimerModel> timerSink;
 
     private final GetTimerUseCase getTimerUseCase;
+
     private final StartTimerUseCase startTimerUseCase;
 
     /**
