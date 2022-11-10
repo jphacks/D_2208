@@ -4,6 +4,7 @@ import dev.abelab.smartpointer.AbstractSpecification
 import dev.abelab.smartpointer.domain.repository.RoomRepository
 import dev.abelab.smartpointer.domain.repository.TimerRepository
 import dev.abelab.smartpointer.domain.repository.UserRepository
+import dev.abelab.smartpointer.domain.service.TimerService
 import dev.abelab.smartpointer.domain.service.UserService
 import org.spockframework.spring.SpringBean
 
@@ -23,5 +24,8 @@ abstract class AbstractUseCase_UT extends AbstractSpecification {
 
     @SpringBean
     UserService userService = Mock()
+
+    @SpringBean
+    TimerService timerService = Mock()
 
 }

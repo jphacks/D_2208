@@ -30,6 +30,7 @@ public class RoomJoinRequest implements BaseRequest {
     /**
      * バリデーション
      */
+    @Override
     public void validate() {
         // ユーザ名
         if (!ValidationUtil.checkStringLength(this.getName(), 1, 255)) {

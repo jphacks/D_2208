@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * ルームコントローラ
- * 
- * TODO: STOMPからGraphQLへの移行が完了したら削除する
  */
 @RestController
 @RequestMapping(path = "/api/rooms", produces = MediaType.APPLICATION_JSON_VALUE)

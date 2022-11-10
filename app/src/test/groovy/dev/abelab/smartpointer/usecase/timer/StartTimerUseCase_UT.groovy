@@ -6,7 +6,6 @@ import dev.abelab.smartpointer.exception.BaseException
 import dev.abelab.smartpointer.exception.ErrorCode
 import dev.abelab.smartpointer.exception.NotFoundException
 import dev.abelab.smartpointer.helper.RandomHelper
-import dev.abelab.smartpointer.infrastructure.api.request.TimerStartRequest
 import dev.abelab.smartpointer.usecase.AbstractUseCase_UT
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -23,26 +22,26 @@ class StartTimerUseCase_UT extends AbstractUseCase_UT {
         final timer = Spy(TimerModel)
         final room = RandomHelper.mock(RoomModel)
 
-        final requestBody = RandomHelper.mock(TimerStartRequest)
+        final inputTime = 100
 
         when:
-        this.sut.handle(room.id, requestBody)
+        this.sut.handle(room.id, inputTime)
 
         then:
         noExceptionThrown()
         1 * this.roomRepository.existsById(room.id) >> true
         1 * this.timerRepository.selectByRoomId(room.id) >> Optional.of(timer)
-        1 * timer.start(requestBody.value)
+        1 * timer.start(inputTime)
     }
 
     def "handle: ルームが存在しない場合は404エラー"() {
         given:
         final room = RandomHelper.mock(RoomModel)
 
-        final requestBody = RandomHelper.mock(TimerStartRequest)
+        final inputTime = 100
 
         when:
-        this.sut.handle(room.id, requestBody)
+        this.sut.handle(room.id, inputTime)
 
         then:
         1 * this.roomRepository.existsById(room.id) >> false
@@ -54,10 +53,10 @@ class StartTimerUseCase_UT extends AbstractUseCase_UT {
         given:
         final room = RandomHelper.mock(RoomModel)
 
-        final requestBody = RandomHelper.mock(TimerStartRequest)
+        final inputTime = 100
 
         when:
-        this.sut.handle(room.id, requestBody)
+        this.sut.handle(room.id, inputTime)
 
         then:
         1 * this.roomRepository.existsById(room.id) >> true

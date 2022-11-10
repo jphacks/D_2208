@@ -25,8 +25,6 @@ public class PointerControlResponse {
      */
     Boolean isActive;
 
-    // TODO: ポインター操作者を入れる
-
     public PointerControlResponse(final PointerControlRequest requestBody, final Boolean isActive) {
         this.rotation = new PointerRotationResponse(requestBody);
         this.isActive = isActive;

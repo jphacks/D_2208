@@ -3,12 +3,13 @@
 <mapper namespace="dev.abelab.smartpointer.infrastructure.db.mapper.TimerMapper">
 
     <insert id="upsert" parameterType="dev.abelab.smartpointer.infrastructure.db.entity.Timer">
-        insert into `timer` (`room_id`, `status`, `input_time`, `finish_at`)
-        values (#{roomId}, #{status}, #{inputTime}, #{finishAt})
-        ON DUPLICATE KEY UPDATE `room_id`    = #{roomId},
-                                `status`     = #{status},
-                                `input_time` = #{inputTime},
-                                `finish_at`  = #{finishAt}
+        insert into `timer` (`room_id`, `status`, `input_time`, `remaining_time_at_paused`, `finish_at`)
+        values (#{roomId}, #{status}, #{inputTime}, #{remainingTimeAtPaused}, #{finishAt})
+        ON DUPLICATE KEY UPDATE `room_id`                  = #{roomId},
+                                `status`                   = #{status},
+                                `input_time`               = #{inputTime},
+                                `remaining_time_at_paused` = #{remainingTimeAtPaused},
+                                `finish_at`                = #{finishAt}
     </insert>
 
 </mapper>

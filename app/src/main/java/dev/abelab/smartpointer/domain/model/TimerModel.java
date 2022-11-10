@@ -42,7 +42,8 @@ public class TimerModel implements Serializable {
     /**
      * 一時停止時点での残り時間 [s]
      */
-    Optional<Integer> remainingTimeAtPaused;
+    @Builder.Default
+    Optional<Integer> remainingTimeAtPaused = Optional.empty();
 
     /**
      * 終了時刻
@@ -61,16 +62,17 @@ public class TimerModel implements Serializable {
     /**
      * タイマーを開始
      * 
-     * @param value タイマー時間[s]
+     * @param inputTime 入力時間
      */
-    public void start(final Integer value) {
+    public void start(final Integer inputTime) {
         if (!this.getStatus().equals(TimerStatus.READY)) {
-            throw new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STARTED);
+            throw new BadRequestException(ErrorCode.TIMER_CANNOT_BE_STARTED);
         }
 
         this.setStatus(TimerStatus.RUNNING);
-        this.setInputTime(value);
-        this.setFinishAt(LocalDateTime.now().plusSeconds(value));
+        this.setInputTime(inputTime);
+        this.setRemainingTimeAtPaused(Optional.empty());
+        this.setFinishAt(LocalDateTime.now().plusSeconds(inputTime));
     }
 
     /**
@@ -80,7 +82,7 @@ public class TimerModel implements Serializable {
      */
     public void resume(final Integer value) {
         if (!this.getStatus().equals(TimerStatus.READY)) {
-            throw new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STARTED);
+            throw new BadRequestException(ErrorCode.TIMER_CANNOT_BE_STARTED);
         }
 
         this.setStatus(TimerStatus.RUNNING);

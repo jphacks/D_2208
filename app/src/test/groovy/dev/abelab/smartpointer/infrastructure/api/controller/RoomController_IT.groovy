@@ -22,7 +22,7 @@ class RoomController_IT extends AbstractController_IT {
                     }
                 }
             """
-        final response = this.execute(query, "createRoom", RoomResponse)
+        final response = this.executeHttp(query, "createRoom", RoomResponse)
 
         then:
         final createdRoom = sql.firstRow("SELECT * FROM room")
@@ -52,7 +52,7 @@ class RoomController_IT extends AbstractController_IT {
                     deleteRoom(roomId: "00000000-0000-0000-0000-000000000000")
                 }
             """
-        final response = this.execute(query, "deleteRoom", String)
+        final response = this.executeHttp(query, "deleteRoom", String)
 
         then:
         response == "00000000-0000-0000-0000-000000000000"
@@ -77,7 +77,7 @@ class RoomController_IT extends AbstractController_IT {
                     deleteRoom(roomId: "00000000-0000-0000-0000-000000000001")
                 }
             """
-        this.execute(query, new NotFoundException(ErrorCode.NOT_FOUND_ROOM))
+        this.executeHttp(query, new NotFoundException(ErrorCode.NOT_FOUND_ROOM))
     }
 
 }

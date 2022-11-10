@@ -53,7 +53,6 @@ public class JoinRoomUseCase {
         }
 
         // ユーザ名チェック
-        // TODO: Validatorを作成し、Controllerで400チェックする
         this.userService.checkIsNameValid(userName);
         this.userService.checkIsNameAlreadyUsed(roomId, userName);
 

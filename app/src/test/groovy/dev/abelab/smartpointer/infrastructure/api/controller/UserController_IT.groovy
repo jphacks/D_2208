@@ -43,7 +43,7 @@ class UserController_IT extends AbstractController_IT {
                     }
                 }
             """
-        final response = this.execute(query, "getUsers", UsersResponse)
+        final response = this.executeHttp(query, "getUsers", UsersResponse)
 
         then:
         response.users*.name == expectedUserNames
@@ -68,7 +68,7 @@ class UserController_IT extends AbstractController_IT {
                     }
                 }
             """
-        this.execute(query, new NotFoundException(ErrorCode.NOT_FOUND_ROOM))
+        this.executeHttp(query, new NotFoundException(ErrorCode.NOT_FOUND_ROOM))
     }
 
     def "ルーム入室API: 正常系 入室に成功するとアクセストークンを返す"() {
@@ -94,7 +94,7 @@ class UserController_IT extends AbstractController_IT {
                     }
                 }
             """
-        final response = this.execute(query, "joinRoom", AccessTokenResponse)
+        final response = this.executeHttp(query, "joinRoom", AccessTokenResponse)
 
         then:
         response.tokenType == this.authProperty.tokenType
@@ -135,7 +135,7 @@ class UserController_IT extends AbstractController_IT {
                     }
                 }
             """
-        this.execute(query, new BadRequestException(expectedErrorCode))
+        this.executeHttp(query, new BadRequestException(expectedErrorCode))
 
         where:
         inputUserName                  || expectedErrorCode
@@ -166,7 +166,7 @@ class UserController_IT extends AbstractController_IT {
                     }
                 }
             """
-        this.execute(query, new NotFoundException(ErrorCode.NOT_FOUND_ROOM))
+        this.executeHttp(query, new NotFoundException(ErrorCode.NOT_FOUND_ROOM))
     }
 
     def "ルーム入室API: 異常系 パスコードが間違えている場合は401エラー"() {
@@ -192,7 +192,7 @@ class UserController_IT extends AbstractController_IT {
                     }
                 }
             """
-        this.execute(query, new UnauthorizedException(ErrorCode.INCORRECT_ROOM_PASSCODE))
+        this.executeHttp(query, new UnauthorizedException(ErrorCode.INCORRECT_ROOM_PASSCODE))
     }
 
     def "ルーム入室API: 異常系 ユーザ名が既に使われている場合は400エラー"() {
@@ -223,7 +223,7 @@ class UserController_IT extends AbstractController_IT {
                     }
                 }
             """
-        this.execute(query, new BadRequestException(ErrorCode.USER_NAME_IS_ALREADY_EXISTS))
+        this.executeHttp(query, new BadRequestException(ErrorCode.USER_NAME_IS_ALREADY_EXISTS))
     }
 
 }

@@ -30,10 +30,11 @@ public class TimerResumeRequest implements BaseRequest {
     /**
      * バリデーション
      */
+    @Override
     public void validate() {
         // 残り時間
         if (this.getValue() < 1 || this.getValue() > 3600) {
-            throw new BadRequestException(ErrorCode.INVALID_TIMER_VALUE);
+            throw new BadRequestException(ErrorCode.INVALID_TIMER_INPUT_TIME);
         }
     }
 

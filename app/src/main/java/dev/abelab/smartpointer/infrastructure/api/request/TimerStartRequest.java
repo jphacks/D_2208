@@ -1,7 +1,5 @@
 package dev.abelab.smartpointer.infrastructure.api.request;
 
-import dev.abelab.smartpointer.exception.BadRequestException;
-import dev.abelab.smartpointer.exception.ErrorCode;
 import dev.abelab.smartpointer.util.JsonMessageUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,11 +28,7 @@ public class TimerStartRequest implements BaseRequest {
     /**
      * バリデーション
      */
-    public void validate() {
-        // 設定時間
-        if (this.getValue() < 1 || this.getValue() > 3600) {
-            throw new BadRequestException(ErrorCode.INVALID_TIMER_VALUE);
-        }
-    }
+    @Override
+    public void validate() {}
 
 }

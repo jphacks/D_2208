@@ -19,13 +19,13 @@ public enum ErrorCode {
 
     INVALID_USER_NAME(1002, "exception.bad_request.invalid_user_name"),
 
-    TIMER_IS_ALREADY_STARTED(1003, "exception.bad_request.timer_is_already_started"),
+    TIMER_CANNOT_BE_STARTED(1003, "exception.bad_request.timer_cannot_be_started"),
 
     TIMER_IS_ALREADY_STOPPED(1004, "exception.bad_request.timer_is_already_stopped"),
 
     TIMER_CANNOT_BE_RESET(1005, "exception.bad_request.timer_cannot_be_reset"),
 
-    INVALID_TIMER_VALUE(1006, "exception.bad_request.invalid_timer_value"),
+    INVALID_TIMER_INPUT_TIME(1006, "exception.bad_request.invalid_timer_input_time"),
 
     /**
      * 401 Unauthorized: 2000~2999
