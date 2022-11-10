@@ -9,6 +9,7 @@ import dev.abelab.smartpointer.helper.DateHelper
 import dev.abelab.smartpointer.helper.RandomHelper
 
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 /**
  * TimerModelの単体テスト
@@ -54,30 +55,34 @@ class TimerModel_UT extends AbstractSpecification {
 
     def "resume: タイマーを再開する"() {
         given:
+        final now = LocalDateTime.now()
         final timer = TimerModel.builder()
             .inputTime(120)
+            .remainingTimeAtPaused(Optional.of(60))
             .status(TimerStatus.READY)
             .build()
 
         when:
-        timer.resume(60)
+        timer.resume()
 
         then:
-        timer.inputTime == 120
+        ChronoUnit.MINUTES.between(now, timer.finishAt) == 1
+        timer.remainingTimeAtPaused.isEmpty()
     }
 
     def "resume: 実行中のタイマーは再開不可"() {
         given:
         final timer = TimerModel.builder()
+            .remainingTimeAtPaused(Optional.of(60))
             .status(TimerStatus.RUNNING)
             .build()
 
         when:
-        timer.resume(60)
+        timer.resume()
 
         then:
         final BaseException exception = thrown()
-        verifyException(exception, new BadRequestException(ErrorCode.TIMER_CANNOT_BE_STARTED))
+        verifyException(exception, new BadRequestException(ErrorCode.TIMER_CANNOT_BE_RESUMED))
     }
 
     def "pause: 実行中のタイマーを停止する"() {

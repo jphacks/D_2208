@@ -17,6 +17,7 @@ import dev.abelab.smartpointer.exception.UnauthorizedException;
 import dev.abelab.smartpointer.infrastructure.api.type.Timer;
 import dev.abelab.smartpointer.usecase.timer.GetTimerUseCase;
 import dev.abelab.smartpointer.usecase.timer.PauseTimerUseCase;
+import dev.abelab.smartpointer.usecase.timer.ResumeTimerUseCase;
 import dev.abelab.smartpointer.usecase.timer.StartTimerUseCase;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
@@ -36,6 +37,8 @@ public class TimerController {
     private final GetTimerUseCase getTimerUseCase;
 
     private final StartTimerUseCase startTimerUseCase;
+
+    private final ResumeTimerUseCase resumeTimerUseCase;
 
     private final PauseTimerUseCase pauseTimerUseCase;
 
@@ -69,6 +72,25 @@ public class TimerController {
         }
 
         final var timer = this.startTimerUseCase.handle(loginUser.getRoomId(), inputTime);
+        this.timerSink.tryEmitNext(timer);
+        return new Timer(timer);
+    }
+
+    /**
+     * タイマー再開API
+     *
+     * @param loginUser ログインユーザ
+     * @return タイマー
+     */
+    @MutationMapping
+    public Timer resumeTimer( //
+        @AuthenticationPrincipal final LoginUserDetails loginUser //
+    ) {
+        if (Objects.isNull(loginUser)) {
+            throw new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN);
+        }
+
+        final var timer = this.resumeTimerUseCase.handle(loginUser.getRoomId());
         this.timerSink.tryEmitNext(timer);
         return new Timer(timer);
     }

@@ -5,7 +5,8 @@ exception:
     invalid_user_name: ユーザ名は1~255文字にしてください。
     timer_cannot_be_started: タイマーを開始できません。
     timer_cannot_be_paused: タイマーを一時停止できません。
-    timer_cannot_be_reset: 実行中のタイマーはリセットできません。
+    timer_cannot_be_reset: タイマーをリセットできません。
+    timer_cannot_be_resumed: タイマーを再開できません。
     invalid_timer_input_time: 1〜3600秒にしてください。
   unauthorized:
     user_not_logged_in: ユーザはログインしていません。

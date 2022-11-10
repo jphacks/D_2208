@@ -78,16 +78,15 @@ public class TimerModel implements Serializable {
 
     /**
      * タイマーを再開
-     * 
-     * @param value タイマー時間[s]
      */
-    public void resume(final Integer value) {
+    public void resume() {
         if (!this.getStatus().equals(TimerStatus.READY)) {
-            throw new BadRequestException(ErrorCode.TIMER_CANNOT_BE_STARTED);
+            throw new BadRequestException(ErrorCode.TIMER_CANNOT_BE_RESUMED);
         }
 
+        this.setFinishAt(LocalDateTime.now().plusSeconds(this.remainingTimeAtPaused.orElse(0)));
         this.setStatus(TimerStatus.RUNNING);
-        this.setFinishAt(LocalDateTime.now().plusSeconds(value));
+        this.setRemainingTimeAtPaused(Optional.empty());
     }
 
     /**

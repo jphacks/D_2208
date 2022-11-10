@@ -6,7 +6,6 @@ import dev.abelab.smartpointer.exception.BaseException
 import dev.abelab.smartpointer.exception.ErrorCode
 import dev.abelab.smartpointer.exception.NotFoundException
 import dev.abelab.smartpointer.helper.RandomHelper
-import dev.abelab.smartpointer.infrastructure.api.request.TimerResumeRequest
 import dev.abelab.smartpointer.usecase.AbstractUseCase_UT
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -23,16 +22,14 @@ class ResumeTimerUseCase_UT extends AbstractUseCase_UT {
         final timer = Spy(TimerModel)
         final room = RandomHelper.mock(RoomModel)
 
-        final requestBody = RandomHelper.mock(TimerResumeRequest)
-
         when:
-        this.sut.handle(room.id, requestBody)
+        this.sut.handle(room.id)
 
         then:
         noExceptionThrown()
         1 * this.roomRepository.existsById(room.id) >> true
         1 * this.timerRepository.selectByRoomId(room.id) >> Optional.of(timer)
-        1 * timer.resume(requestBody.value) >> {}
+        1 * timer.resume() >> {}
         this.timerRepository.upsert(timer)
     }
 
@@ -40,10 +37,8 @@ class ResumeTimerUseCase_UT extends AbstractUseCase_UT {
         given:
         final room = RandomHelper.mock(RoomModel)
 
-        final requestBody = RandomHelper.mock(TimerResumeRequest)
-
         when:
-        this.sut.handle(room.id, requestBody)
+        this.sut.handle(room.id)
 
         then:
         1 * this.roomRepository.existsById(room.id) >> false
@@ -55,10 +50,8 @@ class ResumeTimerUseCase_UT extends AbstractUseCase_UT {
         given:
         final room = RandomHelper.mock(RoomModel)
 
-        final requestBody = RandomHelper.mock(TimerResumeRequest)
-
         when:
-        this.sut.handle(room.id, requestBody)
+        this.sut.handle(room.id)
 
         then:
         1 * this.roomRepository.existsById(room.id) >> true
