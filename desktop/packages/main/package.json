@@ -11,6 +11,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "2.13.11",
     "@graphql-codegen/client-preset": "1.1.3",
+    "@graphql-typed-document-node/core": "3.1.1",
     "@openapitools/openapi-generator-cli": "2.5.2",
     "@smartpointer-desktop/eslintrc": "1.1.0-SNAPSHOT",
     "@smartpointer-desktop/tsconfig": "1.1.0-SNAPSHOT",
