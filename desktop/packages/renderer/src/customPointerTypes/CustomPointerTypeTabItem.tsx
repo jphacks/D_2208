@@ -42,7 +42,11 @@ export const CustomPointerTypeTabItem: FC<{
   });
 
   const { getRootProps, getInputProps } = useDropzone({
-    accept: { "image/*": [] },
+    accept: {
+      "image/jpeg": [],
+      "image/png": [],
+      "image/gif": [],
+    },
     onDrop: (acceptedFiles) => {
       const file = acceptedFiles[0];
       if (file) {
