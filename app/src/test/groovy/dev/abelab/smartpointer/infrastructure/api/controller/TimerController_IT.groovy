@@ -102,7 +102,7 @@ class TimerController_IT extends AbstractController_IT {
         "00000000-0000-0000-0000-000000000001" | ErrorCode.NOT_FOUND_ROOM
     }
 
-    def "タイマー開始API: 正常系 タイマーを開始できる"() {
+    def "タイマー開始API: 正常系 準備中のタイマーを開始できる"() {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
@@ -255,7 +255,7 @@ class TimerController_IT extends AbstractController_IT {
         this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
     }
 
-    def "タイマー再開API: 正常系 タイマーを再開できる"() {
+    def "タイマー再開API: 正常系 一時停止中のタイマーを再開できる"() {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
@@ -369,7 +369,7 @@ class TimerController_IT extends AbstractController_IT {
         this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
     }
 
-    def "タイマー一時停止API: 正常系 タイマーを一時停止できる"() {
+    def "タイマー一時停止API: 正常系 実行中のタイマーを一時停止できる"() {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
@@ -473,6 +473,121 @@ class TimerController_IT extends AbstractController_IT {
             """
                 mutation {
                     pauseTimer {
+                        inputTime
+                        remainingTimeAtPaused
+                        finishAt
+                        status
+                    }
+                }
+            """
+        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
+    }
+
+    def "タイマーリセットAPI: 正常系 準備中以外のタイマーをリセットできる"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
+        }
+        TableHelper.insert sql, "timer", {
+            room_id                                | status         | input_time | remaining_time_at_paused | finish_at
+            "00000000-0000-0000-0000-000000000000" | inputStatus.id | 60         | 30                       | "2000-01-01 10:30:30"
+        }
+        // @formatter:on
+
+        final loginUser = this.login("00000000-0000-0000-0000-000000000000")
+        this.connectWebSocketGraphQL(loginUser)
+
+        when:
+        final query =
+            """
+                mutation {
+                    resetTimer {
+                        inputTime
+                        remainingTimeAtPaused
+                        finishAt
+                        status
+                    }
+                }
+            """
+        final response = this.executeWebSocket(query, "resetTimer", Timer)
+
+        then:
+        final updatedTimer = sql.firstRow("SELECT * FROM timer")
+        updatedTimer.input_time == 60
+        updatedTimer.remaining_time_at_paused == null
+        updatedTimer.status == TimerStatus.READY.id
+
+        response.inputTime == 60
+        response.remainingTimeAtPaused == null
+        response.status == TimerStatus.READY
+
+        StepVerifier.create(this.timerFlux)
+            .expectNextMatches({
+                it.inputTime == 60 && it.remainingTimeAtPaused.isEmpty() && it.status == TimerStatus.READY
+            })
+            .thenCancel()
+            .verify()
+
+        where:
+        inputStatus << [
+            TimerStatus.RUNNING,
+            TimerStatus.PAUSED,
+        ]
+    }
+
+    def "タイマーリセットAPI: 異常系 タイマー準備中の場合は400エラー"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
+        }
+        TableHelper.insert sql, "timer", {
+            room_id                                | status               | input_time | remaining_time_at_paused | finish_at
+            "00000000-0000-0000-0000-000000000000" | TimerStatus.READY.id | 60         | 30                       | "2000-01-01 10:30:30"
+        }
+        // @formatter:on
+
+        final loginUser = this.login("00000000-0000-0000-0000-000000000000")
+        this.connectWebSocketGraphQL(loginUser)
+
+        expect:
+        final query =
+            """
+                mutation {
+                    resetTimer {
+                        inputTime
+                        remainingTimeAtPaused
+                        finishAt
+                        status
+                    }
+                }
+            """
+        this.executeWebSocket(query, new BadRequestException(ErrorCode.TIMER_CANNOT_BE_RESET))
+    }
+
+    def "タイマーリセットAPI: 異常系 未認証の場合は401エラー"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
+        }
+        TableHelper.insert sql, "timer", {
+            room_id                                | status                 | input_time | remaining_time_at_paused | finish_at
+            "00000000-0000-0000-0000-000000000000" | TimerStatus.RUNNING.id | 60         | 30                       | "2000-01-01 10:30:30"
+        }
+        // @formatter:on
+
+        this.connectWebSocketGraphQL()
+
+        expect:
+        final query =
+            """
+                mutation {
+                    resetTimer {
                         inputTime
                         remainingTimeAtPaused
                         finishAt
