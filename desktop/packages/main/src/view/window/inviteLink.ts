@@ -24,7 +24,7 @@ export const inviteLink = {
       });
 
       await loadFile(inviteLinkWindow, "link.html", {
-        roomId: state.room.roomId,
+        roomId: state.room.id,
         passcode: state.room.passcode,
         origin:
           process.env["USE_DEV_BACKEND"] === "true"
