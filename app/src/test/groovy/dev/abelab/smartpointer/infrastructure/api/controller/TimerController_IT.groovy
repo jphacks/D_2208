@@ -136,9 +136,11 @@ class TimerController_IT extends AbstractController_IT {
         final updatedTimer = sql.firstRow("SELECT * FROM timer")
         updatedTimer.input_time == inputTime
         updatedTimer.remaining_time_at_paused == null
+        updatedTimer.status == TimerStatus.RUNNING.id
 
         response.inputTime == inputTime
         response.remainingTimeAtPaused == null
+        response.status == TimerStatus.RUNNING
 
         StepVerifier.create(this.timerFlux)
             .expectNextMatches({
@@ -261,8 +263,8 @@ class TimerController_IT extends AbstractController_IT {
             "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
         }
         TableHelper.insert sql, "timer", {
-            room_id                                | status               | input_time | remaining_time_at_paused | finish_at
-            "00000000-0000-0000-0000-000000000000" | TimerStatus.READY.id | 60         | 30                       | "2000-01-01 10:30:30"
+            room_id                                | status                | input_time | remaining_time_at_paused | finish_at
+            "00000000-0000-0000-0000-000000000000" | TimerStatus.PAUSED.id | 60         | 30                       | "2000-01-01 10:30:30"
         }
         // @formatter:on
 
@@ -287,9 +289,11 @@ class TimerController_IT extends AbstractController_IT {
         final updatedTimer = sql.firstRow("SELECT * FROM timer")
         updatedTimer.input_time == 60
         updatedTimer.remaining_time_at_paused == null
+        updatedTimer.status == TimerStatus.RUNNING.id
 
         response.inputTime == 60
         response.remainingTimeAtPaused == null
+        response.status == TimerStatus.RUNNING
 
         StepVerifier.create(this.timerFlux)
             .expectNextMatches({
@@ -299,7 +303,7 @@ class TimerController_IT extends AbstractController_IT {
             .verify()
     }
 
-    def "タイマー再開API: 異常系 タイマーが準備中以外の場合は400エラー"() {
+    def "タイマー再開API: 異常系 タイマーが一時停止中以外の場合は400エラー"() {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
@@ -331,8 +335,8 @@ class TimerController_IT extends AbstractController_IT {
 
         where:
         timerStatus         || expectedErrorCode
+        TimerStatus.READY   || ErrorCode.TIMER_CANNOT_BE_RESUMED
         TimerStatus.RUNNING || ErrorCode.TIMER_CANNOT_BE_RESUMED
-        TimerStatus.PAUSED  || ErrorCode.TIMER_CANNOT_BE_RESUMED
     }
 
     def "タイマー再開API: 異常系 未認証の場合は401エラー"() {
@@ -399,13 +403,15 @@ class TimerController_IT extends AbstractController_IT {
         final updatedTimer = sql.firstRow("SELECT * FROM timer")
         updatedTimer.input_time == 60
         updatedTimer.remaining_time_at_paused != null
+        updatedTimer.status == TimerStatus.PAUSED.id
 
         response.inputTime == 60
         response.remainingTimeAtPaused != null
+        response.status == TimerStatus.PAUSED
 
         StepVerifier.create(this.timerFlux)
             .expectNextMatches({
-                it.inputTime == 60 && it.remainingTimeAtPaused.isPresent() && it.status == TimerStatus.READY
+                it.inputTime == 60 && it.remainingTimeAtPaused.isPresent() && it.status == TimerStatus.PAUSED
             })
             .thenCancel()
             .verify()
