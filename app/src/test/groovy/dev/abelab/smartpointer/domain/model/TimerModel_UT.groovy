@@ -39,10 +39,10 @@ class TimerModel_UT extends AbstractSpecification {
         timer.remainingTimeAtPaused.isEmpty()
     }
 
-    def "start: 実行中のタイマーは開始不可"() {
+    def "start: 準備中以外のタイマーは開始不可"() {
         given:
         final timer = TimerModel.builder()
-            .status(TimerStatus.RUNNING)
+            .status(status)
             .build()
 
         when:
@@ -51,15 +51,21 @@ class TimerModel_UT extends AbstractSpecification {
         then:
         final BaseException exception = thrown()
         verifyException(exception, new BadRequestException(ErrorCode.TIMER_CANNOT_BE_STARTED))
+
+        where:
+        status << [
+            TimerStatus.RUNNING,
+            TimerStatus.PAUSED,
+        ]
     }
 
-    def "resume: タイマーを再開する"() {
+    def "resume: 一時停止中のタイマーを再開する"() {
         given:
         final now = LocalDateTime.now()
         final timer = TimerModel.builder()
             .inputTime(120)
             .remainingTimeAtPaused(Optional.of(60))
-            .status(TimerStatus.READY)
+            .status(TimerStatus.PAUSED)
             .build()
 
         when:
@@ -70,7 +76,7 @@ class TimerModel_UT extends AbstractSpecification {
         timer.remainingTimeAtPaused.isEmpty()
     }
 
-    def "resume: 実行中のタイマーは再開不可"() {
+    def "resume: 一時停止中以外のタイマーは再開不可"() {
         given:
         final timer = TimerModel.builder()
             .remainingTimeAtPaused(Optional.of(60))
@@ -83,6 +89,12 @@ class TimerModel_UT extends AbstractSpecification {
         then:
         final BaseException exception = thrown()
         verifyException(exception, new BadRequestException(ErrorCode.TIMER_CANNOT_BE_RESUMED))
+
+        where:
+        status << [
+            TimerStatus.READY,
+            TimerStatus.RUNNING,
+        ]
     }
 
     def "pause: 実行中のタイマーを停止する"() {
@@ -97,14 +109,14 @@ class TimerModel_UT extends AbstractSpecification {
         timer.pause()
 
         then:
-        timer.status == TimerStatus.READY
+        timer.status == TimerStatus.PAUSED
         timer.remainingTimeAtPaused.isPresent()
     }
 
-    def "pause: 準備中のタイマーは停止不可"() {
+    def "pause: 実行中以外のタイマーは停止不可"() {
         given:
         final timer = TimerModel.builder()
-            .status(TimerStatus.READY)
+            .status(status)
             .build()
 
         when:
@@ -113,14 +125,21 @@ class TimerModel_UT extends AbstractSpecification {
         then:
         final BaseException exception = thrown()
         verifyException(exception, new BadRequestException(ErrorCode.TIMER_CANNOT_BE_PAUSED))
+
+        where:
+        status << [
+            TimerStatus.READY,
+            TimerStatus.PAUSED,
+        ]
     }
 
-    def "reset: 準備中のタイマーをリセットする"() {
+    def "reset: タイマーをリセットする"() {
         given:
         final oldFinishAt = RandomHelper.mock(LocalDateTime)
         final timer = TimerModel.builder()
-            .status(TimerStatus.READY)
+            .status(status)
             .inputTime(60)
+            .remainingTimeAtPaused(Optional.of(10))
             .finishAt(oldFinishAt)
             .build()
 
@@ -128,15 +147,21 @@ class TimerModel_UT extends AbstractSpecification {
         timer.reset()
 
         then:
+        timer.remainingTimeAtPaused.isEmpty()
         timer.status == TimerStatus.READY
         timer.finishAt != oldFinishAt
+
+        where:
+        status << [
+            TimerStatus.RUNNING,
+            TimerStatus.PAUSED,
+        ]
     }
 
-
-    def "reset: 実行中のタイマーはリセット不可"() {
+    def "reset: 準備中のタイマーはリセット不可"() {
         given:
         final timer = TimerModel.builder()
-            .status(TimerStatus.RUNNING)
+            .status(TimerStatus.READY)
             .build()
 
         when:

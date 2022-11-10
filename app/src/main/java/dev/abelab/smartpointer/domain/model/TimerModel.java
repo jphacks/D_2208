@@ -80,7 +80,7 @@ public class TimerModel implements Serializable {
      * タイマーを再開
      */
     public void resume() {
-        if (!this.getStatus().equals(TimerStatus.READY)) {
+        if (!this.getStatus().equals(TimerStatus.PAUSED)) {
             throw new BadRequestException(ErrorCode.TIMER_CANNOT_BE_RESUMED);
         }
 
@@ -99,18 +99,20 @@ public class TimerModel implements Serializable {
 
         // レイテンシによっては残り時間が0sを下回る可能性があるが、とりあえず考慮しない
         this.setRemainingTimeAtPaused(Optional.of(Math.toIntExact(ChronoUnit.SECONDS.between(LocalDateTime.now(), this.finishAt))));
-        this.setStatus(TimerStatus.READY);
+        this.setStatus(TimerStatus.PAUSED);
     }
 
     /**
      * タイマーをリセット
      */
     public void reset() {
-        if (!this.getStatus().equals(TimerStatus.READY)) {
+        if (this.getStatus().equals(TimerStatus.READY)) {
             throw new BadRequestException(ErrorCode.TIMER_CANNOT_BE_RESET);
         }
 
+        this.setRemainingTimeAtPaused(Optional.empty());
         this.setFinishAt(LocalDateTime.now().plusSeconds(this.getInputTime()));
+        this.setStatus(TimerStatus.READY);
     }
 
 }

@@ -15,10 +15,7 @@ import dev.abelab.smartpointer.domain.model.TimerModel;
 import dev.abelab.smartpointer.exception.ErrorCode;
 import dev.abelab.smartpointer.exception.UnauthorizedException;
 import dev.abelab.smartpointer.infrastructure.api.type.Timer;
-import dev.abelab.smartpointer.usecase.timer.GetTimerUseCase;
-import dev.abelab.smartpointer.usecase.timer.PauseTimerUseCase;
-import dev.abelab.smartpointer.usecase.timer.ResumeTimerUseCase;
-import dev.abelab.smartpointer.usecase.timer.StartTimerUseCase;
+import dev.abelab.smartpointer.usecase.timer.*;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
@@ -41,6 +38,8 @@ public class TimerController {
     private final ResumeTimerUseCase resumeTimerUseCase;
 
     private final PauseTimerUseCase pauseTimerUseCase;
+
+    private final ResetTimerUseCase resetTimerUseCase;
 
     /**
      * タイマー取得API
@@ -110,6 +109,25 @@ public class TimerController {
         }
 
         final var timer = this.pauseTimerUseCase.handle(loginUser.getRoomId());
+        this.timerSink.tryEmitNext(timer);
+        return new Timer(timer);
+    }
+
+    /**
+     * タイマーリセットAPI
+     *
+     * @param loginUser ログインユーザ
+     * @return タイマー
+     */
+    @MutationMapping
+    public Timer resetTimer( //
+        @AuthenticationPrincipal final LoginUserDetails loginUser //
+    ) {
+        if (Objects.isNull(loginUser)) {
+            throw new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN);
+        }
+
+        final var timer = this.resetTimerUseCase.handle(loginUser.getRoomId());
         this.timerSink.tryEmitNext(timer);
         return new Timer(timer);
     }
