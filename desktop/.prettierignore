@@ -6,3 +6,5 @@ packages/main/src/generated/http-client/*
 
 package-lock.json
 .electron-vendors.cache.json
+
+packages/main/src/gql/**/*
