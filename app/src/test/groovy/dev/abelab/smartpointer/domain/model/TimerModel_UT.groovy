@@ -26,6 +26,7 @@ class TimerModel_UT extends AbstractSpecification {
         given:
         final timer = TimerModel.builder()
             .status(TimerStatus.READY)
+            .remainingTimeAtPaused(Optional.of(10))
             .build()
 
         when:
@@ -33,6 +34,7 @@ class TimerModel_UT extends AbstractSpecification {
 
         then:
         timer.inputTime == 60
+        timer.remainingTimeAtPaused.isEmpty()
     }
 
     def "start: 実行中のタイマーは開始不可"() {
@@ -46,7 +48,7 @@ class TimerModel_UT extends AbstractSpecification {
 
         then:
         final BaseException exception = thrown()
-        verifyException(exception, new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STARTED))
+        verifyException(exception, new BadRequestException(ErrorCode.TIMER_CANNOT_BE_STARTED))
     }
 
     def "resume: タイマーを再開する"() {
@@ -74,7 +76,7 @@ class TimerModel_UT extends AbstractSpecification {
 
         then:
         final BaseException exception = thrown()
-        verifyException(exception, new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STARTED))
+        verifyException(exception, new BadRequestException(ErrorCode.TIMER_CANNOT_BE_STARTED))
     }
 
     def "stop: 実行中のタイマーを停止する"() {

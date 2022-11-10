@@ -13,7 +13,7 @@ class HealthCheckController_IT extends AbstractController_IT {
                     health
                 }
             """
-        final response = this.execute(query, "health", Boolean)
+        final response = this.executeHttp(query, "health", Boolean)
 
         then:
         response

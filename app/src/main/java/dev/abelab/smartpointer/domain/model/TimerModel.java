@@ -42,7 +42,8 @@ public class TimerModel implements Serializable {
     /**
      * 一時停止時点での残り時間 [s]
      */
-    Optional<Integer> remainingTimeAtPaused;
+    @Builder.Default
+    Optional<Integer> remainingTimeAtPaused = Optional.empty();
 
     /**
      * 終了時刻
