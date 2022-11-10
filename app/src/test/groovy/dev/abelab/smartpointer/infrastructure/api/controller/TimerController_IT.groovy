@@ -142,7 +142,7 @@ class TimerController_IT extends AbstractController_IT {
 
         StepVerifier.create(this.timerFlux)
             .expectNextMatches({
-                it.inputTime == inputTime && it.remainingTimeAtPaused == Optional.empty() && it.status == TimerStatus.RUNNING
+                it.inputTime == inputTime && it.remainingTimeAtPaused.isEmpty() && it.status == TimerStatus.RUNNING
             })
             .thenCancel()
             .verify()
@@ -243,6 +243,118 @@ class TimerController_IT extends AbstractController_IT {
             """
                 mutation {
                     startTimer(inputTime: 100) {
+                        inputTime
+                        remainingTimeAtPaused
+                        finishAt
+                        status
+                    }
+                }
+            """
+        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
+    }
+
+    def "タイマー一時停止API: 正常系 タイマーを一時停止できる"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
+        }
+        TableHelper.insert sql, "timer", {
+            room_id                                | status                 | input_time | remaining_time_at_paused | finish_at
+            "00000000-0000-0000-0000-000000000000" | TimerStatus.RUNNING.id | 60         | 30                       | "2000-01-01 10:30:30"
+        }
+        // @formatter:on
+
+        final loginUser = this.login("00000000-0000-0000-0000-000000000000")
+        this.connectWebSocketGraphQL(loginUser)
+
+        when:
+        final query =
+            """
+                mutation {
+                    pauseTimer {
+                        inputTime
+                        remainingTimeAtPaused
+                        finishAt
+                        status
+                    }
+                }
+            """
+        final response = this.executeWebSocket(query, "pauseTimer", Timer)
+
+        then:
+        final updatedTimer = sql.firstRow("SELECT * FROM timer")
+        updatedTimer.input_time == 60
+        updatedTimer.remaining_time_at_paused != null
+
+        response.inputTime == 60
+        response.remainingTimeAtPaused != null
+
+        StepVerifier.create(this.timerFlux)
+            .expectNextMatches({
+                it.inputTime == 60 && it.remainingTimeAtPaused.isPresent() && it.status == TimerStatus.READY
+            })
+            .thenCancel()
+            .verify()
+    }
+
+    def "タイマー一時停止API: 異常系 タイマーが実行中以外の場合は400エラー"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
+        }
+        TableHelper.insert sql, "timer", {
+            room_id                                | status         | input_time | remaining_time_at_paused | finish_at
+            "00000000-0000-0000-0000-000000000000" | timerStatus.id | 60         | 30                       | "2000-01-01 10:30:30"
+        }
+        // @formatter:on
+
+        final loginUser = this.login("00000000-0000-0000-0000-000000000000")
+        this.connectWebSocketGraphQL(loginUser)
+
+        expect:
+        final query =
+            """
+                mutation {
+                    pauseTimer {
+                        inputTime
+                        remainingTimeAtPaused
+                        finishAt
+                        status
+                    }
+                }
+            """
+        this.executeWebSocket(query, new BadRequestException(expectedErrorCode))
+
+        where:
+        timerStatus        || expectedErrorCode
+        TimerStatus.READY  || ErrorCode.TIMER_CANNOT_BE_PAUSED
+        TimerStatus.PAUSED || ErrorCode.TIMER_CANNOT_BE_PAUSED
+    }
+
+    def "タイマー一時停止API: 異常系 未認証の場合は401エラー"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
+        }
+        TableHelper.insert sql, "timer", {
+            room_id                                | status                 | input_time | remaining_time_at_paused | finish_at
+            "00000000-0000-0000-0000-000000000000" | TimerStatus.RUNNING.id | 60         | 30                       | "2000-01-01 10:30:30"
+        }
+        // @formatter:on
+
+        this.connectWebSocketGraphQL()
+
+        expect:
+        final query =
+            """
+                mutation {
+                    pauseTimer {
                         inputTime
                         remainingTimeAtPaused
                         finishAt
