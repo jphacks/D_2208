@@ -1,0 +1,30 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+mkdocs = "*"
+mkdocs-awesome-pages-plugin = "*"
+mkdocs-git-revision-date-localized-plugin = "*"
+mkdocs-macros-plugin = "*"
+mkdocs-markdownextradata-plugin = "*"
+mkdocs-material = "*"
+mkdocs-minify-plugin = "*"
+markdown-blockdiag = "*"
+fontawesome-markdown = "*"
+mkdocs-material-extensions = "*"
+hbfm = "*"
+nbconvert = "*"
+mkdocs-rss-plugin = "*"
+mkdocs-drawio-exporter = "*"
+plantuml-markdown = "*"
+mkdocs-glightbox = "*"
+mkdocs-roamlinks-plugin = "*"
+mdx-truly-sane-lists = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
+python_full_version = "3.10.4"

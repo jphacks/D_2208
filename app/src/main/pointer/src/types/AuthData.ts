@@ -1,9 +1,7 @@
-import { AccessTokenResponse } from "@/generated/http-client";
-
 /**
  * ログインユーザ
  */
-export type AuthData = AccessTokenResponse & {
+export type AuthData = {
   userName: string;
   roomId: string;
 };

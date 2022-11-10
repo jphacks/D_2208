@@ -132,6 +132,9 @@ dependencies {
     implementation "commons-net:commons-net:3.8.0"
     implementation "commons-validator:commons-validator:1.7"
     implementation "net.rakugakibox.util:yaml-resource-bundle:1.2"
+
+    // support greater than java 11
+    implementation "javax.xml.bind:jaxb-api:2.3.1"
 }
 
 tasks.withType(Test) {

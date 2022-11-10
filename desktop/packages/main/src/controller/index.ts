@@ -6,7 +6,8 @@ import {
 } from "@smartpointer-desktop/shared";
 import { randomUUID } from "crypto";
 
-import { roomApi } from "@/api";
+import { request } from "@/api";
+import { graphql } from "@/gql";
 import { model } from "@/model";
 import {
   activate,
@@ -26,15 +27,24 @@ export const controller = {
   createRoom: async () => {
     model.startCreatingRoom();
 
-    const { data } = await roomApi.createRoom();
+    const data = await request({
+      query: graphql(`
+        mutation CreateRoom {
+          createRoom {
+            id
+            passcode
+          }
+        }
+      `),
+    });
 
-    console.log("created room", data);
+    console.log("created room", data.createRoom);
 
     await activate();
 
-    model.createdRoom(data);
+    model.createdRoom(data.createRoom);
 
-    listenRoomSubscription(data.roomId);
+    listenRoomSubscription(data.createRoom.id);
 
     view.tray.update();
     await view.window.pointerOverlay.show();

@@ -8,11 +8,13 @@ import { controller } from "@/controller";
 import { model } from "@/model";
 import { State } from "@/types";
 
-type MenuTemplate<S extends State = State> = (
+type MenuTemplate = () => MenuItemConstructorOptions[];
+
+type MenuTemplateWithState<S extends State = State> = (
   state: S
 ) => MenuItemConstructorOptions[];
 
-const createRoomTemplate: MenuTemplate<
+const createRoomTemplate: MenuTemplateWithState<
   State & { status: "CREATING" | "READY" }
 > = (state) => [
   {
@@ -23,9 +25,9 @@ const createRoomTemplate: MenuTemplate<
   },
 ];
 
-const pointerListTemplate: MenuTemplate<State & { status: "CREATED" }> = (
-  state
-) => [
+const pointerListTemplate: MenuTemplateWithState<
+  State & { status: "CREATED" }
+> = (state) => [
   {
     label: "ポインター",
     submenu: builtInPointers
@@ -43,9 +45,9 @@ const pointerListTemplate: MenuTemplate<State & { status: "CREATED" }> = (
   },
 ];
 
-const memberListTemplate: MenuTemplate<State & { status: "CREATED" }> = (
-  state
-) => [
+const memberListTemplate: MenuTemplateWithState<
+  State & { status: "CREATED" }
+> = (state) => [
   {
     label: "参加者一覧",
     accelerator: "CmdOrCtrl+L",
@@ -57,7 +59,7 @@ const memberListTemplate: MenuTemplate<State & { status: "CREATED" }> = (
   },
 ];
 
-const showInviteLinkWindowTemplate: MenuItemConstructorOptions[] = [
+const showInviteLinkWindowTemplate: MenuTemplate = () => [
   {
     label: "招待リンクを表示",
     accelerator: "CmdOrCtrl+S",
@@ -65,7 +67,7 @@ const showInviteLinkWindowTemplate: MenuItemConstructorOptions[] = [
   },
 ];
 
-const closeRoomTemplate: MenuItemConstructorOptions[] = [
+const closeRoomTemplate: MenuTemplate = () => [
   {
     label: "ルームを終了",
     accelerator: "CmdOrCtrl+W",
@@ -73,14 +75,14 @@ const closeRoomTemplate: MenuItemConstructorOptions[] = [
   },
 ];
 
-const customPointerSetting: MenuItemConstructorOptions[] = [
+const customPointerSetting: MenuTemplate = () => [
   {
     label: "自作ポインターの設定",
     click: controller.showCustomPointerTypes,
   },
 ];
 
-const quitApp: MenuItemConstructorOptions[] = [
+const quitApp: MenuTemplate = () => [
   {
     role: "quit",
     label: "アプリを終了",
@@ -88,40 +90,40 @@ const quitApp: MenuItemConstructorOptions[] = [
   },
 ];
 
-const showDevTools: MenuItemConstructorOptions[] = [
+const showDevTools: MenuTemplate = () => [
   {
     label: "オーバーレイの開発者ツールを表示",
     click: controller.toggleOverlayWindowDevTools,
   },
 ];
 
-const defaultMenuTemplate: MenuTemplate<
+const defaultMenuTemplate: MenuTemplateWithState<
   State & { status: "CREATING" | "READY" }
 > = (state) => [
   ...createRoomTemplate(state),
   { type: "separator" },
-  ...customPointerSetting,
+  ...customPointerSetting(),
   { type: "separator" },
-  ...quitApp,
+  ...quitApp(),
 ];
 
-const createdRoomMenuTemplate: MenuTemplate<State & { status: "CREATED" }> = (
-  state
-) => [
+const createdRoomMenuTemplate: MenuTemplateWithState<
+  State & { status: "CREATED" }
+> = (state) => [
   ...pointerListTemplate(state),
-  ...customPointerSetting,
+  ...customPointerSetting(),
   ...memberListTemplate(state),
-  ...showInviteLinkWindowTemplate,
+  ...showInviteLinkWindowTemplate(),
   { type: "separator" },
-  ...closeRoomTemplate,
+  ...closeRoomTemplate(),
   { type: "separator" },
-  ...quitApp,
+  ...quitApp(),
   ...(import.meta.env.DEV
-    ? [{ type: "separator" } as const, ...showDevTools]
+    ? [{ type: "separator" } as const, ...showDevTools()]
     : []),
 ];
 
-const menuTemplate: MenuTemplate = (state) => [
+const menuTemplate: MenuTemplateWithState = (state) => [
   ...(state.status === "CREATED"
     ? createdRoomMenuTemplate(state)
     : defaultMenuTemplate(state)),

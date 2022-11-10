@@ -5,9 +5,10 @@ import {
   User,
 } from "@smartpointer-desktop/shared";
 
-import { RoomResponse } from "./generated/http-client";
-
-export type Room = RoomResponse;
+export type Room = {
+  id: string;
+  passcode: string;
+};
 
 export type ActivePointer = {
   user: User;

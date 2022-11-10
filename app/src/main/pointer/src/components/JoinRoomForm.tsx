@@ -11,11 +11,12 @@ import {
   PinInputField,
   Flex,
 } from "@chakra-ui/react";
-import { AxiosError } from "axios";
+import { ClientError } from "graphql-request";
 import { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { roomApi } from "@/api";
+import { request } from "@/api";
+import { graphql } from "@/gql";
 import { activate } from "@/stomp";
 import { AuthData } from "@/types/AuthData";
 
@@ -51,16 +52,32 @@ export const JoinRoomForm: FC<Props> = ({ onSubmit: onSubmitProps }) => {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const { data } = await roomApi.joinRoom(values.roomId, {
-        passcode: values.passcode,
-        name: values.userName,
+      const data = await request({
+        query: graphql(`
+          mutation JoinRoom(
+            $roomId: ID!
+            $passcode: String!
+            $userName: String!
+          ) {
+            joinRoom(
+              roomId: $roomId
+              passcode: $passcode
+              userName: $userName
+            ) {
+              tokenType
+              accessToken
+              ttl
+            }
+          }
+        `),
+        variables: values,
       });
 
       await activate();
 
       localStorage.setItem(localStorageKey, values.userName);
       onSubmitProps({
-        ...data,
+        ...data.joinRoom,
         userName: values.userName,
         roomId: values.roomId,
       });
@@ -72,10 +89,10 @@ export const JoinRoomForm: FC<Props> = ({ onSubmit: onSubmitProps }) => {
         isClosable: true,
       });
     } catch (error) {
-      if (error instanceof AxiosError) {
+      if (error instanceof ClientError) {
         toast({
           title: "ログインに失敗しました。",
-          description: error.response?.data.message,
+          description: error.response.errors?.map((e) => e.message).join(", "),
           status: "error",
           duration: 3000,
           isClosable: true,

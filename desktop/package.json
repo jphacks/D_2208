@@ -9,7 +9,7 @@
     "generate-electron-vendors": "cross-env ELECTRON_RUN_AS_NODE=1 electron --experimental-loader ts-node/esm scripts/generate-electron-vendors.mts",
     "dev": "node --experimental-loader ts-node/esm scripts/watch.mts",
     "build": "npm run build -ws --if-present",
-    "codegen": "npm run codegen -ws --if-present",
+    "codegen": "npm run codegen -ws --if-present --",
     "lint": "eslint . --ext .ts,.tsx,mts",
     "format": "npm run check:format --write",
     "check:format": "prettier . --check",
@@ -24,6 +24,9 @@
     "@stomp/stompjs": "6.1.2",
     "axios": "1.1.3",
     "electron-store": "8.1.0",
+    "graphql": "16.6.0",
+    "graphql-request": "5.0.0",
+    "graphql-ws": "5.11.2",
     "ws": "8.10.0"
   },
   "devDependencies": {

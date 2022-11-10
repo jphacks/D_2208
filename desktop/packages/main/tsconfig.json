@@ -7,7 +7,7 @@
     "src/view/window/.ts"
   ],
   "exclude": [
-    "src/generated/**/*"
+    "src/gql/**/*"
   ],
   "compilerOptions": {
     "importsNotUsedAsValues": "remove",
