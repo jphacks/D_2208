@@ -25,7 +25,9 @@ public enum ErrorCode {
 
     TIMER_CANNOT_BE_RESET(1005, "exception.bad_request.timer_cannot_be_reset"),
 
-    INVALID_TIMER_INPUT_TIME(1006, "exception.bad_request.invalid_timer_input_time"),
+    TIMER_CANNOT_BE_RESUMED(1006, "exception.bad_request.timer_cannot_be_resumed"),
+
+    INVALID_TIMER_INPUT_TIME(1007, "exception.bad_request.invalid_timer_input_time"),
 
     /**
      * 401 Unauthorized: 2000~2999
