@@ -1,4 +1,4 @@
-package dev.abelab.smartpointer.infrastructure.api.response;
+package dev.abelab.smartpointer.infrastructure.api.type;
 
 import dev.abelab.smartpointer.domain.model.RoomModel;
 import lombok.AllArgsConstructor;
@@ -7,13 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ルームレスポンス
+ * ルーム
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoomResponse {
+public class Room {
 
     /**
      * ルームID
@@ -25,7 +25,7 @@ public class RoomResponse {
      */
     String passcode;
 
-    public RoomResponse(final RoomModel roomModel) {
+    public Room(final RoomModel roomModel) {
         this.id = roomModel.getId();
         this.passcode = roomModel.getPasscode();
     }

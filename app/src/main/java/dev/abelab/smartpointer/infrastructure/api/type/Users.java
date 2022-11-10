@@ -1,4 +1,4 @@
-package dev.abelab.smartpointer.infrastructure.api.response;
+package dev.abelab.smartpointer.infrastructure.api.type;
 
 import java.util.List;
 
@@ -8,17 +8,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ユーザリストレスポンス
+ * ユーザリスト
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsersResponse {
+public class Users {
 
     /**
-     * ユーザID
+     * ユーザリスト
      */
-    List<UserResponse> users;
+    List<User> users;
 
 }

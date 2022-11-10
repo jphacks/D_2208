@@ -1,4 +1,4 @@
-package dev.abelab.smartpointer.infrastructure.api.response;
+package dev.abelab.smartpointer.infrastructure.api.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,13 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * エラーレスポンス
+ * エラー
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorResponse {
+public class Error {
 
     /**
      * エラーメッセージ

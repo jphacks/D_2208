@@ -12,7 +12,7 @@ import dev.abelab.smartpointer.domain.service.UserService;
 import dev.abelab.smartpointer.exception.ErrorCode;
 import dev.abelab.smartpointer.exception.NotFoundException;
 import dev.abelab.smartpointer.exception.UnauthorizedException;
-import dev.abelab.smartpointer.infrastructure.api.response.AccessTokenResponse;
+import dev.abelab.smartpointer.infrastructure.api.type.AccessToken;
 import dev.abelab.smartpointer.property.AuthProperty;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -42,7 +42,7 @@ public class JoinRoomUseCase {
      * @return アクセストークン
      */
     @Transactional
-    public AccessTokenResponse handle(final String roomId, final String passcode, final String userName) {
+    public AccessToken handle(final String roomId, final String passcode, final String userName) {
         // ルームの取得
         final var room = this.roomRepository.selectById(roomId) //
             .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_ROOM));
@@ -71,7 +71,7 @@ public class JoinRoomUseCase {
             .setExpiration(new Date(System.currentTimeMillis() + this.authProperty.getTtl() * 1000)) //
             .signWith(SignatureAlgorithm.HS512, this.authProperty.getJwt().getSecret().getBytes()) //
             .compact();
-        return new AccessTokenResponse(this.authProperty.getTokenType(), accessToken, this.authProperty.getTtl());
+        return new AccessToken(this.authProperty.getTokenType(), accessToken, this.authProperty.getTtl());
     }
 
 }
