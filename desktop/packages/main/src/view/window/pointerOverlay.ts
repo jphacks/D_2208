@@ -21,10 +21,7 @@ export const pointerOverlay = {
       throw new Error("Cannot show overlay window when not in CREATED state");
     }
 
-    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
     overlayWindow = new BrowserWindow({
-      width,
-      height,
       title: "スマートポインター",
       show: false,
       frame: false,
@@ -51,6 +48,8 @@ export const pointerOverlay = {
     overlayWindow.setIgnoreMouseEvents(true);
 
     await loadFile(overlayWindow, "overlay.html");
+
+    pointerOverlay.setBoundsToDisplay();
 
     overlayWindow.show();
   },
@@ -120,11 +119,23 @@ export const pointerOverlay = {
       return;
     }
 
-    const bounds = screen
+    const display = screen
       .getAllDisplays()
-      .find((display) => display.id === state.displayToShowPointer)!.workArea;
+      .find((display) => display.id === state.displayToShowPointer);
 
-    overlayWindow.setBounds(bounds, false);
+    if (display === undefined) {
+      throw new Error("Cannot find display to show pointer");
+    }
+
+    overlayWindow.setBounds(
+      {
+        x: display.bounds.x,
+        y: display.bounds.y,
+        width: display.size.width,
+        height: display.size.height,
+      },
+      false
+    );
   },
 
   close: () => {
