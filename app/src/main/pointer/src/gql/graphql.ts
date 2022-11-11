@@ -32,7 +32,7 @@ export type Mutation = {
   /** ルーム削除API */
   deleteRoom: Scalars['ID'];
   /** ポインター切断API */
-  disconnectPointer: PointerControl;
+  disconnectPointer: User;
   /** スライドを進めるAPI */
   goNextSlide: SlideControl;
   /** スライドを戻すAPI */
@@ -41,14 +41,14 @@ export type Mutation = {
   joinRoom: AccessToken;
   /** ポインター操作API */
   movePointer: PointerControl;
+  /** タイマー一時停止API */
+  pauseTimer: Timer;
   /** タイマーリセットAPI */
   resetTimer: Timer;
   /** タイマー再開API */
   resumeTimer: Timer;
   /** タイマー開始API */
   startTimer: Timer;
-  /** タイマー停止API */
-  stopTimer: Timer;
 };
 
 
@@ -64,13 +64,15 @@ export type MutationJoinRoomArgs = {
 };
 
 
-export type MutationStartTimerArgs = {
-  inputTime: Scalars['Int'];
+export type MutationMovePointerArgs = {
+  alpha?: InputMaybe<Scalars['Float']>;
+  beta?: InputMaybe<Scalars['Float']>;
+  gamma?: InputMaybe<Scalars['Float']>;
 };
 
 
-export type MutationStopTimerArgs = {
-  remainingTimeAtPaused: Scalars['Int'];
+export type MutationStartTimerArgs = {
+  inputTime: Scalars['Int'];
 };
 
 /** ポインター操作 */

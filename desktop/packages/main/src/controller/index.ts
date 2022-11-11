@@ -7,7 +7,7 @@ import {
 import { randomUUID } from "crypto";
 import { screen } from "electron";
 
-import { request } from "@/api";
+import { requestHttp } from "@/api";
 import { graphql } from "@/gql";
 import { model } from "@/model";
 import {
@@ -58,7 +58,7 @@ export const controller = {
   createRoom: async () => {
     model.startCreatingRoom();
 
-    const data = await request({
+    const data = await requestHttp({
       query: graphql(`
         mutation CreateRoom {
           createRoom {
