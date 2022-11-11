@@ -29,4 +29,18 @@ public class CustomPointerRepositoryImpl implements CustomPointerRepository {
             .collect(Collectors.toList());
     }
 
+    @Override
+    public boolean existsByIdAndRoomId(final String id, final String roomId) {
+        final var example = new CustomPointerExample();
+        example.createCriteria().andIdEqualTo(id).andRoomIdEqualTo(roomId);
+        return this.customPointerMapper.countByExample(example) != 0;
+    }
+
+    @Override
+    public void deleteByIdAndRoomId(final String id, final String roomId) {
+        final var example = new CustomPointerExample();
+        example.createCriteria().andIdEqualTo(id).andRoomIdEqualTo(roomId);
+        this.customPointerMapper.deleteByExample(example);
+    }
+
 }

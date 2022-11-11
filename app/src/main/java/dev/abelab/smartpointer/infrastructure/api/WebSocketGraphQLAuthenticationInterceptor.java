@@ -27,7 +27,11 @@ public class WebSocketGraphQLAuthenticationInterceptor implements WebSocketGraph
 
     @Override
     public Mono<WebGraphQlResponse> intercept(final WebGraphQlRequest request, final Chain chain) {
-        log.info(request.getDocument());
+        if (request.getVariables().isEmpty()) {
+            log.info(String.format("%s", request.getOperationName()));
+        } else {
+            log.info(String.format("%s %s", request.getOperationName(), request.getVariables()));
+        }
         return WebSocketGraphQlInterceptor.super.intercept(request, chain);
     }
 

@@ -85,32 +85,62 @@ type Mutation {
         入力時間 [s]
         """
         inputTime: Int!
+
+        """
+        アクセストークン
+        """
+        accessToken: String!
     ): Timer!
 
     """
     タイマー再開API
     """
-    resumeTimer: Timer!
+    resumeTimer(
+        """
+        アクセストークン
+        """
+        accessToken: String!
+    ): Timer!
 
     """
     タイマー一時停止API
     """
-    pauseTimer: Timer!
+    pauseTimer(
+        """
+        アクセストークン
+        """
+        accessToken: String!
+    ): Timer!
 
     """
     タイマーリセットAPI
     """
-    resetTimer: Timer!
+    resetTimer(
+        """
+        アクセストークン
+        """
+        accessToken: String!
+    ): Timer!
 
     """
     スライドを進めるAPI
     """
-    goNextSlide: SlideControl!
+    goNextSlide(
+        """
+        アクセストークン
+        """
+        accessToken: String!
+    ): SlideControl!
 
     """
     スライドを戻すAPI
     """
-    goPreviousSlide: SlideControl!
+    goPreviousSlide(
+        """
+        アクセストークン
+        """
+        accessToken: String!
+    ): SlideControl!
 
     """
     ポインター操作API
@@ -130,12 +160,37 @@ type Mutation {
         γ値
         """
         gamma: Float,
+
+        """
+        アクセストークン
+        """
+        accessToken: String!
     ): PointerControl!
 
     """
     ポインター切断API
     """
-    disconnectPointer: User!
+    disconnectPointer(
+        """
+        アクセストークン
+        """
+        accessToken: String!
+    ): User!
+
+    """
+    カスタムポインター削除API
+    """
+    deleteCustomPointer(
+        """
+        カスタムポインターID
+        """
+        id: ID!
+
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): ID!
 }
 
 type Subscription {

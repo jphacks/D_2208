@@ -40,13 +40,13 @@ class PointerController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
+        final accessToken = this.getAccessToken(loginUser)
 
         when:
         final query =
             """
                 mutation {
-                    movePointer(alpha: 1.0, beta: 2.0, gamma: 3.0) {
+                    movePointer(alpha: 1.0, beta: 2.0, gamma: 3.0, accessToken: "${accessToken}") {
                         user {
                             id
                             name
@@ -90,13 +90,12 @@ class PointerController_IT extends AbstractController_IT {
         }
         // @formatter:on
 
-        this.connectWebSocketGraphQL()
 
         expect:
         final query =
             """
                 mutation {
-                    movePointer(alpha: 1.0, beta: 2.0, gamma: 3.0) {
+                    movePointer(alpha: 1.0, beta: 2.0, gamma: 3.0, accessToken: "") {
                         user {
                             id
                             name
@@ -109,7 +108,7 @@ class PointerController_IT extends AbstractController_IT {
                     }
                 }
             """
-        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
+        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.INVALID_ACCESS_TOKEN))
     }
 
     def "ポインター切断API: 正常系 ポインターを切断する"() {
@@ -122,13 +121,13 @@ class PointerController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
+        final accessToken = this.getAccessToken(loginUser)
 
         when:
         final query =
             """
                 mutation {
-                    disconnectPointer {
+                    disconnectPointer(accessToken: "${accessToken}") {
                         id
                         name
                     }
@@ -157,22 +156,21 @@ class PointerController_IT extends AbstractController_IT {
         }
         // @formatter:on
 
-        this.connectWebSocketGraphQL()
 
         expect:
         final query =
             """
                 mutation {
-                    disconnectPointer {
+                    disconnectPointer(accessToken: "") {
                         id
                         name
                     }
                 }
             """
-        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
+        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.INVALID_ACCESS_TOKEN))
     }
 
-    def "ポインター操作購読API: ポインターを購読できる"() {
+    def "ポインター操作購読API: 正常系 ポインターを購読できる"() {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
@@ -183,7 +181,6 @@ class PointerController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
 
         final query = """
                 subscription {
@@ -227,7 +224,7 @@ class PointerController_IT extends AbstractController_IT {
             .verify()
     }
 
-    def "ポインター切断イベント購読API: ポインター切断イベントを購読できる"() {
+    def "ポインター切断イベント購読API: 正常系 ポインター切断イベントを購読できる"() {
         given:
         // @formatter:off
         TableHelper.insert sql, "room", {
@@ -238,7 +235,6 @@ class PointerController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
 
         final query = """
                 subscription {

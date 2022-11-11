@@ -32,13 +32,13 @@ class SlideController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
+        final accessToken = this.getAccessToken(loginUser)
 
         when:
         final query =
             """
                 mutation {
-                    goNextSlide
+                    goNextSlide(accessToken: "${accessToken}")
                 }
             """
         final response = this.executeWebSocket(query, "goNextSlide", SlideControl)
@@ -61,16 +61,14 @@ class SlideController_IT extends AbstractController_IT {
         }
         // @formatter:on
 
-        this.connectWebSocketGraphQL()
-
         expect:
         final query =
             """
                 mutation {
-                    goNextSlide
+                    goNextSlide(accessToken: "")
                 }
             """
-        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
+        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.INVALID_ACCESS_TOKEN))
     }
 
     def "スライドを戻すAPI: 正常系 スライドを戻す"() {
@@ -83,13 +81,13 @@ class SlideController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
+        final accessToken = this.getAccessToken(loginUser)
 
         when:
         final query =
             """
                 mutation {
-                    goPreviousSlide
+                    goPreviousSlide(accessToken: "${accessToken}")
                 }
             """
         final response = this.executeWebSocket(query, "goPreviousSlide", SlideControl)
@@ -112,16 +110,15 @@ class SlideController_IT extends AbstractController_IT {
         }
         // @formatter:on
 
-        this.connectWebSocketGraphQL()
 
         expect:
         final query =
             """
                 mutation {
-                    goPreviousSlide
+                    goPreviousSlide(accessToken: "")
                 }
             """
-        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
+        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.INVALID_ACCESS_TOKEN))
     }
 
     def "スライド操作購読API: 正常系 スライド操作を購読できる"() {
@@ -135,7 +132,6 @@ class SlideController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
 
         final query = """
                 subscription {
@@ -168,7 +164,6 @@ class SlideController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
 
         final query = """
                 subscription {

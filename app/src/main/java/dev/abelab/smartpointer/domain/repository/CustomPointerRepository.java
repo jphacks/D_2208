@@ -17,4 +17,21 @@ public interface CustomPointerRepository {
      */
     List<CustomPointerModel> selectByRoomId(final String roomId);
 
+    /**
+     * ID、ルームIDからカスタムポインターの存在チェック
+     * 
+     * @param id カスタムポインターID
+     * @param roomId ルームID
+     * @return チェック結果
+     */
+    boolean existsByIdAndRoomId(final String id, final String roomId);
+
+    /**
+     * ID、ルームIDからカスタムポインターを削除
+     *
+     * @param id カスタムポインターID
+     * @param roomId ルームID
+     */
+    void deleteByIdAndRoomId(final String id, final String roomId);
+
 }

@@ -1,23 +1,18 @@
 package dev.abelab.smartpointer.infrastructure.api.controller;
 
-import java.util.Objects;
-
 import org.reactivestreams.Publisher;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.SubscriptionMapping;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 
-import dev.abelab.smartpointer.auth.LoginUserDetails;
 import dev.abelab.smartpointer.domain.model.PointerControlModel;
 import dev.abelab.smartpointer.domain.model.UserModel;
-import dev.abelab.smartpointer.exception.ErrorCode;
-import dev.abelab.smartpointer.exception.UnauthorizedException;
 import dev.abelab.smartpointer.infrastructure.api.type.PointerControl;
 import dev.abelab.smartpointer.infrastructure.api.type.User;
 import dev.abelab.smartpointer.usecase.pointer.DisconnectPointerUseCase;
 import dev.abelab.smartpointer.usecase.pointer.MovePointerUseCase;
+import dev.abelab.smartpointer.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
@@ -37,6 +32,8 @@ public class PointerController {
 
     private final Sinks.Many<UserModel> pointerDisconnectSink;
 
+    private final AuthUtil authUtil;
+
     private final MovePointerUseCase movePointerUseCase;
 
     private final DisconnectPointerUseCase disconnectPointerUseCase;
@@ -44,19 +41,17 @@ public class PointerController {
     /**
      * ポインター操作API
      *
-     * @param loginUser ログインユーザ
+     * @param accessToken アクセストークン
      * @return ポインター操作
      */
     @MutationMapping
     public PointerControl movePointer( //
-        @AuthenticationPrincipal final LoginUserDetails loginUser, //
         @Argument final Double alpha, //
         @Argument final Double beta, //
-        @Argument final Double gamma //
+        @Argument final Double gamma, //
+        @Argument final String accessToken //
     ) {
-        if (Objects.isNull(loginUser)) {
-            throw new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN);
-        }
+        final var loginUser = this.authUtil.getLoginUser(accessToken);
 
         final var pointerControl = this.movePointerUseCase.handle(loginUser.getRoomId(), loginUser, alpha, beta, gamma);
         this.pointerControlSink.tryEmitNext(pointerControl);
@@ -66,16 +61,14 @@ public class PointerController {
     /**
      * ポインター切断API
      *
-     * @param loginUser ログインユーザ
+     * @param accessToken アクセストークン
      * @return ユーザ
      */
     @MutationMapping
     public User disconnectPointer( //
-        @AuthenticationPrincipal final LoginUserDetails loginUser //
+        @Argument final String accessToken //
     ) {
-        if (Objects.isNull(loginUser)) {
-            throw new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN);
-        }
+        final var loginUser = this.authUtil.getLoginUser(accessToken);
 
         final var user = this.disconnectPointerUseCase.handle(loginUser.getRoomId(), loginUser);
         this.pointerDisconnectSink.tryEmitNext(user);

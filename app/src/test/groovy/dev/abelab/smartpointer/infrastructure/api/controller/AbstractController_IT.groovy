@@ -153,36 +153,27 @@ abstract class AbstractController_IT extends AbstractDatabaseSpecification {
     }
 
     /**
-     * GraphQL(over WebSocket)を開始
+     * アクセストークンを取得
      *
-     * @param user ユーザ
+     * @param loginUser ログインユーザ
+     * @return アクセストークン
      */
-    protected void connectWebSocketGraphQL(final UserModel user) {
-        final var jwt = Jwts.builder()
-            .setSubject(user.id)
+    protected String getAccessToken(final UserModel loginUser) {
+        return Jwts.builder()
+            .setSubject(loginUser.id)
             .setIssuer(this.authProperty.getJwt().getIssuer())
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + this.authProperty.getTtl() * 1000))
             .signWith(SignatureAlgorithm.HS512, this.authProperty.getJwt().getSecret().getBytes())
             .compact()
-        this.webSocketGraphQlTester = WebSocketGraphQlTester
-            .builder("ws://localhost:${PORT}/graphql-ws", new ReactorNettyWebSocketClient())
-            .header("Authorization", "Bearer " + jwt)
-            .build()
-    }
-
-
-    /**
-     * GraphQL(over WebSocket)を開始
-     */
-    protected void connectWebSocketGraphQL() {
-        this.webSocketGraphQlTester = WebSocketGraphQlTester
-            .builder("ws://localhost:${PORT}/graphql-ws", new ReactorNettyWebSocketClient())
-            .build()
     }
 
     def setup() {
         StepVerifier.setDefaultTimeout(Duration.ofSeconds(5))
+
+        this.webSocketGraphQlTester = WebSocketGraphQlTester
+            .builder("ws://localhost:${PORT}/graphql-ws", new ReactorNettyWebSocketClient())
+            .build()
     }
 
 }
