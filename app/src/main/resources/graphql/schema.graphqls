@@ -136,6 +136,21 @@ type Mutation {
     ポインター切断API
     """
     disconnectPointer: User!
+
+    """
+    カスタムポインター削除API
+    """
+    deleteCustomPointer(
+        """
+        カスタムポインターID
+        """
+        id: ID!
+
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): ID!
 }
 
 type Subscription {

@@ -50,6 +50,8 @@ public enum ErrorCode {
 
     NOT_FOUND_TIMER(4002, "exception.not_found.timer"),
 
+    NOT_FOUND_CUSTOM_POINTER(4003, "exception.not_found.custom_pointer"),
+
     /**
      * 409 Conflict: 5000~5999
      */
