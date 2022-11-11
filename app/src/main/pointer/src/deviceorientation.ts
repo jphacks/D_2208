@@ -1,4 +1,4 @@
-import { stompClient } from "./stomp";
+// import { stompClient } from "./stomp";
 
 const messagePleasingWhenDeny = [
   "使用するには許可してください🥺",
@@ -60,10 +60,10 @@ export const subscribeOrientation = (roomId: string) => {
 
     lastOrientation = lastOrientation ?? orientation;
 
-    stompClient.publish({
-      destination: `/app/rooms/${roomId}/pointer/control`,
-      body: JSON.stringify(sub(orientation, lastOrientation)),
-    });
+    // stompClient.publish({
+    //   destination: `/app/rooms/${roomId}/pointer/control`,
+    //   body: JSON.stringify(sub(orientation, lastOrientation)),
+    // });
   };
   window.addEventListener("deviceorientation", handler);
 };
@@ -74,7 +74,7 @@ export const unsubscribeOrientation = (roomId: string) => {
     window.removeEventListener("deviceorientation", handler);
     handler = null;
   }
-  stompClient.publish({
-    destination: `/app/rooms/${roomId}/pointer/disconnect`,
-  });
+  // stompClient.publish({
+  //   destination: `/app/rooms/${roomId}/pointer/disconnect`,
+  // });
 };

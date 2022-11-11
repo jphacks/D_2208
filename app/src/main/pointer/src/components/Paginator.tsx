@@ -1,8 +1,8 @@
-import { IconButton, Icon, Flex, VStack, Heading } from "@chakra-ui/react";
+import { IconButton, Icon, Flex } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { FC } from "react";
 
-import { stompClient } from "@/stomp";
+// import { stompClient } from "@/stomp";
 import { AuthData } from "@/types/AuthData";
 
 type Props = {
@@ -11,17 +11,20 @@ type Props = {
 
 export const Paginator: FC<Props> = ({ authData }) => {
   const goNext = () => {
-    stompClient.publish({
-      destination: `/app/rooms/${authData.roomId}/slides/next`,
-      body: JSON.stringify({ room_id: authData.roomId }),
-    });
+    // TODO: GraphQL 移行
+    // stompClient.publish({
+    //   destination: `/app/rooms/${authData.roomId}/slides/next`,
+    //   body: JSON.stringify({ room_id: authData.roomId }),
+    // });
   };
 
-  const goPrevious = () =>
-    stompClient.publish({
-      destination: `/app/rooms/${authData.roomId}/slides/previous`,
-      body: JSON.stringify({ room_id: authData.roomId }),
-    });
+  const goPrevious = () => {
+    // TODO: GraphQL 移行
+    // stompClient.publish({
+    //   destination: `/app/rooms/${authData.roomId}/slides/previous`,
+    //   body: JSON.stringify({ room_id: authData.roomId }),
+    // });
+  };
 
   return (
     <Flex

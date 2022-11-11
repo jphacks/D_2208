@@ -10,11 +10,11 @@ import { screen } from "electron";
 import { requestHttp } from "@/api";
 import { graphql } from "@/gql";
 import { model } from "@/model";
-import {
-  activate,
-  listenRoomSubscription,
-  unsubscribeRoomSubscription,
-} from "@/stomp";
+// import {
+//   activate,
+//   listenRoomSubscription,
+//   unsubscribeRoomSubscription,
+// } from "@/stomp";
 import { store } from "@/store";
 import { view } from "@/view";
 
@@ -71,11 +71,15 @@ export const controller = {
 
     console.log("created room", data.createRoom);
 
-    await activate();
+    // TODO: GraphQL 移行
+    // await activate();
 
+    console.log("before", model.state);
     model.createdRoom(data.createRoom, screen.getPrimaryDisplay().id);
+    console.log("after", model.state);
 
-    listenRoomSubscription(data.createRoom.id);
+    // TODO: GraphQL 移行
+    // listenRoomSubscription(data.createRoom.id);
 
     view.tray.update();
     await view.window.pointerOverlay.show();
@@ -93,7 +97,8 @@ export const controller = {
   closeRoom: () => {
     view.window.pointerOverlay.close();
     view.window.inviteLink.close();
-    unsubscribeRoomSubscription();
+    // TODO: GraphQL 移行
+    // unsubscribeRoomSubscription();
 
     model.closeRoom();
   },
