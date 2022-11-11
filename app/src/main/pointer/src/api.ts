@@ -39,6 +39,7 @@ export const initializeWsClient = (accessToken: string) => {
         Authorization: `Bearer ${accessToken}`,
       },
     },
+    lazy: false,
   });
 };
 
