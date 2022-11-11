@@ -21,3 +21,4 @@ exception:
     user_name_is_already_exists: そのユーザ名は既に使われています。
   internal_server_error:
     unexpected_error: 予期しないエラーが発生しました。
+    failed_to_upload_file: アップロードに失敗しました
