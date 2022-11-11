@@ -19,14 +19,13 @@ import {
   InputGroup,
   InputLeftAddon,
   InputRightAddon,
-  Heading,
   useToast,
 } from "@chakra-ui/react";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { stompClient } from "@/stomp";
+// import { stompClient } from "@/stomp";
 import { AuthData } from "@/types/AuthData";
 
 type Props = {
@@ -59,52 +58,55 @@ export const Timer: FC<Props> = ({ authData }) => {
     console.log(values);
     switch (state) {
       case "READY": {
-        stompClient.publish({
-          destination: `/app/rooms/${authData.roomId}/timer/start`,
-          body: JSON.stringify({
-            value: Number(values.minutes) * 60 + Number(values.seconds),
-          }),
-        });
+        // TODO: GraphQL 移行
+        // stompClient.publish({
+        //   destination: `/app/rooms/${authData.roomId}/timer/start`,
+        //   body: JSON.stringify({
+        //     value: Number(values.minutes) * 60 + Number(values.seconds),
+        //   }),
+        // });
         return;
       }
       case "RUNNING": {
-        stompClient.publish({
-          destination: `/app/rooms/${authData.roomId}/timer/stop`,
-        });
+        // TODO: GraphQL 移行
+        // stompClient.publish({
+        //   destination: `/app/rooms/${authData.roomId}/timer/stop`,
+        // });
         return;
       }
     }
   };
 
   useEffect(() => {
-    stompClient.subscribe(
-      `/topic/rooms/${authData.roomId}/timer`,
-      (message) => {
-        console.log(message);
-        const { status, value, finishAt } = JSON.parse(message.body) as {
-          status: 0 | 1;
-          value: number;
-          finishAt: string;
-        };
-        switch (status) {
-          case 0: {
-            const minutes = Math.floor(value / 60);
-            const seconds = value % 60;
-            setValue("minutes", minutes.toString());
-            setValue("seconds", seconds.toString());
-            setState("READY");
-            return;
-          }
-          case 1: {
-            setFinishedTimestamp(
-              performance.now() + new Date(finishAt).valueOf() - Date.now()
-            );
-            setState("RUNNING");
-            return;
-          }
-        }
-      }
-    );
+    // TODO: GraphQL 移行
+    // stompClient.subscribe(
+    //   `/topic/rooms/${authData.roomId}/timer`,
+    //   (message) => {
+    //     console.log(message);
+    //     const { status, value, finishAt } = JSON.parse(message.body) as {
+    //       status: 0 | 1;
+    //       value: number;
+    //       finishAt: string;
+    //     };
+    //     switch (status) {
+    //       case 0: {
+    //         const minutes = Math.floor(value / 60);
+    //         const seconds = value % 60;
+    //         setValue("minutes", minutes.toString());
+    //         setValue("seconds", seconds.toString());
+    //         setState("READY");
+    //         return;
+    //       }
+    //       case 1: {
+    //         setFinishedTimestamp(
+    //           performance.now() + new Date(finishAt).valueOf() - Date.now()
+    //         );
+    //         setState("RUNNING");
+    //         return;
+    //       }
+    //     }
+    //   }
+    // );
   }, [authData.roomId, setValue]);
 
   useEffect(() => {
