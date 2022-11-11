@@ -2,8 +2,10 @@ package dev.abelab.smartpointer.infrastructure.api.controller;
 
 import java.util.Objects;
 
+import org.reactivestreams.Publisher;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.SubscriptionMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 
@@ -78,6 +80,21 @@ public class PointerController {
         final var user = this.disconnectPointerUseCase.handle(loginUser.getRoomId(), loginUser);
         this.pointerDisconnectSink.tryEmitNext(user);
         return new User(user);
+    }
+
+    /**
+     * ポインター操作購読API
+     *
+     * @param roomId ルームID
+     * @return ポインター
+     */
+    @SubscriptionMapping
+    public Publisher<PointerControl> subscribeToPointer( //
+        @Argument final String roomId //
+    ) {
+        return this.pointerControlFlux //
+            .filter(pointerControlModel -> pointerControlModel.getRoomId().equals(roomId)) //
+            .map(PointerControl::new);
     }
 
 }
