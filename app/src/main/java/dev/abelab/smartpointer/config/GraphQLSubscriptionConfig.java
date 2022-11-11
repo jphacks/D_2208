@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import dev.abelab.smartpointer.domain.model.PointerControlModel;
 import dev.abelab.smartpointer.domain.model.SlideControlModel;
 import dev.abelab.smartpointer.domain.model.TimerModel;
+import dev.abelab.smartpointer.domain.model.UserModel;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 import reactor.util.concurrent.Queues;
@@ -44,6 +45,16 @@ public class GraphQLSubscriptionConfig {
     @Bean
     public Flux<PointerControlModel> pointerControlFlux(final Sinks.Many<PointerControlModel> pointerControlSink) {
         return pointerControlSink.asFlux();
+    }
+
+    @Bean
+    public Sinks.Many<UserModel> pointerDisconnectSink() {
+        return Sinks.many().multicast().onBackpressureBuffer(Queues.SMALL_BUFFER_SIZE, false);
+    }
+
+    @Bean
+    public Flux<UserModel> pointerDisconnectFlux(final Sinks.Many<UserModel> pointerDisconnectSink) {
+        return pointerDisconnectSink.asFlux();
     }
 
 }

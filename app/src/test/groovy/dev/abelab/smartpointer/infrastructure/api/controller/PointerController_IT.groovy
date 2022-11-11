@@ -1,11 +1,13 @@
 package dev.abelab.smartpointer.infrastructure.api.controller
 
 import dev.abelab.smartpointer.domain.model.PointerControlModel
+import dev.abelab.smartpointer.domain.model.UserModel
 import dev.abelab.smartpointer.exception.ErrorCode
 import dev.abelab.smartpointer.exception.UnauthorizedException
 import dev.abelab.smartpointer.helper.RandomHelper
 import dev.abelab.smartpointer.helper.TableHelper
 import dev.abelab.smartpointer.infrastructure.api.type.PointerControl
+import dev.abelab.smartpointer.infrastructure.api.type.User
 import org.springframework.beans.factory.annotation.Autowired
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Sinks
@@ -21,6 +23,12 @@ class PointerController_IT extends AbstractController_IT {
 
     @Autowired
     Sinks.Many<PointerControlModel> pointerControlSink
+
+    @Autowired
+    Flux<UserModel> pointerDisconnectFlux
+
+    @Autowired
+    Sinks.Many<UserModel> pointerDisconnectSink
 
     def "ポインター操作API: 正常系 ポインターを操作する"() {
         given:
@@ -103,5 +111,66 @@ class PointerController_IT extends AbstractController_IT {
             """
         this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
     }
+
+    def "ポインター切断API: 正常系 ポインターを切断する"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
+        }
+        // @formatter:on
+
+        final loginUser = this.login("00000000-0000-0000-0000-000000000000")
+        this.connectWebSocketGraphQL(loginUser)
+
+        when:
+        final query =
+            """
+                mutation {
+                    disconnectPointer {
+                        id
+                        name
+                    }
+                }
+            """
+        final response = this.executeWebSocket(query, "disconnectPointer", User)
+
+        then:
+        response.id == loginUser.id
+        response.name == loginUser.name
+
+        StepVerifier.create(this.pointerDisconnectFlux)
+            .expectNextMatches({
+                it.id == loginUser.id && it.name == loginUser.name && it.roomId == loginUser.roomId
+            })
+            .thenCancel()
+            .verify()
+    }
+
+    def "ポインター切断API: 異常系 未認証の場合は401エラー"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
+        }
+        // @formatter:on
+
+        this.connectWebSocketGraphQL()
+
+        expect:
+        final query =
+            """
+                mutation {
+                    disconnectPointer {
+                        id
+                        name
+                    }
+                }
+            """
+        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
+    }
+
 
 }
