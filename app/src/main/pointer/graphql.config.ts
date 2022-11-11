@@ -1,8 +1,9 @@
 import { CodegenConfig } from "@graphql-codegen/cli";
+import { join } from "path";
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: "../resources/graphql/schema.graphqls",
+  schema: join(__dirname, "../resources/graphql/schema.graphqls"),
   documents: ["src/**/*.ts{,x}"],
   ignoreNoDocuments: true,
   generates: {

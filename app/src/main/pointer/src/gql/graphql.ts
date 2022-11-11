@@ -41,14 +41,14 @@ export type Mutation = {
   joinRoom: AccessToken;
   /** ポインター操作API */
   movePointer: PointerControl;
+  /** タイマー一時停止API */
+  pauseTimer: Timer;
   /** タイマーリセットAPI */
   resetTimer: Timer;
   /** タイマー再開API */
   resumeTimer: Timer;
   /** タイマー開始API */
   startTimer: Timer;
-  /** タイマー停止API */
-  stopTimer: Timer;
 };
 
 
@@ -66,11 +66,6 @@ export type MutationJoinRoomArgs = {
 
 export type MutationStartTimerArgs = {
   inputTime: Scalars['Int'];
-};
-
-
-export type MutationStopTimerArgs = {
-  remainingTimeAtPaused: Scalars['Int'];
 };
 
 /** ポインター操作 */
