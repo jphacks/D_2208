@@ -11,6 +11,7 @@ exception:
   unauthorized:
     user_not_logged_in: ユーザはログインしていません。
     incorrect_room_passcode: パスコードが間違えています。
+    invalid_access_token: 不正なアクセストークンです。
   forbidden:
     user_has_no_permission: その動作は許可されていません。
   not_found:

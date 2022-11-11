@@ -36,6 +36,8 @@ public enum ErrorCode {
 
     INCORRECT_ROOM_PASSCODE(2001, "exception.unauthorized.incorrect_room_passcode"),
 
+    INVALID_ACCESS_TOKEN(2002, "exception.unauthorized.invalid_access_token"),
+
     /**
      * 403 Forbidden: 3000~3999
      */

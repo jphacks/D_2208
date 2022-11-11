@@ -1,21 +1,16 @@
 package dev.abelab.smartpointer.infrastructure.api.controller;
 
-import java.util.Objects;
-
 import org.reactivestreams.Publisher;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SubscriptionMapping;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 
-import dev.abelab.smartpointer.auth.LoginUserDetails;
 import dev.abelab.smartpointer.domain.model.TimerModel;
-import dev.abelab.smartpointer.exception.ErrorCode;
-import dev.abelab.smartpointer.exception.UnauthorizedException;
 import dev.abelab.smartpointer.infrastructure.api.type.Timer;
 import dev.abelab.smartpointer.usecase.timer.*;
+import dev.abelab.smartpointer.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
@@ -30,6 +25,8 @@ public class TimerController {
     private final Flux<TimerModel> timerFlux;
 
     private final Sinks.Many<TimerModel> timerSink;
+
+    private final AuthUtil authUtil;
 
     private final GetTimerUseCase getTimerUseCase;
 
@@ -56,19 +53,17 @@ public class TimerController {
 
     /**
      * タイマー開始API
-     * 
-     * @param loginUser ログインユーザ
+     *
      * @param inputTime 入力時間
+     * @param accessToken アクセストークン
      * @return タイマー
      */
     @MutationMapping
     public Timer startTimer( //
-        @AuthenticationPrincipal final LoginUserDetails loginUser, //
-        @Argument final Integer inputTime //
+        @Argument final Integer inputTime, //
+        @Argument final String accessToken //
     ) {
-        if (Objects.isNull(loginUser)) {
-            throw new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN);
-        }
+        final var loginUser = this.authUtil.getLoginUser(accessToken);
 
         final var timer = this.startTimerUseCase.handle(loginUser.getRoomId(), inputTime);
         this.timerSink.tryEmitNext(timer);
@@ -78,16 +73,14 @@ public class TimerController {
     /**
      * タイマー再開API
      *
-     * @param loginUser ログインユーザ
+     * @param accessToken アクセストークン
      * @return タイマー
      */
     @MutationMapping
     public Timer resumeTimer( //
-        @AuthenticationPrincipal final LoginUserDetails loginUser //
+        @Argument final String accessToken //
     ) {
-        if (Objects.isNull(loginUser)) {
-            throw new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN);
-        }
+        final var loginUser = this.authUtil.getLoginUser(accessToken);
 
         final var timer = this.resumeTimerUseCase.handle(loginUser.getRoomId());
         this.timerSink.tryEmitNext(timer);
@@ -97,16 +90,14 @@ public class TimerController {
     /**
      * タイマー一時停止API
      *
-     * @param loginUser ログインユーザ
+     * @param accessToken アクセストークン
      * @return タイマー
      */
     @MutationMapping
     public Timer pauseTimer( //
-        @AuthenticationPrincipal final LoginUserDetails loginUser //
+        @Argument final String accessToken //
     ) {
-        if (Objects.isNull(loginUser)) {
-            throw new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN);
-        }
+        final var loginUser = this.authUtil.getLoginUser(accessToken);
 
         final var timer = this.pauseTimerUseCase.handle(loginUser.getRoomId());
         this.timerSink.tryEmitNext(timer);
@@ -116,16 +107,14 @@ public class TimerController {
     /**
      * タイマーリセットAPI
      *
-     * @param loginUser ログインユーザ
+     * @param accessToken アクセストークン
      * @return タイマー
      */
     @MutationMapping
     public Timer resetTimer( //
-        @AuthenticationPrincipal final LoginUserDetails loginUser //
+        @Argument final String accessToken //
     ) {
-        if (Objects.isNull(loginUser)) {
-            throw new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN);
-        }
+        final var loginUser = this.authUtil.getLoginUser(accessToken);
 
         final var timer = this.resetTimerUseCase.handle(loginUser.getRoomId());
         this.timerSink.tryEmitNext(timer);

@@ -116,13 +116,13 @@ class TimerController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
+        final accessToken = this.getAccessToken(loginUser)
 
         when:
         final query =
             """
                 mutation {
-                    startTimer(inputTime: ${inputTime}) {
+                    startTimer(inputTime: ${inputTime},  accessToken: "${accessToken}") {
                         inputTime
                         remainingTimeAtPaused
                         finishAt
@@ -167,13 +167,13 @@ class TimerController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
+        final accessToken = this.getAccessToken(loginUser)
 
         expect:
         final query =
             """
                 mutation {
-                    startTimer(inputTime: ${inputTime}) {
+                    startTimer(inputTime: ${inputTime}, accessToken: "${accessToken}") {
                         inputTime
                         remainingTimeAtPaused
                         finishAt
@@ -203,13 +203,13 @@ class TimerController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
+        final accessToken = this.getAccessToken(loginUser)
 
         expect:
         final query =
             """
                 mutation {
-                    startTimer(inputTime: 100) {
+                    startTimer(inputTime: 100, accessToken: "${accessToken}") {
                         inputTime
                         remainingTimeAtPaused
                         finishAt
@@ -238,13 +238,12 @@ class TimerController_IT extends AbstractController_IT {
         }
         // @formatter:on
 
-        this.connectWebSocketGraphQL()
 
         expect:
         final query =
             """
                 mutation {
-                    startTimer(inputTime: 100) {
+                    startTimer(inputTime: 100, accessToken: "") {
                         inputTime
                         remainingTimeAtPaused
                         finishAt
@@ -252,7 +251,7 @@ class TimerController_IT extends AbstractController_IT {
                     }
                 }
             """
-        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
+        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.INVALID_ACCESS_TOKEN))
     }
 
     def "タイマー再開API: 正常系 一時停止中のタイマーを再開できる"() {
@@ -269,13 +268,13 @@ class TimerController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
+        final accessToken = this.getAccessToken(loginUser)
 
         when:
         final query =
             """
                 mutation {
-                    resumeTimer {
+                    resumeTimer(accessToken: "${accessToken}") {
                         inputTime
                         remainingTimeAtPaused
                         finishAt
@@ -317,13 +316,13 @@ class TimerController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
+        final accessToken = this.getAccessToken(loginUser)
 
         expect:
         final query =
             """
                 mutation {
-                   resumeTimer {
+                   resumeTimer(accessToken: "${accessToken}") {
                         inputTime
                         remainingTimeAtPaused
                         finishAt
@@ -352,13 +351,12 @@ class TimerController_IT extends AbstractController_IT {
         }
         // @formatter:on
 
-        this.connectWebSocketGraphQL()
 
         expect:
         final query =
             """
                 mutation {
-                    resumeTimer {
+                    resumeTimer(accessToken: "") {
                         inputTime
                         remainingTimeAtPaused
                         finishAt
@@ -366,7 +364,7 @@ class TimerController_IT extends AbstractController_IT {
                     }
                 }
             """
-        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
+        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.INVALID_ACCESS_TOKEN))
     }
 
     def "タイマー一時停止API: 正常系 実行中のタイマーを一時停止できる"() {
@@ -383,13 +381,13 @@ class TimerController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
+        final accessToken = this.getAccessToken(loginUser)
 
         when:
         final query =
             """
                 mutation {
-                    pauseTimer {
+                    pauseTimer(accessToken: "${accessToken}") {
                         inputTime
                         remainingTimeAtPaused
                         finishAt
@@ -431,13 +429,13 @@ class TimerController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
+        final accessToken = this.getAccessToken(loginUser)
 
         expect:
         final query =
             """
                 mutation {
-                    pauseTimer {
+                    pauseTimer(accessToken: "${accessToken}") {
                         inputTime
                         remainingTimeAtPaused
                         finishAt
@@ -466,13 +464,12 @@ class TimerController_IT extends AbstractController_IT {
         }
         // @formatter:on
 
-        this.connectWebSocketGraphQL()
 
         expect:
         final query =
             """
                 mutation {
-                    pauseTimer {
+                    pauseTimer(accessToken: "") {
                         inputTime
                         remainingTimeAtPaused
                         finishAt
@@ -480,7 +477,7 @@ class TimerController_IT extends AbstractController_IT {
                     }
                 }
             """
-        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
+        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.INVALID_ACCESS_TOKEN))
     }
 
     def "タイマーリセットAPI: 正常系 準備中以外のタイマーをリセットできる"() {
@@ -497,13 +494,13 @@ class TimerController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
+        final accessToken = this.getAccessToken(loginUser)
 
         when:
         final query =
             """
                 mutation {
-                    resetTimer {
+                    resetTimer(accessToken: "${accessToken}") {
                         inputTime
                         remainingTimeAtPaused
                         finishAt
@@ -551,13 +548,13 @@ class TimerController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
+        final accessToken = this.getAccessToken(loginUser)
 
         expect:
         final query =
             """
                 mutation {
-                    resetTimer {
+                    resetTimer(accessToken: "${accessToken}") {
                         inputTime
                         remainingTimeAtPaused
                         finishAt
@@ -581,13 +578,12 @@ class TimerController_IT extends AbstractController_IT {
         }
         // @formatter:on
 
-        this.connectWebSocketGraphQL()
 
         expect:
         final query =
             """
                 mutation {
-                    resetTimer {
+                    resetTimer(accessToken: "") {
                         inputTime
                         remainingTimeAtPaused
                         finishAt
@@ -595,7 +591,7 @@ class TimerController_IT extends AbstractController_IT {
                     }
                 }
             """
-        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
+        this.executeWebSocket(query, new UnauthorizedException(ErrorCode.INVALID_ACCESS_TOKEN))
     }
 
     def "タイマー購読API: 正常系 タイマー変更イベントを購読できる"() {
@@ -612,7 +608,6 @@ class TimerController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
 
         final query = """
                 subscription {
@@ -659,7 +654,6 @@ class TimerController_IT extends AbstractController_IT {
         // @formatter:on
 
         final loginUser = this.login("00000000-0000-0000-0000-000000000000")
-        this.connectWebSocketGraphQL(loginUser)
 
         final query = """
                 subscription {
