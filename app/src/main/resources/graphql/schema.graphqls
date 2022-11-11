@@ -105,12 +105,27 @@ type Mutation {
     """
     ポインター操作API
     """
-    movePointer: PointerControl!
+    movePointer(
+        """
+        α値
+        """
+        alpha: Float,
+
+        """
+        β値
+        """
+        beta: Float,
+
+        """
+        γ値
+        """
+        gamma: Float,
+    ): PointerControl!
 
     """
     ポインター切断API
     """
-    disconnectPointer: PointerControl!
+    disconnectPointer: User!
 }
 
 type Subscription {

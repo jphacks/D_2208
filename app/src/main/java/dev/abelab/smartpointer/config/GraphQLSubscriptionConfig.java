@@ -3,6 +3,7 @@ package dev.abelab.smartpointer.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import dev.abelab.smartpointer.domain.model.PointerControlModel;
 import dev.abelab.smartpointer.domain.model.SlideControlModel;
 import dev.abelab.smartpointer.domain.model.TimerModel;
 import reactor.core.publisher.Flux;
@@ -33,6 +34,16 @@ public class GraphQLSubscriptionConfig {
     @Bean
     public Flux<SlideControlModel> slideControlFlux(final Sinks.Many<SlideControlModel> slideControlSink) {
         return slideControlSink.asFlux();
+    }
+
+    @Bean
+    public Sinks.Many<PointerControlModel> pointerControlSink() {
+        return Sinks.many().multicast().onBackpressureBuffer(Queues.SMALL_BUFFER_SIZE, false);
+    }
+
+    @Bean
+    public Flux<PointerControlModel> pointerControlFlux(final Sinks.Many<PointerControlModel> pointerControlSink) {
+        return pointerControlSink.asFlux();
     }
 
 }
