@@ -195,35 +195,4 @@ class UserController_IT extends AbstractController_IT {
         this.executeHttp(query, new UnauthorizedException(ErrorCode.INCORRECT_ROOM_PASSCODE))
     }
 
-    def "ルーム入室API: 異常系 ユーザ名が既に使われている場合は400エラー"() {
-        given:
-        final roomId = RandomHelper.uuid()
-        final roomPasscode = RandomHelper.numeric(6)
-        final userName = RandomHelper.alphanumeric(10)
-
-        // @formatter:off
-        TableHelper.insert sql, "room", {
-            id     | passcode
-            roomId | roomPasscode
-        }
-        TableHelper.insert sql, "user", {
-            room_id | name
-            roomId  | userName
-        }
-        // @formatter:on
-
-        expect:
-        final query =
-            """
-                mutation {
-                    joinRoom(roomId: "${roomId}", passcode: "${roomPasscode}", userName: "${userName}") {
-                        tokenType
-                        accessToken
-                        ttl
-                    }
-                }
-            """
-        this.executeHttp(query, new BadRequestException(ErrorCode.USER_NAME_IS_ALREADY_EXISTS))
-    }
-
 }

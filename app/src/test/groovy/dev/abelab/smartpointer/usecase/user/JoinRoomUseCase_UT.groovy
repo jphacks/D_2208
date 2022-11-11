@@ -34,7 +34,6 @@ class JoinRoomUseCase_UT extends AbstractUseCase_UT {
         1 * this.roomRepository.selectById(room.id) >> Optional.of(room)
         1 * room.isPasscodeValid(passcode) >> true
         1 * this.userService.checkIsNameValid(userName) >> {}
-        1 * this.userService.checkIsNameAlreadyUsed(room.id, userName) >> {}
         1 * this.userRepository.insert(_)
         result.tokenType == this.authProperty.tokenType
         result.ttl == this.authProperty.ttl

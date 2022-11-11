@@ -54,7 +54,6 @@ public class JoinRoomUseCase {
 
         // ユーザ名チェック
         this.userService.checkIsNameValid(userName);
-        this.userService.checkIsNameAlreadyUsed(roomId, userName);
 
         // ユーザを作成
         final var user = UserModel.builder() //
