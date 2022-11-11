@@ -1,6 +1,7 @@
 package dev.abelab.smartpointer.usecase.pointer
 
 import dev.abelab.smartpointer.domain.model.RoomModel
+import dev.abelab.smartpointer.domain.model.UserModel
 import dev.abelab.smartpointer.exception.BaseException
 import dev.abelab.smartpointer.exception.ErrorCode
 import dev.abelab.smartpointer.exception.NotFoundException
@@ -19,22 +20,23 @@ class DisconnectPointerUseCase_UT extends AbstractUseCase_UT {
     def "handle: ポインターを切断する"() {
         given:
         final room = RandomHelper.mock(RoomModel)
+        final loginUser = RandomHelper.mock(UserModel)
 
         when:
-        final result = this.sut.handle(room.id,)
+        final result = this.sut.handle(room.id, loginUser)
 
         then:
         1 * this.roomRepository.existsById(room.id) >> true
-        result.rotation == null
-        !result.isActive
+        result == loginUser
     }
 
     def "handle: ルームが存在しない場合は404エラー"() {
         given:
         final room = RandomHelper.mock(RoomModel)
+        final loginUser = RandomHelper.mock(UserModel)
 
         when:
-        this.sut.handle(room.id)
+        this.sut.handle(room.id, loginUser)
 
         then:
         1 * this.roomRepository.existsById(room.id) >> false
