@@ -29,6 +29,16 @@ type Query {
         """
         roomId: ID!
     ): Timer!
+
+    """
+    カスタムポインターリスト取得API
+    """
+    getCustomPointers(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): CustomPointers!
 }
 
 type Mutation {
@@ -298,6 +308,36 @@ type PointerControlOrientation {
     γ値
     """
     gamma: Float!
+}
+
+"""
+カスタムポインター
+"""
+type CustomPointer {
+    """
+    カスタムポインターID
+    """
+    id: ID!
+
+    """
+    ラベル
+    """
+    label: String!
+
+    """
+    URL
+    """
+    url: String!
+}
+
+"""
+カスタムポインターリスト
+"""
+type CustomPointers {
+    """
+    カスタムポインターリスト
+    """
+    customPointers: [CustomPointer!]!
 }
 
 """

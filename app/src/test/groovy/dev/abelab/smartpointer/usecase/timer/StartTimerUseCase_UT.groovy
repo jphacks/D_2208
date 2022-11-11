@@ -30,6 +30,7 @@ class StartTimerUseCase_UT extends AbstractUseCase_UT {
         then:
         noExceptionThrown()
         1 * this.roomRepository.existsById(room.id) >> true
+        1 * this.timerService.checkIsInputTimeValid(inputTime) >> {}
         1 * this.timerRepository.selectByRoomId(room.id) >> Optional.of(timer)
         1 * timer.start(inputTime)
     }

@@ -1,6 +1,7 @@
 package dev.abelab.smartpointer.usecase
 
 import dev.abelab.smartpointer.AbstractSpecification
+import dev.abelab.smartpointer.domain.repository.CustomPointerRepository
 import dev.abelab.smartpointer.domain.repository.RoomRepository
 import dev.abelab.smartpointer.domain.repository.TimerRepository
 import dev.abelab.smartpointer.domain.repository.UserRepository
@@ -21,6 +22,9 @@ abstract class AbstractUseCase_UT extends AbstractSpecification {
 
     @SpringBean
     TimerRepository timerRepository = Mock()
+
+    @SpringBean
+    CustomPointerRepository customPointerRepository = Mock()
 
     @SpringBean
     UserService userService = Mock()
