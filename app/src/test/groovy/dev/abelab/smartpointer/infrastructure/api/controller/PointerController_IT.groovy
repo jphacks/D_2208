@@ -172,5 +172,59 @@ class PointerController_IT extends AbstractController_IT {
         this.executeWebSocket(query, new UnauthorizedException(ErrorCode.USER_NOT_LOGGED_IN))
     }
 
+    def "ポインター操作購読API: ポインターを購読できる"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
+            "00000000-0000-0000-0000-000000000001" | RandomHelper.numeric(6)
+        }
+        // @formatter:on
+
+        final loginUser = this.login("00000000-0000-0000-0000-000000000000")
+        this.connectWebSocketGraphQL(loginUser)
+
+        final query = """
+                subscription {
+                    subscribeToPointer(roomId: "${loginUser.roomId}") {
+                        user {
+                            id
+                            name
+                        }
+                        orientation {
+                            alpha
+                            beta
+                            gamma
+                        }
+                    }
+                }
+            """
+        final response = this.executeWebSocketSubscription(query, "subscribeToPointer", PointerControl)
+
+        when:
+        this.pointerControlSink.tryEmitNext(new PointerControlModel("00000000-0000-0000-0000-000000000000", loginUser, 1.0, 2.0, 3.0))
+        this.pointerControlSink.tryEmitNext(new PointerControlModel("00000000-0000-0000-0000-000000000000", loginUser, 0.0, 0.0, 0.0))
+        this.pointerControlSink.tryEmitNext(new PointerControlModel("00000000-0000-0000-0000-000000000001", loginUser, 0.0, 0.0, 0.0))
+
+        then:
+        StepVerifier.create(response)
+            .expectNextMatches({
+                it.user.id == loginUser.id
+                    && it.user.name == loginUser.name
+                    && it.orientation.alpha == 1.0
+                    && it.orientation.beta == 2.0
+                    && it.orientation.gamma == 3.0
+            })
+            .expectNextMatches({
+                it.user.id == loginUser.id
+                    && it.user.name == loginUser.name
+                    && it.orientation.alpha == 0.0
+                    && it.orientation.beta == 0.0
+                    && it.orientation.gamma == 0.0
+            })
+            .thenCancel()
+            .verify()
+    }
 
 }
