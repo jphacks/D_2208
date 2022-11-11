@@ -1,23 +1,24 @@
 import {
   Box,
-  VStack,
-  FormControl,
-  FormLabel,
-  Input,
-  FormHelperText,
-  Image,
-  Center,
   Button,
+  Center,
+  FormControl,
+  FormHelperText,
+  FormLabel,
   Icon,
+  Image,
+  Input,
   Text,
+  VStack,
 } from "@chakra-ui/react";
+import { NoSymbolIcon, TrashIcon } from "@heroicons/react/24/outline";
 import type { CustomPointerType } from "@smartpointer-desktop/shared";
 import { FC, FormEvent, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
 import { useAutosave } from "./useAutosave";
 
-import { updateCustomPointerType, removeCustomPointerType } from "#preload";
+import { removeCustomPointerType, updateCustomPointerType } from "#preload";
 
 export const CustomPointerTypeTabItem: FC<{
   customPointerType: CustomPointerType;
@@ -102,11 +103,7 @@ export const CustomPointerTypeTabItem: FC<{
                     stroke="currentColor"
                     boxSize="12"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
-                    />
+                    <NoSymbolIcon />
                   </Icon>
 
                   <Text textTransform="uppercase">no image</Text>
@@ -124,6 +121,18 @@ export const CustomPointerTypeTabItem: FC<{
         <Button
           colorScheme="red"
           onClick={() => removeCustomPointerType(customPointerType)}
+          leftIcon={
+            <Icon
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="gray.600"
+              boxSize="5"
+            >
+              <TrashIcon />
+            </Icon>
+          }
         >
           削除する
         </Button>
