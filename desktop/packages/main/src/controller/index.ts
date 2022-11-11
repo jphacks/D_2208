@@ -7,14 +7,10 @@ import {
 import { randomUUID } from "crypto";
 import { screen } from "electron";
 
-import { requestHttp } from "@/api";
+import { initializeWsClient, requestHttp, requestWs } from "@/api";
 import { graphql } from "@/gql";
 import { model } from "@/model";
-// import {
-//   activate,
-//   listenRoomSubscription,
-//   unsubscribeRoomSubscription,
-// } from "@/stomp";
+import { goNext, goPrevious } from "@/pagination";
 import { store } from "@/store";
 import { view } from "@/view";
 
@@ -71,15 +67,41 @@ export const controller = {
 
     console.log("created room", data.createRoom);
 
-    // TODO: GraphQL 移行
-    // await activate();
+    initializeWsClient();
 
-    console.log("before", model.state);
     model.createdRoom(data.createRoom, screen.getPrimaryDisplay().id);
-    console.log("after", model.state);
 
-    // TODO: GraphQL 移行
-    // listenRoomSubscription(data.createRoom.id);
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          subscription SubscribeToSlideControl($roomId: ID!) {
+            subscribeToSlideControl(roomId: $roomId)
+          }
+        `),
+        variables: {
+          roomId: data.createRoom.id,
+        },
+      },
+      {
+        next({ data }) {
+          if (data) {
+            switch (data.subscribeToSlideControl) {
+              case "NEXT": {
+                goNext();
+                return;
+              }
+              case "PREVIOUS": {
+                goPrevious();
+              }
+            }
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        error() {},
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        complete() {},
+      }
+    );
 
     view.tray.update();
     await view.window.pointerOverlay.show();

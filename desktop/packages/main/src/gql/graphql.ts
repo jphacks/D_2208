@@ -25,14 +25,34 @@ export type AccessToken = {
   ttl: Scalars['Int'];
 };
 
+/** カスタムポインター */
+export type CustomPointer = {
+  __typename?: 'CustomPointer';
+  /** カスタムポインターID */
+  id: Scalars['ID'];
+  /** ラベル */
+  label: Scalars['String'];
+  /** URL */
+  url: Scalars['String'];
+};
+
+/** カスタムポインターリスト */
+export type CustomPointers = {
+  __typename?: 'CustomPointers';
+  /** カスタムポインターリスト */
+  customPointers: Array<CustomPointer>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   /** ルーム作成API */
   createRoom: Room;
+  /** カスタムポインター削除API */
+  deleteCustomPointer: Scalars['ID'];
   /** ルーム削除API */
   deleteRoom: Scalars['ID'];
   /** ポインター切断API */
-  disconnectPointer: PointerControl;
+  disconnectPointer: User;
   /** スライドを進めるAPI */
   goNextSlide: SlideControl;
   /** スライドを戻すAPI */
@@ -52,8 +72,29 @@ export type Mutation = {
 };
 
 
+export type MutationDeleteCustomPointerArgs = {
+  id: Scalars['ID'];
+  roomId: Scalars['ID'];
+};
+
+
 export type MutationDeleteRoomArgs = {
   roomId: Scalars['ID'];
+};
+
+
+export type MutationDisconnectPointerArgs = {
+  accessToken: Scalars['String'];
+};
+
+
+export type MutationGoNextSlideArgs = {
+  accessToken: Scalars['String'];
+};
+
+
+export type MutationGoPreviousSlideArgs = {
+  accessToken: Scalars['String'];
 };
 
 
@@ -64,7 +105,31 @@ export type MutationJoinRoomArgs = {
 };
 
 
+export type MutationMovePointerArgs = {
+  accessToken: Scalars['String'];
+  alpha?: InputMaybe<Scalars['Float']>;
+  beta?: InputMaybe<Scalars['Float']>;
+  gamma?: InputMaybe<Scalars['Float']>;
+};
+
+
+export type MutationPauseTimerArgs = {
+  accessToken: Scalars['String'];
+};
+
+
+export type MutationResetTimerArgs = {
+  accessToken: Scalars['String'];
+};
+
+
+export type MutationResumeTimerArgs = {
+  accessToken: Scalars['String'];
+};
+
+
 export type MutationStartTimerArgs = {
+  accessToken: Scalars['String'];
   inputTime: Scalars['Int'];
 };
 
@@ -90,12 +155,19 @@ export type PointerControlOrientation = {
 
 export type Query = {
   __typename?: 'Query';
+  /** カスタムポインターリスト取得API */
+  getCustomPointers: CustomPointers;
   /** タイマー取得API */
   getTimer: Timer;
   /** ユーザリスト取得API */
   getUsers: Users;
   /** ヘルスチェックAPI */
   health: Scalars['Boolean'];
+};
+
+
+export type QueryGetCustomPointersArgs = {
+  roomId: Scalars['ID'];
 };
 
 
@@ -208,5 +280,13 @@ export type CreateRoomMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type CreateRoomMutation = { __typename?: 'Mutation', createRoom: { __typename?: 'Room', id: string, passcode: string } };
 
+export type SubscribeToSlideControlSubscriptionVariables = Exact<{
+  roomId: Scalars['ID'];
+}>;
+
+
+export type SubscribeToSlideControlSubscription = { __typename?: 'Subscription', subscribeToSlideControl: SlideControl };
+
 
 export const CreateRoomDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateRoom"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createRoom"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"passcode"}}]}}]}}]} as unknown as DocumentNode<CreateRoomMutation, CreateRoomMutationVariables>;
+export const SubscribeToSlideControlDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"SubscribeToSlideControl"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"subscribeToSlideControl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"roomId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}}}]}]}}]} as unknown as DocumentNode<SubscribeToSlideControlSubscription, SubscribeToSlideControlSubscriptionVariables>;

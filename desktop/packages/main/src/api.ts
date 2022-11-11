@@ -45,6 +45,7 @@ export const initializeWsClient = () => {
   graphqlWsClient = createClient({
     url: graphqlWsEndpoint,
     webSocketImpl: WebSocket,
+    lazy: false,
   });
 };
 
