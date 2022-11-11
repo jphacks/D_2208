@@ -15,9 +15,8 @@ import { ClientError } from "graphql-request";
 import { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { request } from "@/api";
+import { initializeWsClient, requestHttp } from "@/api";
 import { graphql } from "@/gql";
-import { activate } from "@/stomp";
 import { AuthData } from "@/types/AuthData";
 
 type Props = {
@@ -52,7 +51,7 @@ export const JoinRoomForm: FC<Props> = ({ onSubmit: onSubmitProps }) => {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const data = await request({
+      const data = await requestHttp({
         query: graphql(`
           mutation JoinRoom(
             $roomId: ID!
@@ -73,7 +72,7 @@ export const JoinRoomForm: FC<Props> = ({ onSubmit: onSubmitProps }) => {
         variables: values,
       });
 
-      await activate();
+      initializeWsClient(data.joinRoom.accessToken);
 
       localStorage.setItem(localStorageKey, values.userName);
       onSubmitProps({

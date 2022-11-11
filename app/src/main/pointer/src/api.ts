@@ -2,13 +2,13 @@ import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import { ExecutionResult, print } from "graphql";
 import { GraphQLClient } from "graphql-request";
 import { RemoveIndex, RequestOptions } from "graphql-request/dist/types";
-import { createClient, Sink } from "graphql-ws";
+import { Client, createClient, Sink } from "graphql-ws";
 
 const graphqlHttpEndpoint = `${location.origin}/graphql`;
 
 const graphqlHttpClient = new GraphQLClient(graphqlHttpEndpoint);
 
-export const request = <
+export const requestHttp = <
   T = unknown,
   V extends Record<string, unknown> = Record<string, unknown>
 >({
@@ -29,12 +29,20 @@ export const request = <
 
 const graphqlWsEndpoint = `wss://${location.host}/graphql-ws`;
 
-const rawGraphqlWsClient = createClient({
-  url: graphqlWsEndpoint,
-  lazy: true,
-});
+let graphqlWsClient: Client | null = null;
 
-export const subscribe = <
+export const initializeWsClient = (accessToken: string) => {
+  graphqlWsClient = createClient({
+    url: graphqlWsEndpoint,
+    connectionParams: {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  });
+};
+
+export const requestWs = <
   T = unknown,
   V extends Record<string, unknown> = Record<string, unknown>
 >(
@@ -50,7 +58,11 @@ export const subscribe = <
     : { variables: V }),
   sink: Sink<ExecutionResult<T>>
 ) => {
-  rawGraphqlWsClient.subscribe(
+  if (!graphqlWsClient) {
+    throw new Error("graphql-ws client not initialized");
+  }
+
+  graphqlWsClient.subscribe(
     {
       query: print(query),
       variables,
