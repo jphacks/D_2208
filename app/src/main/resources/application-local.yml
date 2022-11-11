@@ -9,3 +9,10 @@ auth:
   jwt:
     secret: 70gdy7X82ya650Vdhb8HqofHniMkPHTIYOIFJA1NKY4=
     issuer: dev.abelab.smartpointer
+
+gcp:
+  project-id: GCP_PROJECT_ID
+  credentials-path: GCP_CREDENTIALS_PATH
+  cloud-storage:
+    enabled: false
+    bucket-name: GCP_BUCKET_NAME

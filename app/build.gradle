@@ -115,6 +115,9 @@ dependencies {
     // mysql
     implementation "mysql:mysql-connector-java:8.0.29"
 
+    // google cloud
+    implementation "com.google.cloud:google-cloud-storage:2.11.3"
+
     // test
     testImplementation "org.spockframework:spock-core:2.2-M1-groovy-4.0"
     testImplementation "org.spockframework:spock-spring:2.2-M1-groovy-4.0"

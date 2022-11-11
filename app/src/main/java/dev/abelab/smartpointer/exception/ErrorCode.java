@@ -58,7 +58,9 @@ public enum ErrorCode {
     /**
      * 500 Internal Server Error: 6000~6999
      */
-    UNEXPECTED_ERROR(6000, "exception.internal_server_error.unexpected_error");
+    UNEXPECTED_ERROR(6000, "exception.internal_server_error.unexpected_error"),
+
+    FAILED_TO_UPLOAD_FILE(6001, "exception.internal_server_error.failed_to_upload_file");
 
     /**
      * エラーコード
