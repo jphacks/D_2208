@@ -1,16 +1,18 @@
 package dev.abelab.smartpointer.infrastructure.api;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.graphql.server.WebGraphQlRequest;
 import org.springframework.graphql.server.WebGraphQlResponse;
 import org.springframework.graphql.server.WebSocketGraphQlInterceptor;
 import org.springframework.graphql.server.WebSocketSessionInfo;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import dev.abelab.smartpointer.domain.repository.UserRepository;
+import dev.abelab.smartpointer.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -24,6 +26,8 @@ import reactor.core.publisher.Mono;
 public class WebSocketGraphQLAuthenticationInterceptor implements WebSocketGraphQlInterceptor {
 
     private final UserRepository userRepository;
+
+    private final AuthUtil authUtil;
 
     @Override
     public Mono<WebGraphQlResponse> intercept(final WebGraphQlRequest request, final Chain chain) {
@@ -47,11 +51,13 @@ public class WebSocketGraphQLAuthenticationInterceptor implements WebSocketGraph
     @Override
     public void handleConnectionClosed(final WebSocketSessionInfo sessionInfo, final int statusCode,
         final Map<String, Object> connectionInitPayload) {
-        final var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (Objects.nonNull(authentication)) {
-            log.info(String.format("%d: GraphQL connection closed [user=%s]", statusCode, authentication.getName()));
-            this.userRepository.deleteById(authentication.getName());
-        } else {
+        try {
+            final var headers = (LinkedHashMap<String, String>) connectionInitPayload.get("headers");
+            final var authorization = headers.get(HttpHeaders.AUTHORIZATION);
+            final var loginUser = this.authUtil.getLoginUser(authorization.replace("Bearer ", ""));
+            log.info(String.format("%d: GraphQL connection closed [name=%s, id=%s]", statusCode, loginUser.getName(), loginUser.getId()));
+            this.userRepository.deleteById(loginUser.getId());
+        } catch (final Exception ignored) {
             log.info(String.format("%d: GraphQL connection closed", statusCode));
         }
         WebSocketGraphQlInterceptor.super.handleConnectionClosed(sessionInfo, statusCode, connectionInitPayload);
