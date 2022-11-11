@@ -227,4 +227,43 @@ class PointerController_IT extends AbstractController_IT {
             .verify()
     }
 
+    def "ポインター切断イベント購読API: ポインター切断イベントを購読できる"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
+            "00000000-0000-0000-0000-000000000001" | RandomHelper.numeric(6)
+        }
+        // @formatter:on
+
+        final loginUser = this.login("00000000-0000-0000-0000-000000000000")
+        this.connectWebSocketGraphQL(loginUser)
+
+        final query = """
+                subscription {
+                    subscribeToPointerDisconnectEvent(roomId: "${loginUser.roomId}") {
+                        id
+                        name
+                    }
+                }
+            """
+        final response = this.executeWebSocketSubscription(query, "subscribeToPointerDisconnectEvent", User)
+
+        when:
+        final user1 = this.login("00000000-0000-0000-0000-000000000000")
+        final user2 = this.login("00000000-0000-0000-0000-000000000000")
+        final user3 = this.login("00000000-0000-0000-0000-000000000001")
+        this.pointerDisconnectSink.tryEmitNext(user1)
+        this.pointerDisconnectSink.tryEmitNext(user2)
+        this.pointerDisconnectSink.tryEmitNext(user3)
+
+        then:
+        StepVerifier.create(response)
+            .expectNextMatches({ it.id == user1.id && it.name == user1.name })
+            .expectNextMatches({ it.id == user2.id && it.name == user2.name })
+            .thenCancel()
+            .verify()
+    }
+
 }
