@@ -97,4 +97,19 @@ public class PointerController {
             .map(PointerControl::new);
     }
 
+    /**
+     * ポインター切断イベント購読API
+     *
+     * @param roomId ルームID
+     * @return ポインター
+     */
+    @SubscriptionMapping
+    public Publisher<User> subscribeToPointerDisconnectEvent( //
+        @Argument final String roomId //
+    ) {
+        return this.pointerDisconnectFlux //
+            .filter(userModel -> userModel.getRoomId().equals(roomId)) //
+            .map(User::new);
+    }
+
 }
