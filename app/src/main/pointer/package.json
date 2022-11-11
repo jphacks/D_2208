@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev:serve": "vite --host",
-    "dev": "run-p dev:* codegen",
+    "dev": "run-p codegen:watch dev:*",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "codegen": "gql-gen --config graphql.config.ts",

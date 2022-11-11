@@ -47,6 +47,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** ルーム作成API */
   createRoom: Room;
+  /** カスタムポインター削除API */
+  deleteCustomPointer: Scalars['ID'];
   /** ルーム削除API */
   deleteRoom: Scalars['ID'];
   /** ポインター切断API */
@@ -70,8 +72,29 @@ export type Mutation = {
 };
 
 
+export type MutationDeleteCustomPointerArgs = {
+  id: Scalars['ID'];
+  roomId: Scalars['ID'];
+};
+
+
 export type MutationDeleteRoomArgs = {
   roomId: Scalars['ID'];
+};
+
+
+export type MutationDisconnectPointerArgs = {
+  accessToken: Scalars['String'];
+};
+
+
+export type MutationGoNextSlideArgs = {
+  accessToken: Scalars['String'];
+};
+
+
+export type MutationGoPreviousSlideArgs = {
+  accessToken: Scalars['String'];
 };
 
 
@@ -83,13 +106,30 @@ export type MutationJoinRoomArgs = {
 
 
 export type MutationMovePointerArgs = {
+  accessToken: Scalars['String'];
   alpha?: InputMaybe<Scalars['Float']>;
   beta?: InputMaybe<Scalars['Float']>;
   gamma?: InputMaybe<Scalars['Float']>;
 };
 
 
+export type MutationPauseTimerArgs = {
+  accessToken: Scalars['String'];
+};
+
+
+export type MutationResetTimerArgs = {
+  accessToken: Scalars['String'];
+};
+
+
+export type MutationResumeTimerArgs = {
+  accessToken: Scalars['String'];
+};
+
+
 export type MutationStartTimerArgs = {
+  accessToken: Scalars['String'];
   inputTime: Scalars['Int'];
 };
 
@@ -244,5 +284,21 @@ export type JoinRoomMutationVariables = Exact<{
 
 export type JoinRoomMutation = { __typename?: 'Mutation', joinRoom: { __typename?: 'AccessToken', tokenType: string, accessToken: string, ttl: number } };
 
+export type GoNextSlideMutationVariables = Exact<{
+  accessToken: Scalars['String'];
+}>;
+
+
+export type GoNextSlideMutation = { __typename?: 'Mutation', goNextSlide: SlideControl };
+
+export type GoPreviousSlideMutationVariables = Exact<{
+  accessToken: Scalars['String'];
+}>;
+
+
+export type GoPreviousSlideMutation = { __typename?: 'Mutation', goPreviousSlide: SlideControl };
+
 
 export const JoinRoomDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"JoinRoom"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"passcode"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"joinRoom"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"roomId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}}},{"kind":"Argument","name":{"kind":"Name","value":"passcode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"passcode"}}},{"kind":"Argument","name":{"kind":"Name","value":"userName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tokenType"}},{"kind":"Field","name":{"kind":"Name","value":"accessToken"}},{"kind":"Field","name":{"kind":"Name","value":"ttl"}}]}}]}}]} as unknown as DocumentNode<JoinRoomMutation, JoinRoomMutationVariables>;
+export const GoNextSlideDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"GoNextSlide"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"goNextSlide"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"accessToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}}}]}]}}]} as unknown as DocumentNode<GoNextSlideMutation, GoNextSlideMutationVariables>;
+export const GoPreviousSlideDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"GoPreviousSlide"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"goPreviousSlide"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"accessToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}}}]}]}}]} as unknown as DocumentNode<GoPreviousSlideMutation, GoPreviousSlideMutationVariables>;
