@@ -25,6 +25,24 @@ export type AccessToken = {
   ttl: Scalars['Int'];
 };
 
+/** カスタムポインター */
+export type CustomPointer = {
+  __typename?: 'CustomPointer';
+  /** カスタムポインターID */
+  id: Scalars['ID'];
+  /** ラベル */
+  label: Scalars['String'];
+  /** URL */
+  url: Scalars['String'];
+};
+
+/** カスタムポインターリスト */
+export type CustomPointers = {
+  __typename?: 'CustomPointers';
+  /** カスタムポインターリスト */
+  customPointers: Array<CustomPointer>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   /** ルーム作成API */
@@ -97,12 +115,19 @@ export type PointerControlOrientation = {
 
 export type Query = {
   __typename?: 'Query';
+  /** カスタムポインターリスト取得API */
+  getCustomPointers: CustomPointers;
   /** タイマー取得API */
   getTimer: Timer;
   /** ユーザリスト取得API */
   getUsers: Users;
   /** ヘルスチェックAPI */
   health: Scalars['Boolean'];
+};
+
+
+export type QueryGetCustomPointersArgs = {
+  roomId: Scalars['ID'];
 };
 
 
