@@ -19,6 +19,13 @@ public interface UserRepository {
     Optional<UserModel> selectById(final String id);
 
     /**
+     * ユーザリストを取得
+     * 
+     * @return ユーザリスト
+     */
+    List<UserModel> selectAll();
+
+    /**
      * ルームIDからユーザリストを取得
      *
      * @param roomId ルームID
