@@ -1,28 +1,29 @@
 import {
+  Button,
+  Flex,
+  Heading,
+  HStack,
+  Icon,
+  Image,
+  Spacer,
+  Tab,
   TabList,
   TabPanel,
   TabPanels,
-  Tab,
   Tabs,
-  VStack,
-  Image,
-  Flex,
-  Button,
-  Heading,
-  Icon,
   Text,
-  Spacer,
-  HStack,
+  VStack,
 } from "@chakra-ui/react";
+import { NoSymbolIcon, PlusIcon } from "@heroicons/react/24/outline";
 import type { CustomPointerType } from "@smartpointer-desktop/shared";
 import { FC, useEffect, useState } from "react";
 
 import { CustomPointerTypeTabItem } from "./CustomPointerTypeTabItem";
 
 import {
+  addCustomPointerType,
   getCustomPointerTypes,
   onUpdateCustomPointerTypes,
-  addCustomPointerType,
 } from "#preload";
 
 export const App: FC = () => {
@@ -47,8 +48,23 @@ export const App: FC = () => {
       >
         <Heading fontSize="xl">カスタムポインターの設定</Heading>
         <Spacer />
-        <Button colorScheme="green" onClick={addCustomPointerType}>
-          追加
+        <Button
+          colorScheme="green"
+          onClick={addCustomPointerType}
+          leftIcon={
+            <Icon
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="gray.600"
+              boxSize="5"
+            >
+              <PlusIcon />
+            </Icon>
+          }
+        >
+          追加する
         </Button>
       </Flex>
       <Tabs
@@ -109,11 +125,7 @@ export const App: FC = () => {
                     stroke="gray.600"
                     boxSize="8"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
-                    />
+                    <NoSymbolIcon />
                   </Icon>
                 )}
                 <Text

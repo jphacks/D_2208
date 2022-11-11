@@ -1,15 +1,16 @@
 import {
   Button,
   Flex,
+  Icon,
   Input,
   InputGroup,
   InputRightElement,
   Text,
   useClipboard,
 } from "@chakra-ui/react";
+import { ClipboardIcon as ClipboardIconOutline } from "@heroicons/react/24/outline";
+import { ClipboardIcon as ClipboardIconSolid } from "@heroicons/react/24/solid";
 import type { FC } from "react";
-
-import { ClipboardIcon } from "./ClipboardIcon";
 
 type Props = {
   title: string;
@@ -30,8 +31,14 @@ export const Clipboard: FC<Props> = ({ title, text }) => {
 
         <InputRightElement w="9.25em">
           <Button
+            color="white"
             h="1.75rem"
-            leftIcon={<ClipboardIcon />}
+            leftIcon={
+              <Icon>
+                {hasCopied ? <ClipboardIconSolid /> : <ClipboardIconOutline />}
+              </Icon>
+            }
+            // leftIcon={<ClipboardIcon />}
             colorScheme="green"
             onClick={onCopy}
           >
