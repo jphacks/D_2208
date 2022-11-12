@@ -49,6 +49,11 @@ export const initializeWsClient = () => {
   });
 };
 
+export const closeWsClient = () => {
+  graphqlWsClient?.dispose();
+  graphqlWsClient = null;
+};
+
 export const requestWs = <
   T = unknown,
   V extends Record<string, unknown> = Record<string, unknown>

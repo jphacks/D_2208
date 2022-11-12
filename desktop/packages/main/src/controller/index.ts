@@ -7,7 +7,12 @@ import {
 import { randomUUID } from "crypto";
 import { screen } from "electron";
 
-import { initializeWsClient, requestHttp, requestWs } from "@/api";
+import {
+  closeWsClient,
+  initializeWsClient,
+  requestHttp,
+  requestWs,
+} from "@/api";
 import { graphql } from "@/gql";
 import { model } from "@/model";
 import { goNext, goPrevious } from "@/pagination";
@@ -178,13 +183,29 @@ export const controller = {
     model.leftRoom(user);
   },
 
-  closeRoom: () => {
+  closeRoom: async () => {
+    if (model.state.status !== "CREATED") {
+      throw new Error("Cannot close room when not in created state");
+    }
+
+    await requestHttp({
+      query: graphql(/* GraphQL */ `
+        mutation DeleteRoom($roomId: ID!) {
+          deleteRoom(roomId: $roomId)
+        }
+      `),
+      variables: {
+        roomId: model.state.room.id,
+      },
+    });
+
     view.window.pointerOverlay.close();
     view.window.inviteLink.close();
-    // TODO: GraphQL 移行
-    // unsubscribeRoomSubscription();
 
+    closeWsClient();
     model.closeRoom();
+
+    view.tray.update();
   },
 
   pointerUpdated: (user: User, orientation: PointerOrientation) => {
