@@ -199,6 +199,8 @@ export enum SlideControl {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  /** カスタムポインターリスト購読API */
+  subscribeToCustomPointers: CustomPointers;
   /** ポインター操作購読API */
   subscribeToPointer: PointerControl;
   /** ポインター切断イベント購読API */
@@ -208,7 +210,12 @@ export type Subscription = {
   /** タイマー購読API */
   subscribeToTimer: Timer;
   /** ユーザリスト購読API */
-  subscribeToUsers: Array<User>;
+  subscribeToUsers: Users;
+};
+
+
+export type SubscriptionSubscribeToCustomPointersArgs = {
+  roomId: Scalars['ID'];
 };
 
 
@@ -298,7 +305,26 @@ export type GoPreviousSlideMutationVariables = Exact<{
 
 export type GoPreviousSlideMutation = { __typename?: 'Mutation', goPreviousSlide: SlideControl };
 
+export type MovePointerMutationVariables = Exact<{
+  alpha?: InputMaybe<Scalars['Float']>;
+  beta?: InputMaybe<Scalars['Float']>;
+  gamma?: InputMaybe<Scalars['Float']>;
+  accessToken: Scalars['String'];
+}>;
+
+
+export type MovePointerMutation = { __typename?: 'Mutation', movePointer: { __typename?: 'PointerControl', user: { __typename?: 'User', id: string } } };
+
+export type DisconnectPointerMutationVariables = Exact<{
+  accessToken: Scalars['String'];
+}>;
+
+
+export type DisconnectPointerMutation = { __typename?: 'Mutation', disconnectPointer: { __typename?: 'User', id: string } };
+
 
 export const JoinRoomDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"JoinRoom"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"passcode"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"joinRoom"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"roomId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}}},{"kind":"Argument","name":{"kind":"Name","value":"passcode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"passcode"}}},{"kind":"Argument","name":{"kind":"Name","value":"userName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tokenType"}},{"kind":"Field","name":{"kind":"Name","value":"accessToken"}},{"kind":"Field","name":{"kind":"Name","value":"ttl"}}]}}]}}]} as unknown as DocumentNode<JoinRoomMutation, JoinRoomMutationVariables>;
 export const GoNextSlideDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"GoNextSlide"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"goNextSlide"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"accessToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}}}]}]}}]} as unknown as DocumentNode<GoNextSlideMutation, GoNextSlideMutationVariables>;
 export const GoPreviousSlideDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"GoPreviousSlide"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"goPreviousSlide"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"accessToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}}}]}]}}]} as unknown as DocumentNode<GoPreviousSlideMutation, GoPreviousSlideMutationVariables>;
+export const MovePointerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"MovePointer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"alpha"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"beta"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"gamma"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"movePointer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"alpha"},"value":{"kind":"Variable","name":{"kind":"Name","value":"alpha"}}},{"kind":"Argument","name":{"kind":"Name","value":"beta"},"value":{"kind":"Variable","name":{"kind":"Name","value":"beta"}}},{"kind":"Argument","name":{"kind":"Name","value":"gamma"},"value":{"kind":"Variable","name":{"kind":"Name","value":"gamma"}}},{"kind":"Argument","name":{"kind":"Name","value":"accessToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<MovePointerMutation, MovePointerMutationVariables>;
+export const DisconnectPointerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DisconnectPointer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"disconnectPointer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"accessToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<DisconnectPointerMutation, DisconnectPointerMutationVariables>;

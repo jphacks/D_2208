@@ -153,10 +153,10 @@ export const Pointer: FC<Props> = ({ authData }) => {
     }
 
     requestPermission().then(() => {
-      subscribeOrientation(authData.roomId);
+      subscribeOrientation(authData.accessToken);
     });
-    return () => unsubscribeOrientation(authData.roomId);
-  }, [authData.roomId, isActive]);
+    return () => unsubscribeOrientation(authData.accessToken);
+  }, [authData.accessToken, isActive]);
 
   return (
     <HStack justify="center" spacing="4">
