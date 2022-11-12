@@ -1,4 +1,5 @@
 import {
+  builtInPointers,
   GetPointerResult,
   PointerType,
   UpdatePointersMessage,
@@ -103,7 +104,9 @@ export const pointerOverlay = {
       return;
     }
 
-    const message: PointerType = state.selectedPointerType;
+    const message: PointerType = builtInPointers
+      .concat(state.customPointerTypes)
+      .find((pointerType) => pointerType.id === state.selectedPointerTypeId)!;
 
     overlayWindow.webContents.send("onUpdatePointerType", message);
   },
@@ -160,6 +163,8 @@ ipcMain.handle("getPointers", (): GetPointerResult => {
         },
       })
     ),
-    pointerType: state.selectedPointerType,
+    pointerType: builtInPointers
+      .concat(state.customPointerTypes)
+      .find((pointerType) => pointerType.id === state.selectedPointerTypeId)!,
   };
 });
