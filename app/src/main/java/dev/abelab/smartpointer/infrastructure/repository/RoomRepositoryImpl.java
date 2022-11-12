@@ -45,4 +45,9 @@ public class RoomRepositoryImpl implements RoomRepository {
         return this.roomMapper.countByExample(example) != 0;
     }
 
+    @Override
+    public void updatePointerTypeById(final String id, final String pointerType) {
+        this.roomMapper.updatePointerTypeById(id, pointerType);
+    }
+
 }

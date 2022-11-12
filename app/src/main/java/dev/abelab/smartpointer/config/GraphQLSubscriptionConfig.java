@@ -74,4 +74,14 @@ public class GraphQLSubscriptionConfig {
         return roomCustomPointersSink.asFlux();
     }
 
+    @Bean
+    public Sinks.Many<RoomPointerModel> roomPointerSink() {
+        return Sinks.many().multicast().onBackpressureBuffer(Queues.SMALL_BUFFER_SIZE, false);
+    }
+
+    @Bean
+    public Flux<RoomPointerModel> roomPointerFlux(final Sinks.Many<RoomPointerModel> roomPointerSink) {
+        return roomPointerSink.asFlux();
+    }
+
 }

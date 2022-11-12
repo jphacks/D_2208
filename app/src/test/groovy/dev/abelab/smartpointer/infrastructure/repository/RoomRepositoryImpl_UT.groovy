@@ -94,4 +94,22 @@ class RoomRepositoryImpl_UT extends AbstractRepository_UT {
         "00000000-0000-0000-0000-000000000001" || false
     }
 
+    def "updatePointerTypeById: IDからポインタータイプを変更"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode | pointer_type
+            "00000000-0000-0000-0000-000000000000" | ""       | "A"
+            "00000000-0000-0000-0000-000000000001" | ""       | "A"
+        }
+        // @formatter:on
+
+        when:
+        this.sut.updatePointerTypeById("00000000-0000-0000-0000-000000000000", "B")
+
+        then:
+        final rooms = sql.rows("SELECT * FROM room")
+        rooms*.pointer_type == ["B", "A"]
+    }
+
 }
