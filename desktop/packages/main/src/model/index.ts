@@ -1,6 +1,5 @@
 import {
   PointerOrientation,
-  builtInPointers,
   PointerType,
   User,
   CustomPointerType,
@@ -45,7 +44,7 @@ export const model = {
       room,
       joinedUsers: new Map(),
       activePointers: new Map(),
-      selectedPointerType: builtInPointers[0]!,
+      selectedPointerTypeId: "SPOTLIGHT",
       displayToShowPointer,
     };
   },
@@ -61,7 +60,7 @@ export const model = {
       room: undefined,
       joinedUsers: undefined,
       activePointers: undefined,
-      selectedPointerType: undefined,
+      selectedPointerTypeId: undefined,
       displayToShowPointer: undefined,
     };
   },
@@ -121,14 +120,14 @@ export const model = {
     };
   },
 
-  selectedPointer: (selectedPointerType: PointerType) => {
+  selectedPointer: (selectedPointerTypeId: PointerType["id"]) => {
     if (state.status !== "CREATED") {
       throw new Error("Cannot select pointer when not in CREATED state");
     }
 
     state = {
       ...state,
-      selectedPointerType,
+      selectedPointerTypeId,
     };
   },
 

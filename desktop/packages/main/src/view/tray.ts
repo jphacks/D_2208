@@ -45,8 +45,8 @@ const pointerListTemplate: MenuTemplateWithState<
       .map((pointer) => ({
         label: pointer.name,
         type: "radio",
-        checked: state.selectedPointerType.id === pointer.id,
-        click: () => controller.selectedPointer(pointer),
+        checked: state.selectedPointerTypeId === pointer.id,
+        click: () => controller.requestChangePointerType(pointer.id),
       })),
   },
 ];

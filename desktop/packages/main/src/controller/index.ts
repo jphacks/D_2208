@@ -170,6 +170,33 @@ export const controller = {
       }
     );
 
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          subscription SubscribeToPointerType($roomId: ID!) {
+            subscribeToPointerType(roomId: $roomId)
+          }
+        `),
+        variables: {
+          roomId: data.createRoom.id,
+        },
+      },
+      {
+        next(value) {
+          const data = value.data?.subscribeToPointerType;
+          if (data) {
+            model.selectedPointer(data);
+
+            view.window.pointerOverlay.updatePointerType();
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        error() {},
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        complete() {},
+      }
+    );
+
     view.tray.update();
     await view.window.pointerOverlay.show();
     await view.window.inviteLink.show();
@@ -219,13 +246,6 @@ export const controller = {
 
     view.window.pointerOverlay.updatePointer();
   },
-
-  selectedPointer: (selectedPointerType: PointerType) => {
-    model.selectedPointer(selectedPointerType);
-
-    view.window.pointerOverlay.updatePointerType();
-  },
-
   showInviteLink: async () => {
     await view.window.inviteLink.show();
   },
@@ -257,6 +277,34 @@ export const controller = {
     store.set("customPointerTypes", model.state.customPointerTypes);
 
     view.window.customPointerType.updateCustomPointerType();
+  },
+
+  requestChangePointerType: (pointerTypeId: PointerType["id"]) => {
+    if (model.state.status !== "CREATED") {
+      throw new Error("Cannot change pointer type when not in created state");
+    }
+
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          mutation ChangePointerType($pointerType: String!, $roomId: ID!) {
+            changePointerType(pointerType: $pointerType, roomId: $roomId)
+          }
+        `),
+        variables: {
+          pointerType: pointerTypeId,
+          roomId: model.state.room.id,
+        },
+      },
+      {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        next: () => {},
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        error: () => {},
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        complete: () => {},
+      }
+    );
   },
 
   updateCustomPointerType: (customPointerType: CustomPointerType) => {

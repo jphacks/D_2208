@@ -23,7 +23,7 @@ export type State = Readonly<
         room?: undefined;
         joinedUsers?: undefined;
         activePointers?: undefined;
-        selectedPointerType?: undefined;
+        selectedPointerTypeId?: undefined;
         displayToShowPointer?: undefined;
       }
     | {
@@ -31,7 +31,7 @@ export type State = Readonly<
         room: Room;
         joinedUsers: Map<User["id"], User>;
         activePointers: Map<ActivePointer["user"]["id"], ActivePointer>;
-        selectedPointerType: PointerType;
+        selectedPointerTypeId: PointerType["id"];
         displayToShowPointer: Display["id"];
       }
   ) & {
