@@ -43,6 +43,11 @@ export const initializeWsClient = (accessToken: string) => {
   });
 };
 
+export const closeWsClient = () => {
+  graphqlWsClient?.dispose();
+  graphqlWsClient = null;
+};
+
 export const requestWs = <
   T = unknown,
   V extends Record<string, unknown> = Record<string, unknown>
