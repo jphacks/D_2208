@@ -383,7 +383,6 @@ class TimerController_IT extends AbstractController_IT {
         }
         // @formatter:on
 
-
         expect:
         final query =
             """
