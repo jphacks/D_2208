@@ -1,7 +1,5 @@
 package dev.abelab.smartpointer.config;
 
-import java.util.List;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -57,23 +55,23 @@ public class GraphQLSubscriptionConfig {
     }
 
     @Bean
-    public Sinks.Many<RoomUsersEventModel> roomUsersEventSink() {
+    public Sinks.Many<RoomUsersModel> roomUsersSink() {
         return Sinks.many().multicast().onBackpressureBuffer(Queues.SMALL_BUFFER_SIZE, false);
     }
 
     @Bean
-    public Flux<RoomUsersEventModel> roomUsersEventFlux(final Sinks.Many<RoomUsersEventModel> roomUsersEventSink) {
-        return roomUsersEventSink.asFlux();
+    public Flux<RoomUsersModel> roomUsersFlux(final Sinks.Many<RoomUsersModel> roomUsersSink) {
+        return roomUsersSink.asFlux();
     }
 
     @Bean
-    public Sinks.Many<List<CustomPointerModel>> customPointersSink() {
+    public Sinks.Many<RoomCustomPointersModel> roomCustomPointersSink() {
         return Sinks.many().multicast().onBackpressureBuffer(Queues.SMALL_BUFFER_SIZE, false);
     }
 
     @Bean
-    public Flux<List<CustomPointerModel>> customPointersFlux(final Sinks.Many<List<CustomPointerModel>> customPointersSink) {
-        return customPointersSink.asFlux();
+    public Flux<RoomCustomPointersModel> roomCustomPointersFlux(final Sinks.Many<RoomCustomPointersModel> roomCustomPointersSink) {
+        return roomCustomPointersSink.asFlux();
     }
 
 }

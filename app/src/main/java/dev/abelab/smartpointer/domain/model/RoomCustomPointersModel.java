@@ -8,13 +8,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ルームユーザリストモデル
+ * ルームカスタムポインターリストモデル
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoomUsersEventModel {
+public class RoomCustomPointersModel {
 
     /**
      * ルームID
@@ -22,8 +22,8 @@ public class RoomUsersEventModel {
     String roomId;
 
     /**
-     * ユーザリスト
+     * カスタムポインターリスト
      */
-    List<UserModel> users;
+    List<CustomPointerModel> customPointers;
 
 }

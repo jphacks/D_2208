@@ -1,14 +1,15 @@
 package dev.abelab.smartpointer.infrastructure.api.controller;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
+import org.reactivestreams.Publisher;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.data.method.annotation.SubscriptionMapping;
 import org.springframework.stereotype.Controller;
 
-import dev.abelab.smartpointer.domain.model.CustomPointerModel;
+import dev.abelab.smartpointer.domain.model.RoomCustomPointersModel;
 import dev.abelab.smartpointer.infrastructure.api.type.CustomPointer;
 import dev.abelab.smartpointer.infrastructure.api.type.CustomPointers;
 import dev.abelab.smartpointer.usecase.custom_pointer.DeleteCustomPointersUseCase;
@@ -24,9 +25,9 @@ import reactor.core.publisher.Sinks;
 @RequiredArgsConstructor
 public class CustomPointerController {
 
-    private final Sinks.Many<List<CustomPointerModel>> customPointersSink;
+    private final Sinks.Many<RoomCustomPointersModel> roomCustomPointersSink;
 
-    private final Flux<List<CustomPointerModel>> customPointersFlux;
+    private final Flux<RoomCustomPointersModel> roomCustomPointersFlux;
 
     private final GetCustomPointersUseCase getCustomPointersUseCase;
 
@@ -61,9 +62,26 @@ public class CustomPointerController {
         @Argument final String roomId //
     ) {
         this.deleteCustomPointersUseCase.handle(id, roomId);
-        this.customPointersSink.tryEmitNext(this.getCustomPointersUseCase.handle(roomId));
+
+        final var customPointers = this.getCustomPointersUseCase.handle(roomId);
+        this.roomCustomPointersSink.tryEmitNext(new RoomCustomPointersModel(roomId, customPointers));
 
         return id;
+    }
+
+    /**
+     * カスタムポインターリスト購読API
+     *
+     * @param roomId ルームID
+     * @return カスタムポインターリスト
+     */
+    @SubscriptionMapping
+    public Publisher<CustomPointers> subscribeToCustomPointers( //
+        @Argument final String roomId //
+    ) {
+        return this.roomCustomPointersFlux //
+            .filter(roomCustomPointersModel -> roomCustomPointersModel.getRoomId().equals(roomId)) //
+            .map(CustomPointers::new);
     }
 
 }

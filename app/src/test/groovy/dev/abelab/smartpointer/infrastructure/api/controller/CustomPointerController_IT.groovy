@@ -1,6 +1,7 @@
 package dev.abelab.smartpointer.infrastructure.api.controller
 
-import dev.abelab.smartpointer.domain.model.CustomPointerModel
+
+import dev.abelab.smartpointer.domain.model.RoomCustomPointersModel
 import dev.abelab.smartpointer.exception.ErrorCode
 import dev.abelab.smartpointer.exception.NotFoundException
 import dev.abelab.smartpointer.helper.TableHelper
@@ -16,10 +17,10 @@ import reactor.test.StepVerifier
 class CustomPointerController_IT extends AbstractController_IT {
 
     @Autowired
-    Sinks.Many<List<CustomPointerModel>> customPointersSink
+    Sinks.Many<RoomCustomPointersModel> roomCustomPointersSink
 
     @Autowired
-    Flux<List<CustomPointerModel>> customPointersFlux
+    Flux<RoomCustomPointersModel> roomCustomPointersFlux
 
     def "カスタムポインターリスト取得API: 正常系 ユーザリストを取得する"() {
         given:
@@ -112,9 +113,9 @@ class CustomPointerController_IT extends AbstractController_IT {
         final customPointers = sql.rows("SELECT * FROM custom_pointer")
         customPointers*.id == ["00000000-0000-0000-0000-000000000001", "00000000-0000-0000-0000-000000000002"]
 
-        StepVerifier.create(this.customPointersFlux)
+        StepVerifier.create(this.roomCustomPointersFlux)
             .expectNextMatches({
-                it*.id == ["00000000-0000-0000-0000-000000000001"]
+                it.customPointers*.id == ["00000000-0000-0000-0000-000000000001"]
             })
             .thenCancel()
             .verify()
