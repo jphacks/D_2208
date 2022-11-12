@@ -280,4 +280,8 @@ export const controller = {
 
     view.tray.update();
   },
+
+  showUserList: () => {
+    view.window.userList.show();
+  },
 };
