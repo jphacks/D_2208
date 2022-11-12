@@ -22,10 +22,13 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
-import { FC, useEffect, useState } from "react";
+import { Sink } from "graphql-ws";
+import { FC, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
-// import { stompClient } from "@/stomp";
+import { requestWs } from "@/api";
+import { graphql } from "@/gql";
+import { Timer as TimerData, TimerStatus } from "@/gql/graphql";
 import { AuthData } from "@/types/AuthData";
 
 type Props = {
@@ -39,8 +42,7 @@ type FormValues = {
 
 export const Timer: FC<Props> = ({ authData }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [state, setState] = useState<"READY" | "RUNNING">("READY");
-  const [finishTimestamp, setFinishedTimestamp] = useState<number | null>(null);
+  const [timer, setTimer] = useState<TimerData | null>(null);
   const [noticeTime, setNoticeTime] = useState<string>("1");
 
   const toast = useToast();
@@ -54,103 +56,268 @@ export const Timer: FC<Props> = ({ authData }) => {
 
   const { register, handleSubmit, setValue } = useForm<FormValues>();
 
+  const mutationSink = useMemo<Sink>(
+    () => ({
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      next: () => {},
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      complete: () => {},
+      error: (error) => {
+        if (!(error instanceof Error)) {
+          throw error;
+        }
+        toast({
+          title: "エラー",
+          description: error.message,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      },
+    }),
+    [toast]
+  );
+
   const onStartStop = (values: FormValues) => {
-    console.log(values);
-    switch (state) {
-      case "READY": {
-        // TODO: GraphQL 移行
-        // stompClient.publish({
-        //   destination: `/app/rooms/${authData.roomId}/timer/start`,
-        //   body: JSON.stringify({
-        //     value: Number(values.minutes) * 60 + Number(values.seconds),
-        //   }),
-        // });
+    console.log("SEND", values);
+    switch (timer?.status) {
+      case TimerStatus.Ready: {
+        requestWs(
+          {
+            query: graphql(/* GraphQL */ `
+              mutation StartTimer($inputTime: Int!, $accessToken: String!) {
+                startTimer(inputTime: $inputTime, accessToken: $accessToken) {
+                  status
+                }
+              }
+            `),
+            variables: {
+              inputTime: Number(values.minutes) * 60 + Number(values.seconds),
+              accessToken: authData.accessToken,
+            },
+          },
+          mutationSink
+        );
         return;
       }
-      case "RUNNING": {
-        // TODO: GraphQL 移行
-        // stompClient.publish({
-        //   destination: `/app/rooms/${authData.roomId}/timer/stop`,
-        // });
+      case TimerStatus.Paused: {
+        requestWs(
+          {
+            query: graphql(/* GraphQL */ `
+              mutation ResumeTime($accessToken: String!) {
+                resumeTimer(accessToken: $accessToken) {
+                  status
+                }
+              }
+            `),
+            variables: {
+              accessToken: authData.accessToken,
+            },
+          },
+          mutationSink
+        );
+        return;
+      }
+      case TimerStatus.Running: {
+        requestWs(
+          {
+            query: graphql(/* GraphQL */ `
+              mutation PauseTimer($accessToken: String!) {
+                pauseTimer(accessToken: $accessToken) {
+                  status
+                }
+              }
+            `),
+            variables: {
+              accessToken: authData.accessToken,
+            },
+          },
+          mutationSink
+        );
         return;
       }
     }
   };
 
-  useEffect(() => {
-    // TODO: GraphQL 移行
-    // stompClient.subscribe(
-    //   `/topic/rooms/${authData.roomId}/timer`,
-    //   (message) => {
-    //     console.log(message);
-    //     const { status, value, finishAt } = JSON.parse(message.body) as {
-    //       status: 0 | 1;
-    //       value: number;
-    //       finishAt: string;
-    //     };
-    //     switch (status) {
-    //       case 0: {
-    //         const minutes = Math.floor(value / 60);
-    //         const seconds = value % 60;
-    //         setValue("minutes", minutes.toString());
-    //         setValue("seconds", seconds.toString());
-    //         setState("READY");
-    //         return;
-    //       }
-    //       case 1: {
-    //         setFinishedTimestamp(
-    //           performance.now() + new Date(finishAt).valueOf() - Date.now()
-    //         );
-    //         setState("RUNNING");
-    //         return;
-    //       }
-    //     }
-    //   }
-    // );
-  }, [authData.roomId, setValue]);
+  const onReset = () => {
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          mutation ResetTimer($accessToken: String!) {
+            resetTimer(accessToken: $accessToken) {
+              status
+            }
+          }
+        `),
+        variables: {
+          accessToken: authData.accessToken,
+        },
+      },
+      mutationSink
+    );
+  };
 
   useEffect(() => {
-    if (finishTimestamp === null) {
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          subscription SubscribeTimer($roomId: ID!) {
+            subscribeToTimer(roomId: $roomId) {
+              status
+              inputTime
+              remainingTimeAtPaused
+              finishAt
+            }
+          }
+        `),
+        variables: {
+          roomId: authData.roomId,
+        },
+      },
+      {
+        next: ({ data, errors }) => {
+          console.log({ data, errors });
+          if (data) {
+            setTimer(data.subscribeToTimer);
+          }
+          if (errors) {
+            for (const error of errors) {
+              toast({
+                status: "error",
+                description: error.message,
+              });
+            }
+          }
+        },
+        error: mutationSink.error,
+        complete: mutationSink.complete,
+      }
+    );
+  }, [
+    authData.roomId,
+    mutationSink.complete,
+    mutationSink.error,
+    setTimer,
+    setValue,
+    toast,
+  ]);
+
+  useEffect(() => {
+    if (timer === null) {
       return;
     }
+    switch (timer.status) {
+      case TimerStatus.Ready: {
+        const { inputTime } = timer;
 
-    let requestId: number | null;
-
-    const tick = (now: number) => {
-      const timeStamp = finishTimestamp - now;
-
-      if (timeStamp <= 0) {
-        setValue("minutes", "0");
-        setValue("seconds", "0");
-        setState("READY");
-        toast({
-          title: "タイマーが終了しました",
-          description: "お疲れ様でした",
-          status: "success",
-          duration: 9000,
-          isClosable: true,
-        });
+        const minutes = Math.floor(inputTime / 60);
+        const seconds = inputTime % 60;
+        setValue("minutes", minutes.toString());
+        setValue("seconds", seconds.toString());
         return;
       }
+      case TimerStatus.Paused: {
+        const { remainingTimeAtPaused } = timer;
 
-      const seconds = Math.floor((timeStamp / 1000) % 60);
-      const minutes = Math.floor((timeStamp / 1000 / 60) % 60);
-      setValue("minutes", minutes.toString());
-      setValue("seconds", seconds.toString());
+        if (remainingTimeAtPaused == null) {
+          return;
+        }
 
-      requestId = requestAnimationFrame(tick);
-    };
+        const minutes = Math.floor(remainingTimeAtPaused / 60);
+        const seconds = remainingTimeAtPaused % 60;
+        setValue("minutes", minutes.toString());
+        setValue("seconds", seconds.toString());
 
-    if (state === "RUNNING") {
-      requestId = requestAnimationFrame(tick);
-    }
-
-    return () => {
-      if (requestId) {
-        cancelAnimationFrame(requestId);
+        return;
       }
-    };
-  }, [finishTimestamp, setValue, state]);
+      case TimerStatus.Running: {
+        let requestId: number | null;
+
+        const tick = () => {
+          if (timer.status !== TimerStatus.Running) {
+            return;
+          }
+
+          const timeStamp = new Date(timer.finishAt).valueOf() - Date.now();
+
+          if (timeStamp <= 0) {
+            setValue("minutes", "0");
+            setValue("seconds", "0");
+            setTimer((oldTimer) => {
+              if (oldTimer === null) {
+                return null;
+              }
+              return {
+                status: TimerStatus.Ready,
+                remainingTimeAtPaused: null,
+                inputTime: oldTimer.inputTime,
+                finishAt: oldTimer.finishAt,
+              };
+            });
+            toast({
+              title: "タイマーが終了しました",
+              description: "お疲れ様でした",
+              status: "success",
+              duration: 9000,
+              isClosable: true,
+            });
+            return;
+          }
+
+          const seconds = Math.floor((timeStamp / 1000) % 60);
+          const minutes = Math.floor((timeStamp / 1000 / 60) % 60);
+          setValue("minutes", minutes.toString());
+          setValue("seconds", seconds.toString());
+
+          requestId = requestAnimationFrame(tick);
+        };
+        requestId = requestAnimationFrame(tick);
+
+        return () => {
+          if (requestId) {
+            cancelAnimationFrame(requestId);
+          }
+        };
+      }
+    }
+  }, [timer, setValue, toast]);
+
+  useEffect(() => {
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          query GetTimer($roomId: ID!) {
+            getTimer(roomId: $roomId) {
+              status
+              inputTime
+              remainingTimeAtPaused
+              finishAt
+            }
+          }
+        `),
+        variables: {
+          roomId: authData.roomId,
+        },
+      },
+      {
+        ...mutationSink,
+        next: ({ data, errors }) => {
+          if (data) {
+            setTimer(data.getTimer);
+          }
+
+          if (errors) {
+            for (const error of errors) {
+              toast({
+                status: "error",
+                description: error.message,
+              });
+            }
+          }
+        },
+      }
+    );
+  }, [authData.roomId, mutationSink, toast]);
 
   return (
     <VStack gap={2}>
@@ -163,6 +330,8 @@ export const Timer: FC<Props> = ({ authData }) => {
               height={24}
               {...register("minutes", {
                 required: true,
+                disabled:
+                  timer === null || timer.status === TimerStatus.Running,
               })}
             />
             <NumberInputStepper>
@@ -190,6 +359,8 @@ export const Timer: FC<Props> = ({ authData }) => {
               height={24}
               {...register("seconds", {
                 required: true,
+                disabled:
+                  timer === null || timer.status === TimerStatus.Running,
               })}
             />
             <NumberInputStepper>
@@ -199,10 +370,18 @@ export const Timer: FC<Props> = ({ authData }) => {
           </NumberInput>
         </Flex>
         <Flex gap={8}>
-          <Button width={24} type="submit">
-            {state === "READY" ? "スタート" : "ストップ"}
+          <Button width={24} type="submit" disabled={timer === null}>
+            {timer?.status === TimerStatus.Running ? "ストップ" : "スタート"}
           </Button>
-          <Button onClick={onOpen}>
+          <Button
+            width={24}
+            type="button"
+            disabled={timer === null || timer.status === TimerStatus.Ready}
+            onClick={onReset}
+          >
+            リセット
+          </Button>
+          <Button onClick={onOpen} disabled={timer === null}>
             <Icon as={Cog6ToothIcon} />
           </Button>
         </Flex>
