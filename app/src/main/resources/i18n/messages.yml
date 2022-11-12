@@ -21,6 +21,7 @@ exception:
     custom_pointer: カスタムポインターが見つかりません。
   conflict:
     user_name_is_already_exists: そのユーザ名は既に使われています。
+    custom_pointer_is_already_exists: カスタムポインターは既に存在します。
   internal_server_error:
     unexpected_error: 予期しないエラーが発生しました。
-    failed_to_upload_file: アップロードに失敗しました
+    failed_to_upload_file: アップロードに失敗しました。

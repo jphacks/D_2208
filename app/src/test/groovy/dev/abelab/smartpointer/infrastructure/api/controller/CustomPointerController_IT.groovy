@@ -2,6 +2,7 @@ package dev.abelab.smartpointer.infrastructure.api.controller
 
 import dev.abelab.smartpointer.domain.model.CustomPointerModel
 import dev.abelab.smartpointer.domain.model.RoomCustomPointersModel
+import dev.abelab.smartpointer.exception.ConflictException
 import dev.abelab.smartpointer.exception.ErrorCode
 import dev.abelab.smartpointer.exception.NotFoundException
 import dev.abelab.smartpointer.helper.RandomHelper
@@ -81,6 +82,68 @@ class CustomPointerController_IT extends AbstractController_IT {
                 }
             """
         this.executeHttp(query, new NotFoundException(ErrorCode.NOT_FOUND_ROOM))
+    }
+
+    def "カスタムポインター作成API: 正常系 カスタムポインターを作成する"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | "000000"
+        }
+        TableHelper.insert sql, "custom_pointer", {
+            id                                     | room_id                                | label | url
+            "00000000-0000-0000-0000-000000000000" | "00000000-0000-0000-0000-000000000000" | ""    | ""
+        }
+        // @formatter:on
+
+        when:
+        final query =
+            """
+                mutation {
+                    createCustomPointer(id: "00000000-0000-0000-0000-000000000001", roomId: "00000000-0000-0000-0000-000000000000", label: "A", content: "")
+                }
+            """
+        final response = this.executeHttp(query, "createCustomPointer", String)
+
+        then:
+        response == "00000000-0000-0000-0000-000000000001"
+
+        final createdCustomPointer = sql.firstRow("SELECT * FROM custom_pointer WHERE id=:id", [id: "00000000-0000-0000-0000-000000000001"])
+        createdCustomPointer.id == "00000000-0000-0000-0000-000000000001"
+        createdCustomPointer.room_id == "00000000-0000-0000-0000-000000000000"
+        createdCustomPointer.label == "A"
+        createdCustomPointer.url != null
+
+        StepVerifier.create(this.roomCustomPointersFlux)
+            .expectNextMatches({
+                it.customPointers*.id == ["00000000-0000-0000-0000-000000000000", "00000000-0000-0000-0000-000000000001"]
+            })
+            .thenCancel()
+            .verify()
+    }
+
+    def "カスタムポインター作成API: 異常系 カスタムポインターが既に存在する場合は400エラー"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | "000000"
+        }
+        TableHelper.insert sql, "custom_pointer", {
+            id                                     | room_id                                | label | url
+            "00000000-0000-0000-0000-000000000000" | "00000000-0000-0000-0000-000000000000" | ""    | ""
+        }
+        // @formatter:on
+
+        expect:
+        final query =
+            """
+                mutation {
+                    createCustomPointer(id: "00000000-0000-0000-0000-000000000000", roomId: "00000000-0000-0000-0000-000000000000", label: "A", content: "")
+                }
+            """
+        final response = this.executeHttp(query, new ConflictException(ErrorCode.CUSTOM_POINTER_IS_ALREADY_EXISTS))
     }
 
     def "カスタムポインター削除API: 正常系 カスタムポインターを削除する"() {

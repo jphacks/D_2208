@@ -7,6 +7,7 @@ import dev.abelab.smartpointer.domain.repository.TimerRepository
 import dev.abelab.smartpointer.domain.repository.UserRepository
 import dev.abelab.smartpointer.domain.service.TimerService
 import dev.abelab.smartpointer.domain.service.UserService
+import dev.abelab.smartpointer.util.FileStorageUtil
 import org.spockframework.spring.SpringBean
 
 /**
@@ -31,5 +32,8 @@ abstract class AbstractUseCase_UT extends AbstractSpecification {
 
     @SpringBean
     TimerService timerService = Mock()
+
+    @SpringBean
+    FileStorageUtil fileStorageUtil = Mock()
 
 }
