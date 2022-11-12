@@ -103,19 +103,26 @@ class UserController_IT extends AbstractController_IT {
                         tokenType
                         accessToken
                         ttl
+                        user {
+                            id
+                            name
+                        }
                     }
                 }
             """
         final response = this.executeHttp(query, "joinRoom", AccessToken)
 
         then:
-        response.tokenType == this.authProperty.tokenType
-        response.accessToken != null
-        response.ttl == this.authProperty.ttl
-
         final createdUser = sql.firstRow("SELECT * FROM user")
         createdUser.room_id == roomId
         createdUser.name == inputUserName
+
+        response.tokenType == this.authProperty.tokenType
+        response.accessToken != null
+        response.ttl == this.authProperty.ttl
+        response.user.id == createdUser.id
+        response.user.name == inputUserName
+
 
         where:
         inputUserName << [

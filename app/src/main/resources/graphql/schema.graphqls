@@ -288,6 +288,11 @@ type AccessToken {
     TTL [s]
     """
     ttl: Int!
+
+    """
+    ユーザ
+    """
+    user: User!
 }
 
 """
