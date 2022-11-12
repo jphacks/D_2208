@@ -1,22 +1,9 @@
-import { Box, Flex, Text, useToken } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { useWindowSize } from "@react-hook/window-size";
 import type { UpdatePointersMessage } from "@smartpointer-desktop/shared";
 import type { FC, ReactNode } from "react";
 
-/**
- *
- * @see https://gist.github.com/0x263b/2bdd90886c2036a1ad5bcf06d6e6fb37
- */
-function randomColorFromList(str: string, list: string[]): string {
-  let index = 0;
-  if (str.length === 0) return list[0]!;
-  for (let i = 0; i < str.length; i += 1) {
-    index = str.charCodeAt(i) + ((index << 5) - index);
-    index = index & index;
-  }
-  index = ((index % list.length) + list.length) % list.length;
-  return list[index]!;
-}
+import { useUserColor } from "@/util/useUserColor";
 
 type Props = {
   pointers: UpdatePointersMessage;
@@ -25,23 +12,13 @@ type Props = {
 
 export const PointerWrapper: FC<Props> = ({ pointers, renderPointer }) => {
   const [width, height] = useWindowSize();
-  const colors = useToken("colors", [
-    "gray.500",
-    "red.500",
-    "orange.500",
-    "yellow.500",
-    "green.500",
-    "teal.500",
-    "blue.500",
-    "cyan.500",
-    "purple.500",
-    "pink.500",
-  ]);
+
+  const getUserColor = useUserColor();
 
   return (
     <Box w="full" h="full">
       {pointers.map(({ user, coordinate }) => {
-        const color = randomColorFromList(user.id, colors);
+        const color = getUserColor(user.id);
 
         return (
           <Flex

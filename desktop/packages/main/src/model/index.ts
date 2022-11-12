@@ -42,7 +42,6 @@ export const model = {
       ...state,
       status: "CREATED",
       room,
-      joinedUsers: new Map(),
       activePointers: new Map(),
       selectedPointerTypeId: "SPOTLIGHT",
       displayToShowPointer,
@@ -58,36 +57,9 @@ export const model = {
       ...state,
       status: "READY",
       room: undefined,
-      joinedUsers: undefined,
       activePointers: undefined,
       selectedPointerTypeId: undefined,
       displayToShowPointer: undefined,
-    };
-  },
-
-  joinedRoom: (user: User) => {
-    if (state.status !== "CREATED") {
-      throw new Error("Cannot join room when not in CREATED state");
-    }
-
-    state = {
-      ...state,
-      joinedUsers: new Map(state.joinedUsers).set(user.id, user),
-    };
-  },
-
-  leftRoom: (user: User) => {
-    if (state.status !== "CREATED") {
-      throw new Error("Cannot leave room when not in CREATED state");
-    }
-
-    const joinedUsers = new Map(state.joinedUsers);
-
-    joinedUsers.delete(user.id);
-
-    state = {
-      ...state,
-      joinedUsers,
     };
   },
 

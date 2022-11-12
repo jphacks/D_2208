@@ -60,3 +60,7 @@ export const removeCustomPointerType = (
 ) => {
   ipcRenderer.send("removeCustomPointerType", customPointerType);
 };
+
+export const getUsers = async (): Promise<void> => {
+  // TODO: ユーザー一覧を取得用 IPC通信の実装
+};

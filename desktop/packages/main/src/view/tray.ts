@@ -53,15 +53,11 @@ const pointerListTemplate: MenuTemplateWithState<
 
 const memberListTemplate: MenuTemplateWithState<
   State & { status: "CREATED" }
-> = (state) => [
+> = () => [
   {
-    label: "参加者一覧",
+    label: "参加者一覧を表示",
     accelerator: "CmdOrCtrl+L",
-    // TODO: チェックリストに変更する
-    submenu:
-      Array.from(state.joinedUsers?.values() ?? []).map((user) => ({
-        label: user.name,
-      })) ?? [],
+    click: controller.showUserList,
   },
 ];
 
