@@ -250,6 +250,16 @@ type Mutation {
 
 type Subscription {
     """
+    ルーム終了イベント購読API
+    """
+    subscribeToRoomFinishEvent(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): ID!
+
+    """
     ユーザリスト購読API
     """
     subscribeToUsers(

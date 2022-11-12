@@ -15,6 +15,16 @@ import reactor.util.concurrent.Queues;
 public class GraphQLSubscriptionConfig {
 
     @Bean
+    public Sinks.Many<RoomFinishEventModel> roomFinishEventSink() {
+        return Sinks.many().multicast().onBackpressureBuffer(Queues.SMALL_BUFFER_SIZE, false);
+    }
+
+    @Bean
+    public Flux<RoomFinishEventModel> roomFinishEventFlux(final Sinks.Many<RoomFinishEventModel> roomFinishEventSink) {
+        return roomFinishEventSink.asFlux();
+    }
+
+    @Bean
     public Sinks.Many<TimerModel> timerSink() {
         return Sinks.many().multicast().onBackpressureBuffer(Queues.SMALL_BUFFER_SIZE, false);
     }
