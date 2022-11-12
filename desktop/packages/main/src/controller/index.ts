@@ -188,6 +188,7 @@ export const controller = {
             model.selectedPointer(data);
 
             view.window.pointerOverlay.updatePointerType();
+            view.tray.update();
           }
         },
         // eslint-disable-next-line @typescript-eslint/no-empty-function

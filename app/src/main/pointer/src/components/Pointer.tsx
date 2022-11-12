@@ -18,15 +18,18 @@ import {
   Image,
   ChakraProps,
   useToken,
+  useToast,
 } from "@chakra-ui/react";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { FC, useEffect, useState } from "react";
 
+import { requestWs } from "@/api";
 import {
   requestPermission,
   subscribeOrientation,
   unsubscribeOrientation,
 } from "@/deviceorientation";
+import { graphql } from "@/gql";
 import { AuthData } from "@/types/AuthData";
 
 type Props = {
@@ -123,12 +126,12 @@ const PointerIcon: FC<{ pointer: PointerType } & ChakraProps> = ({
 };
 
 export const Pointer: FC<Props> = ({ authData }) => {
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isActive, setIsActive] = useState<boolean>(false);
 
-  // TODO: get from sever, set to server
-  const [pointerType, setPointerType] = useState<PointerType>(
-    builtInPointers[0]
+  const [pointerType, setPointerType] = useState<PointerType["id"] | null>(
+    null
   );
 
   const colors = useToken("colors", [
@@ -157,15 +160,103 @@ export const Pointer: FC<Props> = ({ authData }) => {
     return () => unsubscribeOrientation(authData.accessToken);
   }, [authData.accessToken, isActive]);
 
+  useEffect(() => {
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          query GetPointerType($roomId: ID!) {
+            getPointerType(roomId: $roomId)
+          }
+        `),
+        variables: {
+          roomId: authData.roomId,
+        },
+      },
+      {
+        next: ({ data, errors }) => {
+          if (data) {
+            setPointerType(data.getPointerType);
+          }
+          if (errors) {
+            for (const error of errors) {
+              toast({
+                title: "エラーが発生しました",
+                description: error.message,
+                status: "error",
+              });
+            }
+          }
+        },
+        error: (err) => {
+          if (err instanceof Error) {
+            toast({
+              title: "エラーが発生しました",
+              description: err.message,
+              status: "error",
+              duration: 9000,
+              isClosable: true,
+            });
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        complete: () => {},
+      }
+    );
+  }, [authData.roomId, toast]);
+
+  useEffect(() => {
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          subscription SubscribeToPointerType($roomId: ID!) {
+            subscribeToPointerType(roomId: $roomId)
+          }
+        `),
+        variables: {
+          roomId: authData.roomId,
+        },
+      },
+      {
+        next: ({ data, errors }) => {
+          if (data) {
+            setPointerType(data.subscribeToPointerType);
+          }
+          if (errors) {
+            for (const error of errors) {
+              toast({
+                title: "エラーが発生しました",
+                description: error.message,
+                status: "error",
+              });
+            }
+          }
+        },
+        error: (err) => {
+          if (err instanceof Error) {
+            toast({
+              title: "エラーが発生しました",
+              description: err.message,
+              status: "error",
+              duration: 9000,
+              isClosable: true,
+            });
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        complete: () => {},
+      }
+    );
+  }, [authData.roomId, toast]);
+
   return (
     <HStack justify="center" spacing="4">
       <Spacer />
       <Button
+        disabled={pointerType === null}
         aria-label={"ポインターを起動"}
         width="full"
         boxSize={40}
         borderRadius="full"
-        // borderWidth="medium"
         borderColor="currentcolor"
         onMouseDown={() => setIsActive(true)}
         onMouseUp={() => setIsActive(false)}
@@ -175,12 +266,21 @@ export const Pointer: FC<Props> = ({ authData }) => {
         p="4"
       >
         <Center h="full" w="full">
-          <PointerIcon pointer={pointerType} h="80%" w="auto" />
+          {pointerType && (
+            <PointerIcon
+              pointer={
+                builtInPointers.find((pointer) => pointer.id === pointerType)!
+              }
+              h="80%"
+              w="auto"
+            />
+          )}
         </Center>
       </Button>
       <Spacer>
         <Flex h="full" align="end">
           <IconButton
+            disabled={pointerType === null}
             icon={<Icon as={ArrowPathIcon} />}
             aria-label="ポインターを切り替える"
             borderRadius="full"
@@ -200,11 +300,55 @@ export const Pointer: FC<Props> = ({ authData }) => {
                   key={pointer.id}
                   aria-label={pointer.label}
                   width="full"
-                  onClick={() => {
-                    setPointerType(pointer);
-                    onClose();
-                  }}
                   h="16"
+                  onClick={() => {
+                    onClose();
+                    requestWs(
+                      {
+                        query: graphql(/* GraphQL */ `
+                          mutation ChangePointerType(
+                            $roomId: ID!
+                            $pointerType: String!
+                          ) {
+                            changePointerType(
+                              roomId: $roomId
+                              pointerType: $pointerType
+                            )
+                          }
+                        `),
+                        variables: {
+                          roomId: authData.roomId,
+                          pointerType: pointer.id,
+                        },
+                      },
+                      {
+                        next: ({ errors }) => {
+                          if (errors) {
+                            for (const error of errors) {
+                              toast({
+                                title: "エラーが発生しました",
+                                description: error.message,
+                                status: "error",
+                              });
+                            }
+                          }
+                        },
+                        error: (err) => {
+                          if (err instanceof Error) {
+                            toast({
+                              title: "エラーが発生しました",
+                              description: err.message,
+                              status: "error",
+                              duration: 9000,
+                              isClosable: true,
+                            });
+                          }
+                        },
+                        // eslint-disable-next-line @typescript-eslint/no-empty-function
+                        complete: () => {},
+                      }
+                    );
+                  }}
                 >
                   <Flex justify="start" gap="4" w="full" align="center">
                     <PointerIcon pointer={pointer} boxSize="6" />
