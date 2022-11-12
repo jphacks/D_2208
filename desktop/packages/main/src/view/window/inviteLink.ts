@@ -33,8 +33,8 @@ export const inviteLink = {
       });
     }
 
-    inviteLinkWindow.show();
     inviteLinkWindow.removeMenu();
+    inviteLinkWindow.show();
   },
 
   close: () => {

@@ -33,8 +33,8 @@ export const customPointerType = {
       await loadFile(customPointerTypesWindow, "customPointerTypes.html");
     }
 
-    customPointerTypesWindow.show();
     customPointerTypesWindow.removeMenu();
+    customPointerTypesWindow.show();
   },
 
   close: () => {
