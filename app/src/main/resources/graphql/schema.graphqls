@@ -193,6 +193,31 @@ type Mutation {
     ): User!
 
     """
+    カスタムポインター作成API
+    """
+    createCustomPointer(
+        """
+        ルームID
+        """
+        roomId: ID!
+
+        """
+        カスタムポインターID
+        """
+        id: ID!
+
+        """
+        ラベル
+        """
+        label: String!
+
+        """
+        画像コンテンツ(Base64)
+        """
+        content: String!
+    ): ID!
+
+    """
     カスタムポインター削除API
     """
     deleteCustomPointer(

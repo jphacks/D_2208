@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FileStorageUtil {
 
-    private static final String IMAGE_PATH = "images/";
+    private static final String IMAGE_PATH = "images";
 
     private final GcpProperty gcpProperty;
 
@@ -35,9 +35,12 @@ public class FileStorageUtil {
      * @return URL
      */
     public String upload(final FileModel fileModel) {
-        final var url = String.format("https://storage.googleapis.com/%s/images/%s", //
+        final var url = String.format("https://storage.googleapis.com/%s/%s/%s/%s", //
             this.gcpProperty.getCloudStorage().getBucketName(), //
-            fileModel.getUuid());
+            IMAGE_PATH, //
+            fileModel.getRoomId(), //
+            fileModel.getId() //
+        );
 
         if (!this.gcpProperty.getCloudStorage().isEnabled()) {
             return url;
@@ -48,7 +51,8 @@ public class FileStorageUtil {
                 .setProjectId(this.gcpProperty.getProjectId()) //
                 .build().getService();
 
-            final var blobId = BlobId.of(this.gcpProperty.getCloudStorage().getBucketName(), IMAGE_PATH + fileModel.getUuid());
+            final var blobId = BlobId.of(this.gcpProperty.getCloudStorage().getBucketName(),
+                String.format("%s/%s/%s", IMAGE_PATH, fileModel.getRoomId(), fileModel.getId()));
             final var blobInfo = BlobInfo.newBuilder(blobId).build();
             storage.create(blobInfo, fileModel.getContent());
 
