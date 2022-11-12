@@ -4,6 +4,8 @@ import { FC, useEffect, useState } from "react";
 
 import { useUserColor } from "@/util/useUserColor";
 
+import { onUpdateUsers, requestUsers } from "#preload";
+
 export const App: FC = () => {
   const [users, setUsers] = useState<User[]>([]);
 
@@ -12,13 +14,11 @@ export const App: FC = () => {
   }, [users.length]);
 
   useEffect(() => {
-    // TODO: query users from main process
-    setUsers([]);
+    requestUsers();
   }, []);
 
   useEffect(() => {
-    // TODO: subscribe users from main process
-    setUsers([]);
+    onUpdateUsers(setUsers);
   }, []);
 
   const getUserColor = useUserColor();

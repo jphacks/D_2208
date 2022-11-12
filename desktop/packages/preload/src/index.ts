@@ -3,6 +3,7 @@ import type {
   GetPointerResult,
   PointerType,
   UpdatePointersMessage,
+  User,
 } from "@smartpointer-desktop/shared";
 import { ipcRenderer } from "electron";
 
@@ -61,6 +62,12 @@ export const removeCustomPointerType = (
   ipcRenderer.send("removeCustomPointerType", customPointerType);
 };
 
-export const getUsers = async (): Promise<void> => {
-  // TODO: ユーザー一覧を取得用 IPC通信の実装
+export const requestUsers = () => {
+  ipcRenderer.send("requestUsers");
+};
+
+export const onUpdateUsers = (callback: (users: User[]) => void) => {
+  ipcRenderer.on("onUpdateUsers", (_, users: User[]) => {
+    callback(users);
+  });
 };

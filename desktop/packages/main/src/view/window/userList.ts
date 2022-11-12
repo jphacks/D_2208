@@ -2,6 +2,7 @@ import { User } from "@smartpointer-desktop/shared";
 import { app, BrowserWindow, ipcMain } from "electron";
 import { join } from "node:path";
 
+import { controller } from "@/controller";
 import { loadFile } from "@/utils/window/loadFile";
 
 let userListWindow: BrowserWindow | null = null;
@@ -35,10 +36,12 @@ export const userList = {
   close: () => {
     userListWindow?.close();
   },
+
+  updateUsers: (users: User[]) => {
+    userListWindow?.webContents.send("onUpdateUsers", users);
+  },
 };
 
-ipcMain.handle("getUsers", () => {
-  // TODO: ここで、ユーザー一覧を取得する
-  const users: User[] = [{ id: "1", name: "太郎" }];
-  return users;
+ipcMain.on("requestUsers", () => {
+  controller.requestUserList();
 });
