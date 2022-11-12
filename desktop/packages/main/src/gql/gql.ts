@@ -10,6 +10,7 @@ const documents = {
     "\n          subscription SubscribeToPointerType($roomId: ID!) {\n            subscribeToPointerType(roomId: $roomId)\n          }\n        ": types.SubscribeToPointerTypeDocument,
     "\n        mutation DeleteRoom($roomId: ID!) {\n          deleteRoom(roomId: $roomId)\n        }\n      ": types.DeleteRoomDocument,
     "\n          mutation ChangePointerType($pointerType: String!, $roomId: ID!) {\n            changePointerType(pointerType: $pointerType, roomId: $roomId)\n          }\n        ": types.ChangePointerTypeDocument,
+    "\n          query GetUsers($roomId: ID!) {\n            getUsers(roomId: $roomId) {\n              users {\n                id\n                name\n              }\n            }\n          }\n        ": types.GetUsersDocument,
 };
 
 export function graphql(source: "\n        mutation CreateRoom {\n          createRoom(pointerType: \"SPOTLIGHT\") {\n            id\n            passcode\n          }\n        }\n      "): (typeof documents)["\n        mutation CreateRoom {\n          createRoom(pointerType: \"SPOTLIGHT\") {\n            id\n            passcode\n          }\n        }\n      "];
@@ -19,6 +20,7 @@ export function graphql(source: "\n          subscription SubscribeToPointerDisc
 export function graphql(source: "\n          subscription SubscribeToPointerType($roomId: ID!) {\n            subscribeToPointerType(roomId: $roomId)\n          }\n        "): (typeof documents)["\n          subscription SubscribeToPointerType($roomId: ID!) {\n            subscribeToPointerType(roomId: $roomId)\n          }\n        "];
 export function graphql(source: "\n        mutation DeleteRoom($roomId: ID!) {\n          deleteRoom(roomId: $roomId)\n        }\n      "): (typeof documents)["\n        mutation DeleteRoom($roomId: ID!) {\n          deleteRoom(roomId: $roomId)\n        }\n      "];
 export function graphql(source: "\n          mutation ChangePointerType($pointerType: String!, $roomId: ID!) {\n            changePointerType(pointerType: $pointerType, roomId: $roomId)\n          }\n        "): (typeof documents)["\n          mutation ChangePointerType($pointerType: String!, $roomId: ID!) {\n            changePointerType(pointerType: $pointerType, roomId: $roomId)\n          }\n        "];
+export function graphql(source: "\n          query GetUsers($roomId: ID!) {\n            getUsers(roomId: $roomId) {\n              users {\n                id\n                name\n              }\n            }\n          }\n        "): (typeof documents)["\n          query GetUsers($roomId: ID!) {\n            getUsers(roomId: $roomId) {\n              users {\n                id\n                name\n              }\n            }\n          }\n        "];
 
 export function graphql(source: string): unknown;
 export function graphql(source: string) {

@@ -49,6 +49,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** ポインタータイプ変更API */
   changePointerType: Scalars['String'];
+  /** カスタムポインター作成API */
+  createCustomPointer: Scalars['ID'];
   /** ルーム作成API */
   createRoom: Room;
   /** カスタムポインター削除API */
@@ -78,6 +80,14 @@ export type Mutation = {
 
 export type MutationChangePointerTypeArgs = {
   pointerType: Scalars['String'];
+  roomId: Scalars['ID'];
+};
+
+
+export type MutationCreateCustomPointerArgs = {
+  content: Scalars['String'];
+  id: Scalars['ID'];
+  label: Scalars['String'];
   roomId: Scalars['ID'];
 };
 
