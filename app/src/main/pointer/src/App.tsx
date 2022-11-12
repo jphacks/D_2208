@@ -1,7 +1,6 @@
 import { Container, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 
-import { Header } from "./components/Header";
 import { JoinRoomForm } from "./components/JoinRoomForm";
 import { Paginator } from "./components/Paginator";
 import { Pointer } from "./components/Pointer";
