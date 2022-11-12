@@ -34,6 +34,7 @@ export const inviteLink = {
     }
 
     inviteLinkWindow.show();
+    inviteLinkWindow.removeMenu();
   },
 
   close: () => {

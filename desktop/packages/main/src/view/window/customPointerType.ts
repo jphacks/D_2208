@@ -34,6 +34,7 @@ export const customPointerType = {
     }
 
     customPointerTypesWindow.show();
+    customPointerTypesWindow.removeMenu();
   },
 
   close: () => {
