@@ -134,6 +134,10 @@ export const Pointer: FC<Props> = ({ authData }) => {
     null
   );
 
+  const [customPointers, setCustomPointers] = useState<
+    CustomPointerType[] | null
+  >(null);
+
   const colors = useToken("colors", [
     "gray.500",
     "red.500",
@@ -248,11 +252,107 @@ export const Pointer: FC<Props> = ({ authData }) => {
     );
   }, [authData.roomId, toast]);
 
+  useEffect(() => {
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          query GetCustomPointers($roomId: ID!) {
+            getCustomPointers(roomId: $roomId) {
+              customPointers {
+                id
+                label
+                url
+              }
+            }
+          }
+        `),
+        variables: {
+          roomId: authData.roomId,
+        },
+      },
+      {
+        next: ({ data, errors }) => {
+          if (data) {
+            setCustomPointers(data.getCustomPointers.customPointers);
+          }
+          if (errors) {
+            for (const error of errors) {
+              toast({
+                title: "エラーが発生しました",
+                description: error.message,
+                status: "error",
+              });
+            }
+          }
+        },
+        error: (err) => {
+          if (err instanceof Error) {
+            toast({
+              title: "エラーが発生しました",
+              description: err.message,
+              status: "error",
+            });
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        complete: () => {},
+      }
+    );
+  }, [authData.roomId, toast]);
+
+  useEffect(() => {
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          subscription SubscribeToCustomPointers($roomId: ID!) {
+            subscribeToCustomPointers(roomId: $roomId) {
+              customPointers {
+                id
+                label
+                url
+              }
+            }
+          }
+        `),
+        variables: {
+          roomId: authData.roomId,
+        },
+      },
+      {
+        next: ({ data, errors }) => {
+          if (data) {
+            setCustomPointers(data.subscribeToCustomPointers.customPointers);
+          }
+          if (errors) {
+            for (const error of errors) {
+              toast({
+                title: "エラーが発生しました",
+                description: error.message,
+                status: "error",
+              });
+            }
+          }
+        },
+        error: (err) => {
+          if (err instanceof Error) {
+            toast({
+              title: "エラーが発生しました",
+              description: err.message,
+              status: "error",
+            });
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        complete: () => {},
+      }
+    );
+  }, [authData.roomId, toast]);
+
   return (
     <HStack justify="center" spacing="4">
       <Spacer />
       <Button
-        disabled={pointerType === null}
+        disabled={pointerType === null || customPointers === null}
         aria-label={"ポインターを起動"}
         width="full"
         boxSize={40}
@@ -266,10 +366,12 @@ export const Pointer: FC<Props> = ({ authData }) => {
         p="4"
       >
         <Center h="full" w="full">
-          {pointerType && (
+          {pointerType && customPointers && (
             <PointerIcon
               pointer={
-                builtInPointers.find((pointer) => pointer.id === pointerType)!
+                builtInPointers
+                  .concat(customPointers)
+                  .find((pointer) => pointer.id === pointerType)!
               }
               h="80%"
               w="auto"
@@ -280,7 +382,7 @@ export const Pointer: FC<Props> = ({ authData }) => {
       <Spacer>
         <Flex h="full" align="end">
           <IconButton
-            disabled={pointerType === null}
+            disabled={pointerType === null || customPointers === null}
             icon={<Icon as={ArrowPathIcon} />}
             aria-label="ポインターを切り替える"
             borderRadius="full"
@@ -288,78 +390,80 @@ export const Pointer: FC<Props> = ({ authData }) => {
           />
         </Flex>
       </Spacer>
-      <Modal isOpen={isOpen} onClose={onClose} motionPreset="slideInBottom">
-        <ModalOverlay />
-        <ModalContent mt="auto" mb="0" borderBottomRadius="0" h="96">
-          <ModalHeader>ポインター切り替え</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <VStack align="stretch" spacing={1}>
-              {builtInPointers.map((pointer) => (
-                <Button
-                  key={pointer.id}
-                  aria-label={pointer.label}
-                  width="full"
-                  h="16"
-                  onClick={() => {
-                    onClose();
-                    requestWs(
-                      {
-                        query: graphql(/* GraphQL */ `
-                          mutation ChangePointerType(
-                            $roomId: ID!
-                            $pointerType: String!
-                          ) {
-                            changePointerType(
-                              roomId: $roomId
-                              pointerType: $pointerType
-                            )
-                          }
-                        `),
-                        variables: {
-                          roomId: authData.roomId,
-                          pointerType: pointer.id,
+      {pointerType && customPointers && (
+        <Modal isOpen={isOpen} onClose={onClose} motionPreset="slideInBottom">
+          <ModalOverlay />
+          <ModalContent mt="auto" mb="0" borderBottomRadius="0" h="96">
+            <ModalHeader>ポインター切り替え</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <VStack align="stretch" spacing={1}>
+                {builtInPointers.concat(customPointers).map((pointer) => (
+                  <Button
+                    key={pointer.id}
+                    aria-label={pointer.label}
+                    width="full"
+                    h="16"
+                    onClick={() => {
+                      onClose();
+                      requestWs(
+                        {
+                          query: graphql(/* GraphQL */ `
+                            mutation ChangePointerType(
+                              $roomId: ID!
+                              $pointerType: String!
+                            ) {
+                              changePointerType(
+                                roomId: $roomId
+                                pointerType: $pointerType
+                              )
+                            }
+                          `),
+                          variables: {
+                            roomId: authData.roomId,
+                            pointerType: pointer.id,
+                          },
                         },
-                      },
-                      {
-                        next: ({ errors }) => {
-                          if (errors) {
-                            for (const error of errors) {
+                        {
+                          next: ({ errors }) => {
+                            if (errors) {
+                              for (const error of errors) {
+                                toast({
+                                  title: "エラーが発生しました",
+                                  description: error.message,
+                                  status: "error",
+                                });
+                              }
+                            }
+                          },
+                          error: (err) => {
+                            if (err instanceof Error) {
                               toast({
                                 title: "エラーが発生しました",
-                                description: error.message,
+                                description: err.message,
                                 status: "error",
+                                duration: 9000,
+                                isClosable: true,
                               });
                             }
-                          }
-                        },
-                        error: (err) => {
-                          if (err instanceof Error) {
-                            toast({
-                              title: "エラーが発生しました",
-                              description: err.message,
-                              status: "error",
-                              duration: 9000,
-                              isClosable: true,
-                            });
-                          }
-                        },
-                        // eslint-disable-next-line @typescript-eslint/no-empty-function
-                        complete: () => {},
-                      }
-                    );
-                  }}
-                >
-                  <Flex justify="start" gap="4" w="full" align="center">
-                    <PointerIcon pointer={pointer} boxSize="6" />
-                    {pointer.label}
-                  </Flex>
-                </Button>
-              ))}
-            </VStack>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+                          },
+                          // eslint-disable-next-line @typescript-eslint/no-empty-function
+                          complete: () => {},
+                        }
+                      );
+                    }}
+                  >
+                    <Flex justify="start" gap="4" w="full" align="center">
+                      <PointerIcon pointer={pointer} boxSize="6" />
+                      {pointer.label}
+                    </Flex>
+                  </Button>
+                ))}
+              </VStack>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      )}
     </HStack>
   );
 };
