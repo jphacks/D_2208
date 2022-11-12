@@ -330,8 +330,7 @@ export const Timer: FC<Props> = ({ authData }) => {
               height={24}
               {...register("minutes", {
                 required: true,
-                disabled:
-                  timer === null || timer.status === TimerStatus.Running,
+                disabled: timer === null || timer.status !== TimerStatus.Ready,
               })}
             />
             <NumberInputStepper>
@@ -359,8 +358,7 @@ export const Timer: FC<Props> = ({ authData }) => {
               height={24}
               {...register("seconds", {
                 required: true,
-                disabled:
-                  timer === null || timer.status === TimerStatus.Running,
+                disabled: timer === null || timer.status !== TimerStatus.Ready,
               })}
             />
             <NumberInputStepper>
