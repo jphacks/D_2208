@@ -175,14 +175,6 @@ export const controller = {
     await view.window.inviteLink.show();
   },
 
-  joinedRoom: (user: User) => {
-    model.joinedRoom(user);
-  },
-
-  leftRoom: (user: User) => {
-    model.leftRoom(user);
-  },
-
   closeRoom: async () => {
     if (model.state.status !== "CREATED") {
       throw new Error("Cannot close room when not in created state");

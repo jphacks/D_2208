@@ -13,10 +13,12 @@ export const App: FC = () => {
 
   useEffect(() => {
     // TODO: query users from main process
+    setUsers([]);
   }, []);
 
   useEffect(() => {
     // TODO: subscribe users from main process
+    setUsers([]);
   }, []);
 
   const getUserColor = useUserColor();
