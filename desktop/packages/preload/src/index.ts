@@ -46,20 +46,17 @@ export const getCustomPointerTypes = async (): Promise<CustomPointerType[]> => {
   return customPointerTypes;
 };
 
-export const updateCustomPointerType = (
-  customPointerType: CustomPointerType
-) => {
-  ipcRenderer.send("updateCustomPointerType", customPointerType);
-};
-
-export const addCustomPointerType = () => {
-  ipcRenderer.send("addCustomPointerType");
+export const addCustomPointerType = (label: string, content: string) => {
+  ipcRenderer.send("addCustomPointerType", {
+    label,
+    content,
+  });
 };
 
 export const removeCustomPointerType = (
-  customPointerType: CustomPointerType
+  customPointerTypeId: CustomPointerType["id"]
 ) => {
-  ipcRenderer.send("removeCustomPointerType", customPointerType);
+  ipcRenderer.send("removeCustomPointerType", customPointerTypeId);
 };
 
 export const requestUsers = () => {

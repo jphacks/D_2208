@@ -103,13 +103,6 @@ export const model = {
     };
   },
 
-  updatedCustomPointerTypes: (customPointerTypes: CustomPointerType[]) => {
-    state = {
-      ...state,
-      customPointerTypes,
-    };
-  },
-
   addedCustomPointerType: (customPointerType: CustomPointerType) => {
     state = {
       ...state,
@@ -117,11 +110,11 @@ export const model = {
     };
   },
 
-  removedCustomPointerType: (customPointerType: CustomPointerType) => {
+  removedCustomPointerType: (customPointerTypeId: CustomPointerType["id"]) => {
     state = {
       ...state,
       customPointerTypes: state.customPointerTypes.filter(
-        (type) => type.id !== customPointerType.id
+        (type) => type.id !== customPointerTypeId
       ),
     };
   },

@@ -28,13 +28,13 @@ export type BuiltInPointerId = "SPOTLIGHT" | "ARROW" | "FINGER";
 
 export type BuiltInPointerType = {
   id: BuiltInPointerId;
-  name: string;
+  label: string;
 };
 
 export type CustomPointerType = {
   id: string;
-  name: string;
-  image?: string;
+  label: string;
+  content: string;
 };
 
 export type PointerType = BuiltInPointerType | CustomPointerType;
@@ -42,14 +42,14 @@ export type PointerType = BuiltInPointerType | CustomPointerType;
 export const builtInPointers: PointerType[] = [
   {
     id: "SPOTLIGHT",
-    name: "スポットライト",
+    label: "スポットライト",
   },
   {
     id: "ARROW",
-    name: "矢印",
+    label: "矢印",
   },
   {
     id: "FINGER",
-    name: "人差し指",
+    label: "人差し指",
   },
 ];

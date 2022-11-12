@@ -30,6 +30,8 @@ export const customPointerType = {
         },
       });
 
+      customPointerTypesWindow.webContents.openDevTools();
+
       await loadFile(customPointerTypesWindow, "customPointerTypes.html");
     }
 
@@ -55,19 +57,15 @@ ipcMain.handle("getCustomPointerTypes", () => {
 });
 
 ipcMain.on(
-  "updateCustomPointerType",
-  (_, customPointerType: CustomPointerType) => {
-    controller.updateCustomPointerType(customPointerType);
+  "addCustomPointerType",
+  (_, { label, content }: { label: string; content: string }) => {
+    controller.addCustomPointerType(label, content);
   }
 );
 
-ipcMain.on("addCustomPointerType", () => {
-  controller.addCustomPointerType();
-});
-
 ipcMain.on(
   "removeCustomPointerType",
-  (_, customPointerType: CustomPointerType) => {
-    controller.removeCustomPointerType(customPointerType);
+  (_, customPointerTypeId: CustomPointerType["id"]) => {
+    controller.removeCustomPointerType(customPointerTypeId);
   }
 );

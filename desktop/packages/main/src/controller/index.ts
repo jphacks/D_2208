@@ -228,6 +228,37 @@ export const controller = {
       }
     );
 
+    await Promise.all(
+      model.state.customPointerTypes.map(async (customPointerType) => {
+        requestHttp({
+          query: graphql(/* GraphQL */ `
+            mutation CreateCustomPointers(
+              $roomId: ID!
+              $id: ID!
+              $label: String!
+              $content: String!
+            ) {
+              createCustomPointer(
+                roomId: $roomId
+                id: $id
+                label: $label
+                content: $content
+              )
+            }
+          `),
+          variables: {
+            roomId: data.createRoom.id,
+            id: customPointerType.id,
+            label: customPointerType.label,
+            content: customPointerType.content.replace(
+              /^data:.+;base64,\s*/,
+              ""
+            ),
+          },
+        });
+      })
+    );
+
     view.tray.update();
     await view.window.pointerOverlay.show();
     await view.window.inviteLink.show();
@@ -237,6 +268,8 @@ export const controller = {
     if (model.state.status !== "CREATED") {
       throw new Error("Cannot close room when not in created state");
     }
+
+    store.set("customPointerTypes", model.state.customPointerTypes);
 
     await requestHttp({
       query: graphql(/* GraphQL */ `
@@ -277,29 +310,86 @@ export const controller = {
     view.window.pointerOverlay.toggleDevTools();
   },
 
-  addCustomPointerType: () => {
-    const customPointerType: CustomPointerType = {
-      id: randomUUID(),
-      name: "新規カスタムポインター",
-    };
+  addCustomPointerType: (label: string, content: string) => {
+    const id = randomUUID();
 
-    model.addedCustomPointerType(customPointerType);
+    model.addedCustomPointerType({ id, label, content });
 
     view.tray.update();
 
     store.set("customPointerTypes", model.state.customPointerTypes);
 
     view.window.customPointerType.updateCustomPointerType();
+
+    if (model.state.status !== "CREATED") {
+      return;
+    }
+
+    requestHttp({
+      query: graphql(/* GraphQL */ `
+        mutation CreateCustomPointer(
+          $roomId: ID!
+          $id: ID!
+          $label: String!
+          $content: String!
+        ) {
+          createCustomPointer(
+            roomId: $roomId
+            id: $id
+            label: $label
+            content: $content
+          )
+        }
+      `),
+      variables: {
+        roomId: model.state.room.id,
+        id,
+        label,
+        content: content.replace(/^data:.+;base64,\s*/, ""),
+      },
+    });
   },
 
-  removeCustomPointerType: (customPointerType: CustomPointerType) => {
-    model.removedCustomPointerType(customPointerType);
+  removeCustomPointerType: (customPointerTypeId: CustomPointerType["id"]) => {
+    if (
+      model.state.status === "CREATED" &&
+      model.state.selectedPointerTypeId === customPointerTypeId
+    ) {
+      model.selectedPointer("SPOTLIGHT");
+      requestHttp({
+        query: graphql(/* GraphQL */ `
+          mutation ChangePointerTypeToSpotlight($roomId: ID!) {
+            changePointerType(pointerType: "SPOTLIGHT", roomId: $roomId)
+          }
+        `),
+        variables: {
+          roomId: model.state.room.id,
+        },
+      });
+    }
 
+    model.removedCustomPointerType(customPointerTypeId);
     view.tray.update();
 
     store.set("customPointerTypes", model.state.customPointerTypes);
 
     view.window.customPointerType.updateCustomPointerType();
+
+    if (model.state.status !== "CREATED") {
+      return;
+    }
+
+    requestHttp({
+      query: graphql(/* GraphQL */ `
+        mutation DeleteCustomPointer($roomId: ID!, $id: ID!) {
+          deleteCustomPointer(id: $id, roomId: $roomId)
+        }
+      `),
+      variables: {
+        roomId: model.state.room.id,
+        id: customPointerTypeId,
+      },
+    });
   },
 
   requestChangePointerType: (pointerTypeId: PointerType["id"]) => {
@@ -328,16 +418,6 @@ export const controller = {
         complete: () => {},
       }
     );
-  },
-
-  updateCustomPointerType: (customPointerType: CustomPointerType) => {
-    model.updatedCustomPointerType(customPointerType);
-
-    view.tray.update();
-
-    store.set("customPointerTypes", model.state.customPointerTypes);
-
-    view.window.customPointerType.updateCustomPointerType();
   },
 
   showCustomPointerTypes: () => {
