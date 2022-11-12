@@ -10,7 +10,7 @@
     "dev": "node --experimental-loader ts-node/esm scripts/watch.mts",
     "build": "npm run build -ws --if-present",
     "codegen": "npm run codegen -ws --if-present --",
-    "lint": "eslint . --ext .ts,.tsx,mts",
+    "lint": "eslint './**/*.{ts,tsx,mts}'",
     "format": "npm run check:format --write",
     "check:format": "prettier . --check",
     "check:type": "npx --ws tsc",

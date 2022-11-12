@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "build": "vite build",
-    "codegen": "gql-gen --config ../../graphql.config.ts"
+    "codegen": "gql-gen --config ../../graphql.config.ts",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
