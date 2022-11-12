@@ -52,7 +52,7 @@ export const JoinRoomForm: FC<Props> = ({ onSubmit: onSubmitProps }) => {
   const onSubmit = async (values: FormValues) => {
     try {
       const data = await requestHttp({
-        query: graphql(`
+        query: graphql(/* GraphQL */ `
           mutation JoinRoom(
             $roomId: ID!
             $passcode: String!
@@ -66,6 +66,9 @@ export const JoinRoomForm: FC<Props> = ({ onSubmit: onSubmitProps }) => {
               tokenType
               accessToken
               ttl
+              user {
+                id
+              }
             }
           }
         `),
@@ -76,7 +79,8 @@ export const JoinRoomForm: FC<Props> = ({ onSubmit: onSubmitProps }) => {
 
       localStorage.setItem(localStorageKey, values.userName);
       onSubmitProps({
-        ...data.joinRoom,
+        accessToken: data.joinRoom.accessToken,
+        userId: data.joinRoom.user.id,
         userName: values.userName,
         roomId: values.roomId,
       });

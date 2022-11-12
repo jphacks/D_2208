@@ -144,8 +144,7 @@ export const Pointer: FC<Props> = ({ authData }) => {
     "pink.500",
   ]);
 
-  // TODO: get color from authData
-  const color = randomColorFromList("useId", colors);
+  const color = randomColorFromList(authData.userId, colors);
 
   useEffect(() => {
     if (!isActive) {
