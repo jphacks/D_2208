@@ -393,17 +393,18 @@ export const Pointer: FC<Props> = ({ authData }) => {
       {pointerType && customPointers && (
         <Modal isOpen={isOpen} onClose={onClose} motionPreset="slideInBottom">
           <ModalOverlay />
-          <ModalContent mt="auto" mb="0" borderBottomRadius="0" h="96">
+          <ModalContent mt="auto" mb="0" borderBottomRadius="0">
             <ModalHeader>ポインター切り替え</ModalHeader>
             <ModalCloseButton />
-            <ModalBody>
-              <VStack align="stretch" spacing={1}>
+            <ModalBody overflow="hidden">
+              <VStack align="stretch" spacing={1} overflow="auto" h="80">
                 {builtInPointers.concat(customPointers).map((pointer) => (
                   <Button
                     key={pointer.id}
                     aria-label={pointer.label}
                     width="full"
                     h="16"
+                    flexShrink={0}
                     onClick={() => {
                       onClose();
                       requestWs(
