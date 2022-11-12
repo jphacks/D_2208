@@ -8,10 +8,10 @@
   "scripts": {
     "generate-electron-vendors": "cross-env ELECTRON_RUN_AS_NODE=1 electron --experimental-loader ts-node/esm scripts/generate-electron-vendors.mts",
     "dev:build": "node --experimental-loader ts-node/esm scripts/watch.mts",
-    "dev": "run-p codegen dev:*",
+    "dev": "run-p codegen:watch dev:*",
     "build": "npm run build -ws --if-present",
     "codegen": "npm run codegen -ws --if-present --",
-    "codgen:watch": "npm run codegen -- watch",
+    "codegen:watch": "npm run codegen -- --watch",
     "lint": "eslint . --ext .ts,.tsx,mts",
     "format": "npm run check:format --write",
     "check:format": "prettier . --check",

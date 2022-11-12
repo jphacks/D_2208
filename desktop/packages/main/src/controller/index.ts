@@ -103,6 +103,68 @@ export const controller = {
       }
     );
 
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          subscription SubscribeToPointer($roomId: ID!) {
+            subscribeToPointer(roomId: $roomId) {
+              orientation {
+                alpha
+                beta
+                gamma
+              }
+              user {
+                id
+                name
+              }
+            }
+          }
+        `),
+        variables: {
+          roomId: data.createRoom.id,
+        },
+      },
+      {
+        next(value) {
+          const data = value.data?.subscribeToPointer;
+          if (data) {
+            controller.pointerUpdated(data.user, data.orientation);
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        error() {},
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        complete() {},
+      }
+    );
+
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          subscription SubscribeToPointerDisconnectEvent($roomId: ID!) {
+            subscribeToPointerDisconnectEvent(roomId: $roomId) {
+              id
+            }
+          }
+        `),
+        variables: {
+          roomId: data.createRoom.id,
+        },
+      },
+      {
+        next(value) {
+          const data = value.data?.subscribeToPointerDisconnectEvent;
+          if (data) {
+            controller.pointerDeactivated(data.id);
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        error() {},
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        complete() {},
+      }
+    );
+
     view.tray.update();
     await view.window.pointerOverlay.show();
     await view.window.inviteLink.show();
@@ -131,8 +193,8 @@ export const controller = {
     view.window.pointerOverlay.updatePointer();
   },
 
-  pointerDeactivated: (user: User) => {
-    model.deactivatePointer(user);
+  pointerDeactivated: (userId: User["id"]) => {
+    model.deactivatePointer(userId);
 
     view.window.pointerOverlay.updatePointer();
   },

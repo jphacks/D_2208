@@ -1,5 +1,11 @@
 // import { stompClient } from "./stomp";
 
+import { requestWs } from "@/api";
+import { graphql } from "@/gql";
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const noop = () => {};
+
 const messagePleasingWhenDeny = [
   "使用するには許可してください🥺",
   "（リロードしてください）",
@@ -47,7 +53,7 @@ const sub = (a: Orientation, b: Orientation): Orientation => ({
 let lastOrientation: Orientation | null = null;
 let handler: ((orientation: DeviceOrientationEvent) => void) | null = null;
 
-export const subscribeOrientation = (roomId: string) => {
+export const subscribeOrientation = (accessToken: string) => {
   if (handler) {
     return;
   }
@@ -60,21 +66,66 @@ export const subscribeOrientation = (roomId: string) => {
 
     lastOrientation = lastOrientation ?? orientation;
 
-    // stompClient.publish({
-    //   destination: `/app/rooms/${roomId}/pointer/control`,
-    //   body: JSON.stringify(sub(orientation, lastOrientation)),
-    // });
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          mutation MovePointer(
+            $alpha: Float
+            $beta: Float
+            $gamma: Float
+            $accessToken: String!
+          ) {
+            movePointer(
+              alpha: $alpha
+              beta: $beta
+              gamma: $gamma
+              accessToken: $accessToken
+            ) {
+              user {
+                id
+              }
+            }
+          }
+        `),
+        variables: {
+          ...sub(orientation, lastOrientation),
+          accessToken,
+        },
+      },
+      {
+        next: noop,
+        error: noop,
+        complete: noop,
+      }
+    );
   };
   window.addEventListener("deviceorientation", handler);
 };
 
-export const unsubscribeOrientation = (roomId: string) => {
+export const unsubscribeOrientation = (accessToken: string) => {
   lastOrientation = null;
   if (handler) {
     window.removeEventListener("deviceorientation", handler);
     handler = null;
   }
-  // stompClient.publish({
-  //   destination: `/app/rooms/${roomId}/pointer/disconnect`,
-  // });
+
+  requestWs(
+    {
+      query: graphql(/* GraphQL */ `
+        mutation DisconnectPointer($accessToken: String!) {
+          disconnectPointer(accessToken: $accessToken) {
+            id
+          }
+        }
+      `),
+      variables: {
+        accessToken,
+      },
+    },
+    {
+      next: noop,
+      error: noop,
+      complete: noop,
+    }
+  );
 };

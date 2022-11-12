@@ -106,14 +106,14 @@ export const model = {
     };
   },
 
-  deactivatePointer: (user: User) => {
+  deactivatePointer: (userId: User["id"]) => {
     if (state.status !== "CREATED") {
       throw new Error("Cannot deactivate pointer when not in CREATED state");
     }
 
     const activePointers = new Map(state.activePointers);
 
-    activePointers.delete(user.id);
+    activePointers.delete(userId);
 
     state = {
       ...state,
