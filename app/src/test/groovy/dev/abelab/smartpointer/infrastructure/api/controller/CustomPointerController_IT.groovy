@@ -1,8 +1,10 @@
 package dev.abelab.smartpointer.infrastructure.api.controller
 
 import dev.abelab.smartpointer.domain.model.CustomPointerModel
+import dev.abelab.smartpointer.domain.model.RoomCustomPointersModel
 import dev.abelab.smartpointer.exception.ErrorCode
 import dev.abelab.smartpointer.exception.NotFoundException
+import dev.abelab.smartpointer.helper.RandomHelper
 import dev.abelab.smartpointer.helper.TableHelper
 import dev.abelab.smartpointer.infrastructure.api.type.CustomPointers
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,10 +18,10 @@ import reactor.test.StepVerifier
 class CustomPointerController_IT extends AbstractController_IT {
 
     @Autowired
-    Sinks.Many<List<CustomPointerModel>> customPointersSink
+    Sinks.Many<RoomCustomPointersModel> roomCustomPointersSink
 
     @Autowired
-    Flux<List<CustomPointerModel>> customPointersFlux
+    Flux<RoomCustomPointersModel> roomCustomPointersFlux
 
     def "カスタムポインターリスト取得API: 正常系 ユーザリストを取得する"() {
         given:
@@ -112,9 +114,9 @@ class CustomPointerController_IT extends AbstractController_IT {
         final customPointers = sql.rows("SELECT * FROM custom_pointer")
         customPointers*.id == ["00000000-0000-0000-0000-000000000001", "00000000-0000-0000-0000-000000000002"]
 
-        StepVerifier.create(this.customPointersFlux)
+        StepVerifier.create(this.roomCustomPointersFlux)
             .expectNextMatches({
-                it*.id == ["00000000-0000-0000-0000-000000000001"]
+                it.customPointers*.id == ["00000000-0000-0000-0000-000000000001"]
             })
             .thenCancel()
             .verify()
@@ -146,6 +148,45 @@ class CustomPointerController_IT extends AbstractController_IT {
         inputId                                | inputRoomId                            || expectedErrorCode
         "00000000-0000-0000-0000-000000000001" | "00000000-0000-0000-0000-000000000000" || ErrorCode.NOT_FOUND_CUSTOM_POINTER
         "00000000-0000-0000-0000-000000000000" | "00000000-0000-0000-0000-000000000001" || ErrorCode.NOT_FOUND_ROOM
+    }
+
+    def "カスタムポインターリスト購読API: 正常系 ユーザリストを購読できる"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | "000000"
+            "00000000-0000-0000-0000-000000000001" | "000000"
+        }
+        // @formatter:on
+
+        final query =
+            """
+                subscription {
+                    subscribeToCustomPointers(roomId: "00000000-0000-0000-0000-000000000000") {
+                        customPointers {
+                            id
+                            label
+                            url
+                        }
+                    }
+                }
+            """
+        final response = this.executeWebSocketSubscription(query, "subscribeToCustomPointers", CustomPointers)
+
+        when:
+        this.roomCustomPointersSink.tryEmitNext(new RoomCustomPointersModel("00000000-0000-0000-0000-000000000000", [RandomHelper.mock(CustomPointerModel), RandomHelper.mock(CustomPointerModel)]))
+        this.roomCustomPointersSink.tryEmitNext(new RoomCustomPointersModel("00000000-0000-0000-0000-000000000000", [RandomHelper.mock(CustomPointerModel)]))
+        this.roomCustomPointersSink.tryEmitNext(new RoomCustomPointersModel("00000000-0000-0000-0000-000000000000", []))
+        this.roomCustomPointersSink.tryEmitNext(new RoomCustomPointersModel("00000000-0000-0000-0000-000000000001", [RandomHelper.mock(CustomPointerModel)]))
+
+        then:
+        StepVerifier.create(response)
+            .expectNextMatches({ it.customPointers.size() == 2 })
+            .expectNextMatches({ it.customPointers.size() == 1 })
+            .expectNextMatches({ it.customPointers.size() == 0 })
+            .thenCancel()
+            .verify()
     }
 
 }

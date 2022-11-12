@@ -9,7 +9,7 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SubscriptionMapping;
 import org.springframework.stereotype.Controller;
 
-import dev.abelab.smartpointer.domain.model.RoomUsersEventModel;
+import dev.abelab.smartpointer.domain.model.RoomUsersModel;
 import dev.abelab.smartpointer.infrastructure.api.type.AccessToken;
 import dev.abelab.smartpointer.infrastructure.api.type.User;
 import dev.abelab.smartpointer.infrastructure.api.type.Users;
@@ -26,9 +26,9 @@ import reactor.core.publisher.Sinks;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final Sinks.Many<RoomUsersEventModel> roomUsersEventSink;
+    private final Sinks.Many<RoomUsersModel> roomUsersSink;
 
-    private final Flux<RoomUsersEventModel> roomUsersEventFlux;
+    private final Flux<RoomUsersModel> roomUsersFlux;
 
     private final GetUsersUseCase getUsersUseCase;
 
@@ -64,7 +64,7 @@ public class UserController {
     ) {
         final var accessToken = this.joinRoomUseCase.handle(roomId, passcode, userName);
         final var users = this.getUsersUseCase.handle(roomId);
-        this.roomUsersEventSink.tryEmitNext(new RoomUsersEventModel(roomId, users));
+        this.roomUsersSink.tryEmitNext(new RoomUsersModel(roomId, users));
 
         return accessToken;
     }
@@ -79,8 +79,8 @@ public class UserController {
     public Publisher<Users> subscribeToUsers( //
         @Argument final String roomId //
     ) {
-        return this.roomUsersEventFlux //
-            .filter(roomUsersEventModel -> roomUsersEventModel.getRoomId().equals(roomId)) //
+        return this.roomUsersFlux //
+            .filter(roomUsersModel -> roomUsersModel.getRoomId().equals(roomId)) //
             .map(Users::new);
     }
 

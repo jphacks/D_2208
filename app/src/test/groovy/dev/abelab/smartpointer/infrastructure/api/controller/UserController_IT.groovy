@@ -1,6 +1,6 @@
 package dev.abelab.smartpointer.infrastructure.api.controller
 
-import dev.abelab.smartpointer.domain.model.RoomUsersEventModel
+import dev.abelab.smartpointer.domain.model.RoomUsersModel
 import dev.abelab.smartpointer.domain.model.UserModel
 import dev.abelab.smartpointer.exception.BadRequestException
 import dev.abelab.smartpointer.exception.ErrorCode
@@ -21,10 +21,10 @@ import reactor.test.StepVerifier
 class UserController_IT extends AbstractController_IT {
 
     @Autowired
-    Sinks.Many<RoomUsersEventModel> roomUsersEventSink
+    Sinks.Many<RoomUsersModel> roomUsersSink
 
     @Autowired
-    Flux<RoomUsersEventModel> roomUsersEventFlux
+    Flux<RoomUsersModel> roomUsersFlux
 
     def "ユーザリスト取得API: 正常系 ユーザリストを取得する"() {
         given:
@@ -231,10 +231,10 @@ class UserController_IT extends AbstractController_IT {
         final response = this.executeWebSocketSubscription(query, "subscribeToUsers", Users)
 
         when:
-        this.roomUsersEventSink.tryEmitNext(new RoomUsersEventModel("00000000-0000-0000-0000-000000000000", [RandomHelper.mock(UserModel), RandomHelper.mock(UserModel)]))
-        this.roomUsersEventSink.tryEmitNext(new RoomUsersEventModel("00000000-0000-0000-0000-000000000000", [RandomHelper.mock(UserModel)]))
-        this.roomUsersEventSink.tryEmitNext(new RoomUsersEventModel("00000000-0000-0000-0000-000000000000", []))
-        this.roomUsersEventSink.tryEmitNext(new RoomUsersEventModel("00000000-0000-0000-0000-000000000001", [RandomHelper.mock(UserModel)]))
+        this.roomUsersSink.tryEmitNext(new RoomUsersModel("00000000-0000-0000-0000-000000000000", [RandomHelper.mock(UserModel), RandomHelper.mock(UserModel)]))
+        this.roomUsersSink.tryEmitNext(new RoomUsersModel("00000000-0000-0000-0000-000000000000", [RandomHelper.mock(UserModel)]))
+        this.roomUsersSink.tryEmitNext(new RoomUsersModel("00000000-0000-0000-0000-000000000000", []))
+        this.roomUsersSink.tryEmitNext(new RoomUsersModel("00000000-0000-0000-0000-000000000001", [RandomHelper.mock(UserModel)]))
 
         then:
         StepVerifier.create(response)

@@ -3,7 +3,7 @@ package dev.abelab.smartpointer.infrastructure.api.type;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import dev.abelab.smartpointer.domain.model.RoomUsersEventModel;
+import dev.abelab.smartpointer.domain.model.RoomUsersModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,8 +23,8 @@ public class Users {
      */
     List<User> users;
 
-    public Users(final RoomUsersEventModel roomUsersEventModel) {
-        this.users = roomUsersEventModel.getUsers().stream() //
+    public Users(final RoomUsersModel roomUsersModel) {
+        this.users = roomUsersModel.getUsers().stream() //
             .map(User::new) //
             .collect(Collectors.toList());
     }
