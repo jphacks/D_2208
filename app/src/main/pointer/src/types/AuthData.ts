@@ -1,9 +1,9 @@
-import { AccessToken } from "@/gql/graphql";
-
 /**
  * ログインユーザ
  */
-export type AuthData = AccessToken & {
+export type AuthData = {
   userName: string;
   roomId: string;
+  accessToken: string;
+  userId: string;
 };

@@ -23,6 +23,8 @@ export type AccessToken = {
   tokenType: Scalars['String'];
   /** TTL [s] */
   ttl: Scalars['Int'];
+  /** ユーザ */
+  user: User;
 };
 
 /** カスタムポインター */
@@ -45,6 +47,8 @@ export type CustomPointers = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** ポインタータイプ変更API */
+  changePointerType: Scalars['String'];
   /** ルーム作成API */
   createRoom: Room;
   /** カスタムポインター削除API */
@@ -69,6 +73,17 @@ export type Mutation = {
   resumeTimer: Timer;
   /** タイマー開始API */
   startTimer: Timer;
+};
+
+
+export type MutationChangePointerTypeArgs = {
+  pointerType: Scalars['String'];
+  roomId: Scalars['ID'];
+};
+
+
+export type MutationCreateRoomArgs = {
+  pointerType: Scalars['String'];
 };
 
 
@@ -157,6 +172,8 @@ export type Query = {
   __typename?: 'Query';
   /** カスタムポインターリスト取得API */
   getCustomPointers: CustomPointers;
+  /** ポインタータイプ取得API */
+  getPointerType: Scalars['String'];
   /** タイマー取得API */
   getTimer: Timer;
   /** ユーザリスト取得API */
@@ -167,6 +184,11 @@ export type Query = {
 
 
 export type QueryGetCustomPointersArgs = {
+  roomId: Scalars['ID'];
+};
+
+
+export type QueryGetPointerTypeArgs = {
   roomId: Scalars['ID'];
 };
 
@@ -187,6 +209,8 @@ export type Room = {
   id: Scalars['ID'];
   /** パスコード */
   passcode: Scalars['String'];
+  /** ポインタータイプ */
+  pointerType: Scalars['String'];
 };
 
 /** スライド操作 */
@@ -205,6 +229,8 @@ export type Subscription = {
   subscribeToPointer: PointerControl;
   /** ポインター切断イベント購読API */
   subscribeToPointerDisconnectEvent: User;
+  /** ポインタータイプ購読API */
+  subscribeToPointerType: Scalars['String'];
   /** スライド操作購読API */
   subscribeToSlideControl: SlideControl;
   /** タイマー購読API */
@@ -225,6 +251,11 @@ export type SubscriptionSubscribeToPointerArgs = {
 
 
 export type SubscriptionSubscribeToPointerDisconnectEventArgs = {
+  roomId: Scalars['ID'];
+};
+
+
+export type SubscriptionSubscribeToPointerTypeArgs = {
   roomId: Scalars['ID'];
 };
 
@@ -289,7 +320,7 @@ export type JoinRoomMutationVariables = Exact<{
 }>;
 
 
-export type JoinRoomMutation = { __typename?: 'Mutation', joinRoom: { __typename?: 'AccessToken', tokenType: string, accessToken: string, ttl: number } };
+export type JoinRoomMutation = { __typename?: 'Mutation', joinRoom: { __typename?: 'AccessToken', tokenType: string, accessToken: string, ttl: number, user: { __typename?: 'User', id: string } } };
 
 export type GoNextSlideMutationVariables = Exact<{
   accessToken: Scalars['String'];
@@ -366,7 +397,7 @@ export type DisconnectPointerMutationVariables = Exact<{
 export type DisconnectPointerMutation = { __typename?: 'Mutation', disconnectPointer: { __typename?: 'User', id: string } };
 
 
-export const JoinRoomDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"JoinRoom"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"passcode"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"joinRoom"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"roomId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}}},{"kind":"Argument","name":{"kind":"Name","value":"passcode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"passcode"}}},{"kind":"Argument","name":{"kind":"Name","value":"userName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tokenType"}},{"kind":"Field","name":{"kind":"Name","value":"accessToken"}},{"kind":"Field","name":{"kind":"Name","value":"ttl"}}]}}]}}]} as unknown as DocumentNode<JoinRoomMutation, JoinRoomMutationVariables>;
+export const JoinRoomDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"JoinRoom"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"passcode"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"joinRoom"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"roomId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}}},{"kind":"Argument","name":{"kind":"Name","value":"passcode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"passcode"}}},{"kind":"Argument","name":{"kind":"Name","value":"userName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tokenType"}},{"kind":"Field","name":{"kind":"Name","value":"accessToken"}},{"kind":"Field","name":{"kind":"Name","value":"ttl"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<JoinRoomMutation, JoinRoomMutationVariables>;
 export const GoNextSlideDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"GoNextSlide"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"goNextSlide"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"accessToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}}}]}]}}]} as unknown as DocumentNode<GoNextSlideMutation, GoNextSlideMutationVariables>;
 export const GoPreviousSlideDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"GoPreviousSlide"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"goPreviousSlide"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"accessToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}}}]}]}}]} as unknown as DocumentNode<GoPreviousSlideMutation, GoPreviousSlideMutationVariables>;
 export const StartTimerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StartTimer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"inputTime"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"startTimer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"inputTime"},"value":{"kind":"Variable","name":{"kind":"Name","value":"inputTime"}}},{"kind":"Argument","name":{"kind":"Name","value":"accessToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<StartTimerMutation, StartTimerMutationVariables>;
