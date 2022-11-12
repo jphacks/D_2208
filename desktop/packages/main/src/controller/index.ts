@@ -325,4 +325,40 @@ export const controller = {
   showUserList: () => {
     view.window.userList.show();
   },
+
+  requestUserList: () => {
+    if (model.state.status !== "CREATED") {
+      throw new Error("Cannot request user list when not in created state");
+    }
+
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          query GetUsers($roomId: ID!) {
+            getUsers(roomId: $roomId) {
+              users {
+                id
+                name
+              }
+            }
+          }
+        `),
+        variables: {
+          roomId: model.state.room.id,
+        },
+      },
+      {
+        next(value) {
+          const data = value.data?.getUsers;
+          if (data) {
+            view.window.userList.updateUsers(data.users);
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        error() {},
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        complete() {},
+      }
+    );
+  },
 };
