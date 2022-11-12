@@ -48,6 +48,7 @@ export const CustomPointerTypeTabItem: FC<{
       "image/png": [],
       "image/gif": [],
     },
+    maxFiles: 1,
     onDrop: (acceptedFiles) => {
       const file = acceptedFiles[0];
       if (file) {
