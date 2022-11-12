@@ -23,7 +23,7 @@ import {
 } from "@chakra-ui/react";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { Sink } from "graphql-ws";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { requestWs } from "@/api";
@@ -44,6 +44,7 @@ export const Timer: FC<Props> = ({ authData }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [timer, setTimer] = useState<TimerData | null>(null);
   const [noticeTime, setNoticeTime] = useState<string>("1");
+  const alreadyNoticedRemainingTime = useRef<boolean>(false);
 
   const toast = useToast();
 
@@ -233,6 +234,8 @@ export const Timer: FC<Props> = ({ authData }) => {
       case TimerStatus.Running: {
         let requestId: number | null;
 
+        alreadyNoticedRemainingTime.current = false;
+
         const tick = () => {
           if (timer.status !== TimerStatus.Running) {
             return;
@@ -264,6 +267,20 @@ export const Timer: FC<Props> = ({ authData }) => {
             return;
           }
 
+          if (
+            !alreadyNoticedRemainingTime.current &&
+            timeStamp <= Number(noticeTime) * 60 * 1000
+          ) {
+            alreadyNoticedRemainingTime.current = true;
+            toast({
+              title: `${noticeTime}分前になりました`,
+              description: "残り時間を確認してください",
+              status: "warning",
+              duration: 9000,
+              isClosable: true,
+            });
+          }
+
           const seconds = Math.floor((timeStamp / 1000) % 60);
           const minutes = Math.floor((timeStamp / 1000 / 60) % 60);
           setValue("minutes", minutes.toString());
@@ -280,7 +297,7 @@ export const Timer: FC<Props> = ({ authData }) => {
         };
       }
     }
-  }, [timer, setValue, toast]);
+  }, [timer, setValue, toast, noticeTime]);
 
   useEffect(() => {
     requestWs(
