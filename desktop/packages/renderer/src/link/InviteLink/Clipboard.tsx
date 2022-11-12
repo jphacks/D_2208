@@ -27,7 +27,7 @@ export const Clipboard: FC<Props> = ({ title, text }) => {
       </Text>
 
       <InputGroup flexGrow="1">
-        <Input value={text} isReadOnly />
+        <Input value={text} pr="9.25em" isReadOnly />
 
         <InputRightElement w="9.25em">
           <Button
