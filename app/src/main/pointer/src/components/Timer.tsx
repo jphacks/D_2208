@@ -323,7 +323,7 @@ export const Timer: FC<Props> = ({ authData }) => {
     <VStack gap={2}>
       <VStack gap={4} as="form" onSubmit={handleSubmit(onStartStop)}>
         <Flex justify="center" align="center">
-          <NumberInput defaultValue={5} min={0} size="lg" flexGrow={1}>
+          <NumberInput min={0} size="lg" flexGrow={1}>
             <NumberInputField
               textAlign="right"
               fontSize="5xl"
@@ -352,7 +352,7 @@ export const Timer: FC<Props> = ({ authData }) => {
               clipRule="evenodd"
             />
           </Icon>
-          <NumberInput defaultValue={0} min={0} max={59} size="lg" flexGrow={1}>
+          <NumberInput min={0} max={59} size="lg" flexGrow={1}>
             <NumberInputField
               textAlign="right"
               fontSize="5xl"
