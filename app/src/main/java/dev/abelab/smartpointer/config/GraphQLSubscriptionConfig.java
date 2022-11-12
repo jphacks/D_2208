@@ -47,13 +47,23 @@ public class GraphQLSubscriptionConfig {
     }
 
     @Bean
-    public Sinks.Many<UserModel> pointerDisconnectSink() {
+    public Sinks.Many<UserModel> userSink() {
         return Sinks.many().multicast().onBackpressureBuffer(Queues.SMALL_BUFFER_SIZE, false);
     }
 
     @Bean
-    public Flux<UserModel> pointerDisconnectFlux(final Sinks.Many<UserModel> pointerDisconnectSink) {
-        return pointerDisconnectSink.asFlux();
+    public Flux<UserModel> userFlux(final Sinks.Many<UserModel> userSink) {
+        return userSink.asFlux();
+    }
+
+    @Bean
+    public Sinks.Many<RoomUsersEventModel> roomUsersEventSink() {
+        return Sinks.many().multicast().onBackpressureBuffer(Queues.SMALL_BUFFER_SIZE, false);
+    }
+
+    @Bean
+    public Flux<RoomUsersEventModel> roomUsersEventFlux(final Sinks.Many<RoomUsersEventModel> roomUsersEventSink) {
+        return roomUsersEventSink.asFlux();
     }
 
     @Bean

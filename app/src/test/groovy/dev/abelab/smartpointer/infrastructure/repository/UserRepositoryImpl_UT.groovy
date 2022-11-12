@@ -57,6 +57,29 @@ class UserRepositoryImpl_UT extends AbstractRepository_UT {
         result.isEmpty()
     }
 
+    def "selectAll: ユーザリストを取得"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | "000000"
+            "00000000-0000-0000-0000-000000000001" | "000000"
+        }
+        TableHelper.insert sql, "user", {
+            id                                     | room_id                                | name
+            "00000000-0000-0000-0000-000000000000" | "00000000-0000-0000-0000-000000000000" | "A"
+            "00000000-0000-0000-0000-000000000001" | "00000000-0000-0000-0000-000000000000" | "B"
+            "00000000-0000-0000-0000-000000000002" | "00000000-0000-0000-0000-000000000001" | "C"
+        }
+        // @formatter:on
+
+        when:
+        final result = this.sut.selectAll()
+
+        then:
+        result*.id == ["00000000-0000-0000-0000-000000000000", "00000000-0000-0000-0000-000000000001", "00000000-0000-0000-0000-000000000002"]
+    }
+
     def "selectByRoomId: ルームIDからユーザリストを取得"() {
         given:
         // @formatter:off

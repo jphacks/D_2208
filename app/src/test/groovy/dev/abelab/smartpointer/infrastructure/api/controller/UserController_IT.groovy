@@ -1,5 +1,7 @@
 package dev.abelab.smartpointer.infrastructure.api.controller
 
+import dev.abelab.smartpointer.domain.model.RoomUsersEventModel
+import dev.abelab.smartpointer.domain.model.UserModel
 import dev.abelab.smartpointer.exception.BadRequestException
 import dev.abelab.smartpointer.exception.ErrorCode
 import dev.abelab.smartpointer.exception.NotFoundException
@@ -8,11 +10,21 @@ import dev.abelab.smartpointer.helper.RandomHelper
 import dev.abelab.smartpointer.helper.TableHelper
 import dev.abelab.smartpointer.infrastructure.api.type.AccessToken
 import dev.abelab.smartpointer.infrastructure.api.type.Users
+import org.springframework.beans.factory.annotation.Autowired
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Sinks
+import reactor.test.StepVerifier
 
 /**
  * UserControllerの統合テスト
  */
 class UserController_IT extends AbstractController_IT {
+
+    @Autowired
+    Sinks.Many<RoomUsersEventModel> roomUsersEventSink
+
+    @Autowired
+    Flux<RoomUsersEventModel> roomUsersEventFlux
 
     def "ユーザリスト取得API: 正常系 ユーザリストを取得する"() {
         given:
@@ -193,6 +205,44 @@ class UserController_IT extends AbstractController_IT {
                 }
             """
         this.executeHttp(query, new UnauthorizedException(ErrorCode.INCORRECT_ROOM_PASSCODE))
+    }
+
+    def "ユーザリスト購読API: 正常系 ユーザリストを購読できる"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | "000000"
+            "00000000-0000-0000-0000-000000000001" | "000000"
+        }
+        // @formatter:on
+
+        final query =
+            """
+                subscription {
+                    subscribeToUsers(roomId: "00000000-0000-0000-0000-000000000000") {
+                        users {
+                            id
+                            name
+                        }
+                    }
+                }
+            """
+        final response = this.executeWebSocketSubscription(query, "subscribeToUsers", Users)
+
+        when:
+        this.roomUsersEventSink.tryEmitNext(new RoomUsersEventModel("00000000-0000-0000-0000-000000000000", [RandomHelper.mock(UserModel), RandomHelper.mock(UserModel)]))
+        this.roomUsersEventSink.tryEmitNext(new RoomUsersEventModel("00000000-0000-0000-0000-000000000000", [RandomHelper.mock(UserModel)]))
+        this.roomUsersEventSink.tryEmitNext(new RoomUsersEventModel("00000000-0000-0000-0000-000000000000", []))
+        this.roomUsersEventSink.tryEmitNext(new RoomUsersEventModel("00000000-0000-0000-0000-000000000001", [RandomHelper.mock(UserModel)]))
+
+        then:
+        StepVerifier.create(response)
+            .expectNextMatches({ it.users.size() == 2 })
+            .expectNextMatches({ it.users.size() == 1 })
+            .expectNextMatches({ it.users.size() == 0 })
+            .thenCancel()
+            .verify()
     }
 
 }

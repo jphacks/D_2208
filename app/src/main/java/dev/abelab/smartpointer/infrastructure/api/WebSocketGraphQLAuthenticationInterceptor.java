@@ -11,11 +11,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import dev.abelab.smartpointer.domain.model.RoomUsersEventModel;
 import dev.abelab.smartpointer.domain.repository.UserRepository;
 import dev.abelab.smartpointer.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
 
 /**
  * GraphQL (over WebSocket) Authentication Interceptor
@@ -24,6 +26,8 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 public class WebSocketGraphQLAuthenticationInterceptor implements WebSocketGraphQlInterceptor {
+
+    private final Sinks.Many<RoomUsersEventModel> roomUsersEventSink;
 
     private final UserRepository userRepository;
 
@@ -57,6 +61,8 @@ public class WebSocketGraphQLAuthenticationInterceptor implements WebSocketGraph
             final var loginUser = this.authUtil.getLoginUser(authorization.replace("Bearer ", ""));
             log.info(String.format("%d: GraphQL connection closed [name=%s, id=%s]", statusCode, loginUser.getName(), loginUser.getId()));
             this.userRepository.deleteById(loginUser.getId());
+            this.roomUsersEventSink
+                .tryEmitNext(new RoomUsersEventModel(loginUser.getRoomId(), this.userRepository.selectByRoomId(loginUser.getRoomId())));
         } catch (final Exception ignored) {
             log.info(String.format("%d: GraphQL connection closed", statusCode));
         }
