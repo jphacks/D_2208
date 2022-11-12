@@ -66,6 +66,8 @@ app/src/main/resources/application-local.yml
 app/src/main/resources/application-dev.yml
 app/src/main/resources/application-stage.yml
 app/src/main/resources/application-prod.yml
+app/src/main/resources/credentials/**/*
+!app/src/main/resources/credentials/.gitkeep
 
 ### Static contents ###
 app/src/main/resources/static/*
