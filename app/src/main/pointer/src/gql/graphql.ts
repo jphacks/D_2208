@@ -241,6 +241,8 @@ export type Subscription = {
   subscribeToPointerDisconnectEvent: User;
   /** ポインタータイプ購読API */
   subscribeToPointerType: Scalars['String'];
+  /** ルーム終了イベント購読API */
+  subscribeToRoomFinishEvent: Scalars['ID'];
   /** スライド操作購読API */
   subscribeToSlideControl: SlideControl;
   /** タイマー購読API */
@@ -266,6 +268,11 @@ export type SubscriptionSubscribeToPointerDisconnectEventArgs = {
 
 
 export type SubscriptionSubscribeToPointerTypeArgs = {
+  roomId: Scalars['ID'];
+};
+
+
+export type SubscriptionSubscribeToRoomFinishEventArgs = {
   roomId: Scalars['ID'];
 };
 

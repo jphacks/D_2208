@@ -198,6 +198,36 @@ export const controller = {
       }
     );
 
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          subscription SubscribeToUsers($roomId: ID!) {
+            subscribeToUsers(roomId: $roomId) {
+              users {
+                id
+                name
+              }
+            }
+          }
+        `),
+        variables: {
+          roomId: data.createRoom.id,
+        },
+      },
+      {
+        next(value) {
+          const data = value.data?.subscribeToUsers;
+          if (data) {
+            controller.updateUserList(data.users);
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        error() {},
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        complete() {},
+      }
+    );
+
     view.tray.update();
     await view.window.pointerOverlay.show();
     await view.window.inviteLink.show();
@@ -360,5 +390,9 @@ export const controller = {
         complete() {},
       }
     );
+  },
+
+  updateUserList: (users: User[]) => {
+    view.window.userList.updateUsers(users);
   },
 };
