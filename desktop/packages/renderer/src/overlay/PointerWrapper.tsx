@@ -49,7 +49,7 @@ export const PointerWrapper: FC<Props> = ({ pointers, renderPointer }) => {
             position="absolute"
             top="0"
             left="0"
-            fontSize="lg"
+            fontSize={`${Math.min(width, height) / 30}px`}
             w="fit-content"
             h="fit-content"
             align="end"
@@ -58,7 +58,13 @@ export const PointerWrapper: FC<Props> = ({ pointers, renderPointer }) => {
               ${height / 2 + coordinate.y * height}px
             )`}
           >
-            {renderPointer(color)}
+            <Flex
+              boxSize={`${Math.min(width, height) / 10}px`}
+              align="stretch"
+              justify="stretch"
+            >
+              {renderPointer(color)}
+            </Flex>
             {pointers.length > 1 && (
               <Box paddingStart="8">
                 <Text bg={color} color="white" px="2" rounded="sm">
