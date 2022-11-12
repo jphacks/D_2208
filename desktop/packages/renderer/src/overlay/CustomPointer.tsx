@@ -15,9 +15,10 @@ export const CustomPointer: FC<{
     pointers={pointers}
     renderPointer={() => (
       <Box
-        backgroundImage={`url(${pointerType.image})`}
+        backgroundImage={`url(${pointerType.content})`}
         backgroundRepeat="no-repeat"
         backgroundSize="contain"
+        boxSize="full"
       />
     )}
   />

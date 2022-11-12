@@ -39,11 +39,11 @@ const pointerListTemplate: MenuTemplateWithState<
     submenu: builtInPointers
       .concat(
         state.customPointerTypes.filter(
-          (pointerType) => pointerType.image !== undefined
+          (pointerType) => pointerType.content !== undefined
         )
       )
       .map((pointer) => ({
-        label: pointer.name,
+        label: pointer.label,
         type: "radio",
         checked: state.selectedPointerTypeId === pointer.id,
         click: () => controller.requestChangePointerType(pointer.id),
