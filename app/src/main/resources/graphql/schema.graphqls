@@ -45,7 +45,12 @@ type Mutation {
     """
     ルーム作成API
     """
-    createRoom: Room!
+    createRoom(
+        """
+        ポインタータイプ
+        """
+        pointerType: String!
+    ): Room!
 
     """
     ルーム削除API
@@ -268,6 +273,11 @@ type Room {
     パスコード
     """
     passcode: String!
+
+    """
+    ポインタータイプ
+    """
+    pointerType: String!
 }
 
 """

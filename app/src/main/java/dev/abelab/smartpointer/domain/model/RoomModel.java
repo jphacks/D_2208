@@ -33,9 +33,15 @@ public class RoomModel {
     @Builder.Default
     String passcode = RandomStringUtils.randomNumeric(6);
 
+    /**
+     * ポインタータイプ
+     */
+    String pointerType;
+
     public RoomModel(final Room room) {
         this.id = room.getId();
         this.passcode = room.getPasscode();
+        this.pointerType = room.getPointerType();
     }
 
     /**

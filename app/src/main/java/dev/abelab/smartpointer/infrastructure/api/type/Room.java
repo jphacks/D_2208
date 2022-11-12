@@ -25,9 +25,15 @@ public class Room {
      */
     String passcode;
 
+    /**
+     * ポインタータイプ
+     */
+    String pointerType;
+
     public Room(final RoomModel roomModel) {
         this.id = roomModel.getId();
         this.passcode = roomModel.getPasscode();
+        this.pointerType = roomModel.getPointerType();
     }
 
 }

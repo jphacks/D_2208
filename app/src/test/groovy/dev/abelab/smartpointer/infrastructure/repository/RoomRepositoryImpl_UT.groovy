@@ -41,7 +41,9 @@ class RoomRepositoryImpl_UT extends AbstractRepository_UT {
 
     def "insert: ルームを作成"() {
         given:
-        final room = RoomModel.builder().build()
+        final room = RoomModel.builder()
+            .pointerType(RandomHelper.alphanumeric(10))
+            .build()
 
         when:
         this.sut.insert(room)
@@ -50,6 +52,7 @@ class RoomRepositoryImpl_UT extends AbstractRepository_UT {
         final createdRoom = sql.firstRow("SELECT * FROM room")
         createdRoom.id == room.id
         createdRoom.passcode == room.passcode
+        createdRoom.pointer_type == room.pointerType
     }
 
     def "deleteById: IDからルームを削除"() {

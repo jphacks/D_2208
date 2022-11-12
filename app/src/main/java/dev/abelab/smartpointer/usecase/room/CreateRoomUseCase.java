@@ -26,12 +26,15 @@ public class CreateRoomUseCase {
     /**
      * Handle UseCase
      * 
+     * @param pointerType ポインタータイプ
      * @return ルーム
      */
     @Transactional
-    public RoomModel handle() {
+    public RoomModel handle(final String pointerType) {
         // ルームを作成
-        final var room = RoomModel.builder().build();
+        final var room = RoomModel.builder() //
+            .pointerType(pointerType) //
+            .build();
         this.roomRepository.insert(room);
 
         // ルームを作成

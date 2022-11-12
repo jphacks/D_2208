@@ -16,9 +16,10 @@ class RoomController_IT extends AbstractController_IT {
         final query =
             """
                 mutation {
-                    createRoom {
+                    createRoom(pointerType: "SPOTLIGHT") {
                         id
                         passcode
+                        pointerType
                     }
                 }
             """
@@ -28,11 +29,14 @@ class RoomController_IT extends AbstractController_IT {
         final createdRoom = sql.firstRow("SELECT * FROM room")
         createdRoom.id == response.id
         createdRoom.passcode == response.passcode
+        createdRoom.pointer_type == response.pointerType
 
         final createdTimer = sql.firstRow("SELECT * FROM timer")
         createdTimer.input_time == 300
         createdTimer.remaining_time_at_paused == null
         createdTimer.room_id == createdRoom.id
+
+        response.pointerType == "SPOTLIGHT"
     }
 
     def "ルーム削除API: 正常系 ルームを削除できる"() {

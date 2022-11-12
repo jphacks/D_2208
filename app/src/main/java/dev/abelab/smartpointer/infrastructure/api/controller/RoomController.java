@@ -23,11 +23,14 @@ public class RoomController {
     /**
      * ルーム作成API
      * 
+     * @param pointerType ポインタータイプ
      * @return ルーム
      */
     @MutationMapping
-    public Room createRoom() {
-        return new Room(this.createRoomUseCase.handle());
+    public Room createRoom( //
+        @Argument final String pointerType //
+    ) {
+        return new Room(this.createRoomUseCase.handle(pointerType));
     }
 
     /**
