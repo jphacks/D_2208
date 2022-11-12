@@ -27,6 +27,13 @@ public interface CustomPointerRepository {
     boolean existsByIdAndRoomId(final String id, final String roomId);
 
     /**
+     * カスタムポインターを作成
+     * 
+     * @param customPointerModel カスタムポインター
+     */
+    void insert(final CustomPointerModel customPointerModel);
+
+    /**
      * ID、ルームIDからカスタムポインターを削除
      *
      * @param id カスタムポインターID

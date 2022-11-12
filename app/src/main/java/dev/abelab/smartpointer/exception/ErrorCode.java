@@ -59,6 +59,8 @@ public enum ErrorCode {
      */
     USER_NAME_IS_ALREADY_EXISTS(5000, "exception.conflict.user_name_is_already_exists"),
 
+    CUSTOM_POINTER_IS_ALREADY_EXISTS(5001, "exception.conflict.custom_pointer_is_already_exists"),
+
     /**
      * 500 Internal Server Error: 6000~6999
      */

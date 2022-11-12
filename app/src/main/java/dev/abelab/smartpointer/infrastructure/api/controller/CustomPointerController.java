@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import dev.abelab.smartpointer.domain.model.RoomCustomPointersModel;
 import dev.abelab.smartpointer.infrastructure.api.type.CustomPointer;
 import dev.abelab.smartpointer.infrastructure.api.type.CustomPointers;
+import dev.abelab.smartpointer.usecase.custom_pointer.CreateCustomPointersUseCase;
 import dev.abelab.smartpointer.usecase.custom_pointer.DeleteCustomPointersUseCase;
 import dev.abelab.smartpointer.usecase.custom_pointer.GetCustomPointersUseCase;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,8 @@ public class CustomPointerController {
 
     private final GetCustomPointersUseCase getCustomPointersUseCase;
 
+    private final CreateCustomPointersUseCase createCustomPointersUseCase;
+
     private final DeleteCustomPointersUseCase deleteCustomPointersUseCase;
 
     /**
@@ -47,6 +50,30 @@ public class CustomPointerController {
             .map(CustomPointer::new) //
             .collect(Collectors.toList());
         return new CustomPointers(customPointers);
+    }
+
+    /**
+     * カスタムポインター作成API
+     *
+     * @param roomId ルームID
+     * @param id カスタムポインターID
+     * @param label ラベル
+     * @param content 画像コンテンツ(Base64)
+     * @return カスタムポインターID
+     */
+    @MutationMapping
+    public String createCustomPointer( //
+        @Argument final String roomId, //
+        @Argument final String id, //
+        @Argument final String label, //
+        @Argument final String content //
+    ) {
+        this.createCustomPointersUseCase.handle(roomId, id, label, content);
+
+        final var customPointers = this.getCustomPointersUseCase.handle(roomId);
+        this.roomCustomPointersSink.tryEmitNext(new RoomCustomPointersModel(roomId, customPointers));
+
+        return id;
     }
 
     /**
