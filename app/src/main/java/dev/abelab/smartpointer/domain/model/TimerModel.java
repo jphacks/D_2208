@@ -58,6 +58,12 @@ public class TimerModel implements Serializable {
         this.inputTime = timer.getInputTime();
         this.remainingTimeAtPaused = Optional.ofNullable(timer.getRemainingTimeAtPaused());
         this.finishAt = timer.getFinishAt();
+
+        // DB上はRUNNINGだが終了時刻を過ぎている場合があるので、終了時刻を過ぎていたらREADYにする
+        if (LocalDateTime.now().isAfter(this.finishAt)) {
+            this.status = TimerStatus.READY;
+            this.remainingTimeAtPaused = Optional.empty();
+        }
     }
 
     /**

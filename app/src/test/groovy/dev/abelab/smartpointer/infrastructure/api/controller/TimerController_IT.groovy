@@ -6,6 +6,7 @@ import dev.abelab.smartpointer.exception.BadRequestException
 import dev.abelab.smartpointer.exception.ErrorCode
 import dev.abelab.smartpointer.exception.NotFoundException
 import dev.abelab.smartpointer.exception.UnauthorizedException
+import dev.abelab.smartpointer.helper.DateHelper
 import dev.abelab.smartpointer.helper.RandomHelper
 import dev.abelab.smartpointer.helper.TableHelper
 import dev.abelab.smartpointer.infrastructure.api.type.Timer
@@ -37,8 +38,8 @@ class TimerController_IT extends AbstractController_IT {
         }
         TableHelper.insert sql, "timer", {
             room_id                                | status                | input_time | remaining_time_at_paused | finish_at
-            "00000000-0000-0000-0000-000000000000" | TimerStatus.PAUSED.id | 60         | 30                       | "2000-01-01 10:30:30"
-            "00000000-0000-0000-0000-000000000001" | TimerStatus.READY.id  | 100        | null                     | "2000-01-01 10:30:30"
+            "00000000-0000-0000-0000-000000000000" | TimerStatus.PAUSED.id | 60         | 30                       | "2099-01-01 10:30:30"
+            "00000000-0000-0000-0000-000000000001" | TimerStatus.READY.id  | 100        | null                     | "2099-01-01 10:30:30"
         }
         // @formatter:on
 
@@ -60,7 +61,7 @@ class TimerController_IT extends AbstractController_IT {
         response.inputTime == expectedInputTime
         response.remainingTimeAtPaused == expectedRemainingTimeAtPaused
         response.status == expectedStatus
-        response.finishAt.year == 2000
+        response.finishAt.year == 2099
         response.finishAt.monthValue == 1
         response.finishAt.dayOfMonth == 1
         response.finishAt.hour == 10
@@ -71,6 +72,38 @@ class TimerController_IT extends AbstractController_IT {
         inputRoomId                            || expectedStatus     | expectedInputTime | expectedRemainingTimeAtPaused
         "00000000-0000-0000-0000-000000000000" || TimerStatus.PAUSED | 60                | 30
         "00000000-0000-0000-0000-000000000001" || TimerStatus.READY  | 100               | null
+    }
+
+    def "タイマー取得API: 正常系 RUNNINGだが終了時刻を過ぎている場合はREADYになる"() {
+        given:
+        // @formatter:off
+        TableHelper.insert sql, "room", {
+            id                                     | passcode
+            "00000000-0000-0000-0000-000000000000" | RandomHelper.numeric(6)
+        }
+        TableHelper.insert sql, "timer", {
+            room_id                                | status                | input_time | remaining_time_at_paused | finish_at
+            "00000000-0000-0000-0000-000000000000" | TimerStatus.PAUSED.id | 60         | 30                       | DateHelper.yesterday()
+        }
+        // @formatter:on
+
+        when:
+        final query =
+            """
+                query {
+                    getTimer(roomId: "00000000-0000-0000-0000-000000000000") {
+                        inputTime
+                        remainingTimeAtPaused
+                        finishAt
+                        status
+                    }
+                }
+            """
+        final response = this.executeHttp(query, "getTimer", Timer)
+
+        then:
+        response.status == TimerStatus.READY
+        response.remainingTimeAtPaused == null
     }
 
     def "タイマー取得API: 異常系 ルームもしくはタイマーが存在しない場合は404エラー"() {
@@ -198,7 +231,7 @@ class TimerController_IT extends AbstractController_IT {
         }
         TableHelper.insert sql, "timer", {
             room_id                                | status         | input_time | remaining_time_at_paused | finish_at
-            "00000000-0000-0000-0000-000000000000" | timerStatus.id | 60         | 30                       | "2000-01-01 10:30:30"
+            "00000000-0000-0000-0000-000000000000" | timerStatus.id | 60         | 30                       | "2099-01-01 10:30:30"
         }
         // @formatter:on
 
@@ -238,7 +271,6 @@ class TimerController_IT extends AbstractController_IT {
         }
         // @formatter:on
 
-
         expect:
         final query =
             """
@@ -263,7 +295,7 @@ class TimerController_IT extends AbstractController_IT {
         }
         TableHelper.insert sql, "timer", {
             room_id                                | status                | input_time | remaining_time_at_paused | finish_at
-            "00000000-0000-0000-0000-000000000000" | TimerStatus.PAUSED.id | 60         | 30                       | "2000-01-01 10:30:30"
+            "00000000-0000-0000-0000-000000000000" | TimerStatus.PAUSED.id | 60         | 30                       | "2099-01-01 10:30:30"
         }
         // @formatter:on
 
@@ -376,7 +408,7 @@ class TimerController_IT extends AbstractController_IT {
         }
         TableHelper.insert sql, "timer", {
             room_id                                | status                 | input_time | remaining_time_at_paused | finish_at
-            "00000000-0000-0000-0000-000000000000" | TimerStatus.RUNNING.id | 60         | 30                       | "2000-01-01 10:30:30"
+            "00000000-0000-0000-0000-000000000000" | TimerStatus.RUNNING.id | 60         | 30                       | DateHelper.tomorrow().toString()
         }
         // @formatter:on
 
@@ -489,7 +521,7 @@ class TimerController_IT extends AbstractController_IT {
         }
         TableHelper.insert sql, "timer", {
             room_id                                | status         | input_time | remaining_time_at_paused | finish_at
-            "00000000-0000-0000-0000-000000000000" | inputStatus.id | 60         | 30                       | "2000-01-01 10:30:30"
+            "00000000-0000-0000-0000-000000000000" | inputStatus.id | 60         | 30                       | "2099-01-01 10:30:30"
         }
         // @formatter:on
 
@@ -603,7 +635,7 @@ class TimerController_IT extends AbstractController_IT {
         }
         TableHelper.insert sql, "timer", {
             room_id                                | status               | input_time | remaining_time_at_paused | finish_at
-            "00000000-0000-0000-0000-000000000000" | TimerStatus.READY.id | 60         | 30                       | "2000-01-01 10:30:30"
+            "00000000-0000-0000-0000-000000000000" | TimerStatus.READY.id | 60         | 30                       | "2099-01-01 10:30:30"
         }
         // @formatter:on
 
