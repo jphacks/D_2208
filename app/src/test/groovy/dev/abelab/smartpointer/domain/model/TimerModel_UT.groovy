@@ -7,6 +7,7 @@ import dev.abelab.smartpointer.exception.BaseException
 import dev.abelab.smartpointer.exception.ErrorCode
 import dev.abelab.smartpointer.helper.DateHelper
 import dev.abelab.smartpointer.helper.RandomHelper
+import dev.abelab.smartpointer.infrastructure.db.entity.Timer
 
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -15,6 +16,29 @@ import java.time.temporal.ChronoUnit
  * TimerModelの単体テスト
  */
 class TimerModel_UT extends AbstractSpecification {
+
+    def "new: 現在時刻がfinishAtを超過していた場合はステータスが準備中になる"() {
+        given:
+        final entity = Timer.builder()
+            .status(TimerStatus.RUNNING.id)
+            .finishAt(inputFinishAt)
+            .remainingTimeAtPaused(10)
+            .build()
+
+        when:
+        final timer = new TimerModel(entity)
+
+        then:
+        timer.status == expectedStatus
+        timer.remainingTimeAtPaused == expectedRemainingTimeAtPaused
+
+        where:
+        inputFinishAt          || expectedStatus      | expectedRemainingTimeAtPaused
+        // 終了した
+        DateHelper.yesterday() || TimerStatus.READY   | Optional.empty()
+        // まだ終了していない
+        DateHelper.tomorrow()  || TimerStatus.RUNNING | Optional.of(10)
+    }
 
     def "builder: インスタンス生成時にステータスが自動でセットされる"() {
         when:
