@@ -333,6 +333,76 @@ public class RoomExample {
             addCriterion("`passcode` not between", value1, value2, "passcode");
             return (Criteria) this;
         }
+
+        public Criteria andPointerTypeIsNull() {
+            addCriterion("`pointer_type` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointerTypeIsNotNull() {
+            addCriterion("`pointer_type` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointerTypeEqualTo(String value) {
+            addCriterion("`pointer_type` =", value, "pointerType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointerTypeNotEqualTo(String value) {
+            addCriterion("`pointer_type` <>", value, "pointerType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointerTypeGreaterThan(String value) {
+            addCriterion("`pointer_type` >", value, "pointerType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointerTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("`pointer_type` >=", value, "pointerType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointerTypeLessThan(String value) {
+            addCriterion("`pointer_type` <", value, "pointerType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointerTypeLessThanOrEqualTo(String value) {
+            addCriterion("`pointer_type` <=", value, "pointerType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointerTypeLike(String value) {
+            addCriterion("`pointer_type` like", value, "pointerType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointerTypeNotLike(String value) {
+            addCriterion("`pointer_type` not like", value, "pointerType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointerTypeIn(List<String> values) {
+            addCriterion("`pointer_type` in", values, "pointerType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointerTypeNotIn(List<String> values) {
+            addCriterion("`pointer_type` not in", values, "pointerType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointerTypeBetween(String value1, String value2) {
+            addCriterion("`pointer_type` between", value1, value2, "pointerType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointerTypeNotBetween(String value1, String value2) {
+            addCriterion("`pointer_type` not between", value1, value2, "pointerType");
+            return (Criteria) this;
+        }
     }
 
     /**

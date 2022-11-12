@@ -39,13 +39,28 @@ type Query {
         """
         roomId: ID!
     ): CustomPointers!
+
+    """
+    ポインタータイプ取得API
+    """
+    getPointerType(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): String!
 }
 
 type Mutation {
     """
     ルーム作成API
     """
-    createRoom: Room!
+    createRoom(
+        """
+        ポインタータイプ
+        """
+        pointerType: String!
+    ): Room!
 
     """
     ルーム削除API
@@ -191,6 +206,21 @@ type Mutation {
         """
         roomId: ID!
     ): ID!
+
+    """
+    ポインタータイプ変更API
+    """
+    changePointerType(
+        """
+        ポインタータイプ
+        """
+        pointerType: String!
+
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): String!
 }
 
 type Subscription {
@@ -253,6 +283,16 @@ type Subscription {
         """
         roomId: ID!
     ): CustomPointers!
+
+    """
+    ポインタータイプ購読API
+    """
+    subscribeToPointerType(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): String!
 }
 
 """
@@ -268,6 +308,11 @@ type Room {
     パスコード
     """
     passcode: String!
+
+    """
+    ポインタータイプ
+    """
+    pointerType: String!
 }
 
 """

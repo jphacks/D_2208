@@ -3,14 +3,18 @@ package dev.abelab.smartpointer.infrastructure.api.controller;
 import org.reactivestreams.Publisher;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SubscriptionMapping;
 import org.springframework.stereotype.Controller;
 
 import dev.abelab.smartpointer.domain.model.PointerControlModel;
+import dev.abelab.smartpointer.domain.model.RoomPointerModel;
 import dev.abelab.smartpointer.domain.model.UserModel;
 import dev.abelab.smartpointer.infrastructure.api.type.PointerControl;
 import dev.abelab.smartpointer.infrastructure.api.type.User;
+import dev.abelab.smartpointer.usecase.pointer.ChangePointerTypeUseCase;
 import dev.abelab.smartpointer.usecase.pointer.DisconnectPointerUseCase;
+import dev.abelab.smartpointer.usecase.pointer.GetPointerTypeUseCase;
 import dev.abelab.smartpointer.usecase.pointer.MovePointerUseCase;
 import dev.abelab.smartpointer.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +27,10 @@ import reactor.core.publisher.Sinks;
 @Controller
 @RequiredArgsConstructor
 public class PointerController {
+
+    private final Flux<RoomPointerModel> roomPointerFlux;
+
+    private final Sinks.Many<RoomPointerModel> roomPointerSink;
 
     private final Flux<PointerControlModel> pointerControlFlux;
 
@@ -37,6 +45,10 @@ public class PointerController {
     private final MovePointerUseCase movePointerUseCase;
 
     private final DisconnectPointerUseCase disconnectPointerUseCase;
+
+    private final GetPointerTypeUseCase getPointerTypeUseCase;
+
+    private final ChangePointerTypeUseCase changePointerTypeUseCase;
 
     /**
      * ポインター操作API
@@ -76,6 +88,37 @@ public class PointerController {
     }
 
     /**
+     * ポインタータイプ取得API
+     *
+     * @param roomId ルームID
+     * @return ポインタータイプ
+     */
+    @QueryMapping
+    public String getPointerType( //
+        @Argument final String roomId //
+    ) {
+        return this.getPointerTypeUseCase.handle(roomId);
+    }
+
+    /**
+     * ポインタータイプ変更API
+     *
+     * @param pointerType ポインタータイプ
+     * @param roomId ルームID
+     * @return ポインタータイプ
+     */
+    @MutationMapping
+    public String changePointerType( //
+        @Argument final String pointerType, //
+        @Argument final String roomId //
+    ) {
+        this.changePointerTypeUseCase.handle(pointerType, roomId);
+        this.roomPointerSink.tryEmitNext(new RoomPointerModel(roomId, pointerType));
+
+        return pointerType;
+    }
+
+    /**
      * ポインター操作購読API
      *
      * @param roomId ルームID
@@ -103,6 +146,21 @@ public class PointerController {
         return this.pointerDisconnectFlux //
             .filter(userModel -> userModel.getRoomId().equals(roomId)) //
             .map(User::new);
+    }
+
+    /**
+     * ポインタータイプ購読API
+     *
+     * @param roomId ルームID
+     * @return ポインタータイプ
+     */
+    @SubscriptionMapping
+    public Publisher<String> subscribeToPointerType( //
+        @Argument final String roomId //
+    ) {
+        return this.roomPointerFlux //
+            .filter(pointerControlFlux -> pointerControlFlux.getRoomId().equals(roomId)) //
+            .map(RoomPointerModel::getPointerType);
     }
 
 }

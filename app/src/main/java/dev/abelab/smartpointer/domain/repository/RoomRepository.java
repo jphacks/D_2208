@@ -39,4 +39,12 @@ public interface RoomRepository {
      */
     boolean existsById(final String id);
 
+    /**
+     * IDからポインタータイプを更新
+     *
+     * @param id ルームID
+     * @param pointerType ポインタータイプ
+     */
+    void updatePointerTypeById(final String id, final String pointerType);
+
 }

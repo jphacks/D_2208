@@ -13,7 +13,7 @@ class CreateRoomUseCase_UT extends AbstractUseCase_UT {
 
     def "handle: ルームを作成する"() {
         when:
-        this.sut.handle()
+        this.sut.handle("")
 
         then:
         1 * this.roomRepository.insert(_)
