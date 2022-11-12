@@ -60,9 +60,9 @@ export const controller = {
     model.startCreatingRoom();
 
     const data = await requestHttp({
-      query: graphql(`
+      query: graphql(/* GraphQL */ `
         mutation CreateRoom {
-          createRoom {
+          createRoom(pointerType: "SPOTLIGHT") {
             id
             passcode
           }
