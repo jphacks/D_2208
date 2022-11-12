@@ -33,6 +33,7 @@ export const inviteLink = {
       });
     }
 
+    inviteLinkWindow.removeMenu();
     inviteLinkWindow.show();
   },
 
