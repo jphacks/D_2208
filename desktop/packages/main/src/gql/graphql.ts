@@ -47,6 +47,8 @@ export type CustomPointers = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** ポインタータイプ変更API */
+  changePointerType: Scalars['String'];
   /** ルーム作成API */
   createRoom: Room;
   /** カスタムポインター削除API */
@@ -71,6 +73,17 @@ export type Mutation = {
   resumeTimer: Timer;
   /** タイマー開始API */
   startTimer: Timer;
+};
+
+
+export type MutationChangePointerTypeArgs = {
+  pointerType: Scalars['String'];
+  roomId: Scalars['ID'];
+};
+
+
+export type MutationCreateRoomArgs = {
+  pointerType: Scalars['String'];
 };
 
 
@@ -159,6 +172,8 @@ export type Query = {
   __typename?: 'Query';
   /** カスタムポインターリスト取得API */
   getCustomPointers: CustomPointers;
+  /** ポインタータイプ取得API */
+  getPointerType: Scalars['String'];
   /** タイマー取得API */
   getTimer: Timer;
   /** ユーザリスト取得API */
@@ -169,6 +184,11 @@ export type Query = {
 
 
 export type QueryGetCustomPointersArgs = {
+  roomId: Scalars['ID'];
+};
+
+
+export type QueryGetPointerTypeArgs = {
   roomId: Scalars['ID'];
 };
 
@@ -189,6 +209,8 @@ export type Room = {
   id: Scalars['ID'];
   /** パスコード */
   passcode: Scalars['String'];
+  /** ポインタータイプ */
+  pointerType: Scalars['String'];
 };
 
 /** スライド操作 */
@@ -207,6 +229,8 @@ export type Subscription = {
   subscribeToPointer: PointerControl;
   /** ポインター切断イベント購読API */
   subscribeToPointerDisconnectEvent: User;
+  /** ポインタータイプ購読API */
+  subscribeToPointerType: Scalars['String'];
   /** スライド操作購読API */
   subscribeToSlideControl: SlideControl;
   /** タイマー購読API */
@@ -227,6 +251,11 @@ export type SubscriptionSubscribeToPointerArgs = {
 
 
 export type SubscriptionSubscribeToPointerDisconnectEventArgs = {
+  roomId: Scalars['ID'];
+};
+
+
+export type SubscriptionSubscribeToPointerTypeArgs = {
   roomId: Scalars['ID'];
 };
 
@@ -318,7 +347,7 @@ export type DeleteRoomMutationVariables = Exact<{
 export type DeleteRoomMutation = { __typename?: 'Mutation', deleteRoom: string };
 
 
-export const CreateRoomDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateRoom"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createRoom"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"passcode"}}]}}]}}]} as unknown as DocumentNode<CreateRoomMutation, CreateRoomMutationVariables>;
+export const CreateRoomDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateRoom"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createRoom"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pointerType"},"value":{"kind":"StringValue","value":"SPOTLIGHT","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"passcode"}}]}}]}}]} as unknown as DocumentNode<CreateRoomMutation, CreateRoomMutationVariables>;
 export const SubscribeToSlideControlDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"SubscribeToSlideControl"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"subscribeToSlideControl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"roomId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}}}]}]}}]} as unknown as DocumentNode<SubscribeToSlideControlSubscription, SubscribeToSlideControlSubscriptionVariables>;
 export const SubscribeToPointerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"SubscribeToPointer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"subscribeToPointer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"roomId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"orientation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alpha"}},{"kind":"Field","name":{"kind":"Name","value":"beta"}},{"kind":"Field","name":{"kind":"Name","value":"gamma"}}]}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<SubscribeToPointerSubscription, SubscribeToPointerSubscriptionVariables>;
 export const SubscribeToPointerDisconnectEventDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"SubscribeToPointerDisconnectEvent"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"subscribeToPointerDisconnectEvent"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"roomId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"roomId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SubscribeToPointerDisconnectEventSubscription, SubscribeToPointerDisconnectEventSubscriptionVariables>;
