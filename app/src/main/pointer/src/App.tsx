@@ -34,7 +34,18 @@ export const App = () => {
         next: ({ data, errors }) => {
           if (data?.subscribeToRoomFinishEvent) {
             closeWsClient();
+
+            const searchParams = new URLSearchParams(window.location.search);
+            searchParams.delete("roomId");
+            searchParams.delete("passcode");
+            window.history.replaceState(
+              {},
+              "",
+              `${window.location.pathname}?${searchParams.toString()}`
+            );
+
             setAuthData(null);
+
             toast({
               title: "ルームが終了しました",
               status: "info",

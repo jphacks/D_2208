@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import dev.abelab.smartpointer.domain.model.RoomUsersModel;
+import dev.abelab.smartpointer.domain.model.UserModel;
 import dev.abelab.smartpointer.domain.repository.UserRepository;
 import dev.abelab.smartpointer.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,8 @@ import reactor.core.publisher.Sinks;
 public class WebSocketGraphQLAuthenticationInterceptor implements WebSocketGraphQlInterceptor {
 
     private final Sinks.Many<RoomUsersModel> roomUsersSink;
+
+    private final Sinks.Many<UserModel> pointerDisconnectSink;
 
     private final UserRepository userRepository;
 
@@ -61,6 +64,7 @@ public class WebSocketGraphQLAuthenticationInterceptor implements WebSocketGraph
             final var loginUser = this.authUtil.getLoginUser(authorization.replace("Bearer ", ""));
             log.info(String.format("%d: GraphQL connection closed [name=%s, id=%s]", statusCode, loginUser.getName(), loginUser.getId()));
             this.userRepository.deleteById(loginUser.getId());
+            this.pointerDisconnectSink.tryEmitNext(loginUser);
             this.roomUsersSink
                 .tryEmitNext(new RoomUsersModel(loginUser.getRoomId(), this.userRepository.selectByRoomId(loginUser.getRoomId())));
         } catch (final Exception ignored) {
