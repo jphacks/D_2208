@@ -120,7 +120,17 @@ const PointerIcon: FC<{ pointer: PointerType } & ChakraProps> = ({
       return <FingerIcon {...props} />;
     }
     default: {
-      return <Image src={(pointer as CustomPointerType).url} {...props} />;
+      return (
+        <Image
+          src={(pointer as CustomPointerType).url}
+          {...props}
+          onContextMenu={(event) => {
+            event.preventDefault();
+            return false;
+          }}
+          pointerEvents="none"
+        />
+      );
     }
   }
 };
