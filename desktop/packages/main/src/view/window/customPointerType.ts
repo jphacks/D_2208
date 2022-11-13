@@ -38,7 +38,12 @@ export const customPointerType = {
   },
 
   close: () => {
-    customPointerTypesWindow?.close();
+    if (
+      customPointerTypesWindow !== null &&
+      !customPointerTypesWindow.isDestroyed()
+    ) {
+      customPointerTypesWindow.close();
+    }
   },
 
   updateCustomPointerType: () => {

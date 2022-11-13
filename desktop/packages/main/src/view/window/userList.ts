@@ -34,7 +34,9 @@ export const userList = {
   },
 
   close: () => {
-    userListWindow?.close();
+    if (userListWindow !== null && !userListWindow.isDestroyed()) {
+      userListWindow.close();
+    }
   },
 
   updateUsers: (users: User[]) => {
