@@ -142,7 +142,10 @@ export const pointerOverlay = {
   },
 
   close: () => {
-    overlayWindow?.close();
+    if (overlayWindow !== null && !overlayWindow.isDestroyed()) {
+      overlayWindow.close();
+      overlayWindow = null;
+    }
   },
 };
 

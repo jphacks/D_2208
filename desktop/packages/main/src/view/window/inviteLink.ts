@@ -38,6 +38,8 @@ export const inviteLink = {
   },
 
   close: () => {
-    inviteLinkWindow?.close();
+    if (inviteLinkWindow !== null && !inviteLinkWindow.isDestroyed()) {
+      inviteLinkWindow.close();
+    }
   },
 };
