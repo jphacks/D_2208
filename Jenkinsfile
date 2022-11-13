@@ -42,7 +42,7 @@ pipeline {
         stage("deploy") {
             steps {
                 sh "docker-compose up -d"
-                sh "docker run --rm -d -v $PWD/app/build/libs:/app -p ${PORT}:8080 openjdk:11-jdk java -jar -Dspring.profiles.active=${ENVIRONMENT} app/smartpointer_1.1.0_SNAPSHOT.jar"
+                sh "docker run --rm -d -v $PWD/app/build/libs:/app -p ${PORT}:8080 openjdk:11-jdk java -jar -Dspring.profiles.active=${ENVIRONMENT} app/smartpointer_1.1.0.jar"
             }
         }
     }
