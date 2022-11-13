@@ -31,6 +31,7 @@ export default defineConfig({
         link: join(PACKAGE_ROOT, "link.html"),
         overlay: join(PACKAGE_ROOT, "overlay.html"),
         customPointerTypes: join(PACKAGE_ROOT, "customPointerTypes.html"),
+        userList: join(PACKAGE_ROOT, "userList.html"),
       },
     },
     emptyOutDir: true,
