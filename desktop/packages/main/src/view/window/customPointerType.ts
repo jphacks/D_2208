@@ -30,8 +30,6 @@ export const customPointerType = {
         },
       });
 
-      customPointerTypesWindow.webContents.openDevTools();
-
       await loadFile(customPointerTypesWindow, "customPointerTypes.html");
     }
 
