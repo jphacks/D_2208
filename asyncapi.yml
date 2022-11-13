@@ -2,7 +2,7 @@ asyncapi: 2.5.0
 
 info:
   title: Smart Pointer Internal API
-  version: 1.1.0_SNAPSHOT
+  version: 1.1.0
 
 servers:
   local:
@@ -28,7 +28,7 @@ channels:
     publish:
       description: タイマー開始トピック
       message:
-        $ref: '#/components/messages/startTimer'
+        $ref: "#/components/messages/startTimer"
   /app/rooms/{room_id}/timer/resume:
     parameters:
       room_id:
@@ -38,7 +38,7 @@ channels:
     publish:
       description: タイマー再開トピック
       message:
-        $ref: '#/components/messages/resumeTimer'
+        $ref: "#/components/messages/resumeTimer"
   /app/rooms/{room_id}/timer/stop:
     parameters:
       room_id:
@@ -48,7 +48,7 @@ channels:
     publish:
       description: タイマー停止トピック
       message:
-        $ref: '#/components/messages/stopTimer'
+        $ref: "#/components/messages/stopTimer"
   /app/rooms/{room_id}/timer/reset:
     parameters:
       room_id:
@@ -58,7 +58,7 @@ channels:
     publish:
       description: タイマーリセットトピック
       message:
-        $ref: '#/components/messages/resetTimer'
+        $ref: "#/components/messages/resetTimer"
   /app/rooms/{room_id}/slides/next:
     parameters:
       room_id:
@@ -68,7 +68,7 @@ channels:
     publish:
       description: スライドを進めるトピック
       message:
-        $ref: '#/components/messages/goNextSlide'
+        $ref: "#/components/messages/goNextSlide"
   /app/rooms/{room_id}/slides/previous:
     parameters:
       room_id:
@@ -78,7 +78,7 @@ channels:
     publish:
       description: スライドを戻すトピック
       message:
-        $ref: '#/components/messages/goPreviousSlide'
+        $ref: "#/components/messages/goPreviousSlide"
   /app/rooms/{room_id}/pointer/control:
     parameters:
       room_id:
@@ -88,7 +88,7 @@ channels:
     publish:
       description: ポインター操作トピック
       message:
-        $ref: '#/components/messages/controlPointer'
+        $ref: "#/components/messages/controlPointer"
   /app/rooms/{room_id}/pointer/disconnect:
     parameters:
       room_id:
@@ -98,7 +98,7 @@ channels:
     publish:
       description: ポインター切断トピック
       message:
-        $ref: '#/components/messages/disconnectPointer'
+        $ref: "#/components/messages/disconnectPointer"
   /topic/rooms/{room_id}/timer:
     parameters:
       room_id:
@@ -108,7 +108,7 @@ channels:
     subscribe:
       description: タイマー購読トピック
       message:
-        $ref: '#/components/messages/broadcastTimer'
+        $ref: "#/components/messages/broadcastTimer"
   /topic/rooms/{room_id}/users:
     parameters:
       room_id:
@@ -118,7 +118,7 @@ channels:
     subscribe:
       description: ユーザリスト購読トピック
       message:
-        $ref: '#/components/messages/broadcastUsers'
+        $ref: "#/components/messages/broadcastUsers"
   /topic/rooms/{room_id}/slides/control:
     parameters:
       room_id:
@@ -128,7 +128,7 @@ channels:
     subscribe:
       description: スライド操作購読トピック
       message:
-        $ref: '#/components/messages/broadcastSlideControl'
+        $ref: "#/components/messages/broadcastSlideControl"
   /topic/rooms/{room_id}/pointer/control:
     parameters:
       room_id:
@@ -138,23 +138,23 @@ channels:
     subscribe:
       description: ポインター操作購読トピック
       message:
-        $ref: '#/components/messages/broadcastPointerControl'
+        $ref: "#/components/messages/broadcastPointerControl"
   /topic/exception:
     subscribe:
       description: 例外購読トピック
       message:
-        $ref: '#/components/messages/broadcastException'
+        $ref: "#/components/messages/broadcastException"
 
 components:
   messages:
     startTimer:
       description: READY状態のタイマーを開始する
       payload:
-        $ref: '#/components/schemas/TimerStartRequest'
+        $ref: "#/components/schemas/TimerStartRequest"
     resumeTimer:
       description: READY状態のタイマーを再開する
       payload:
-        $ref: '#/components/schemas/TimerResumeRequest'
+        $ref: "#/components/schemas/TimerResumeRequest"
     stopTimer:
       description: RUNNING状態のタイマーを停止する
     resetTimer:
@@ -166,29 +166,29 @@ components:
     controlPointer:
       description: ポインターを操作する
       payload:
-        $ref: '#/components/schemas/PointerControlRequest'
+        $ref: "#/components/schemas/PointerControlRequest"
     disconnectPointer:
       description: ポインターを切断する
     broadcastTimer:
       description: タイマーを配信する
       payload:
-        $ref: '#/components/schemas/TimerResponse'
+        $ref: "#/components/schemas/TimerResponse"
     broadcastUsers:
       description: ユーザリストを配信する
       payload:
-        $ref: '#/components/schemas/UsersResponse'
+        $ref: "#/components/schemas/UsersResponse"
     broadcastSlideControl:
       description: スライド操作を配信する
       payload:
-        $ref: '#/components/schemas/SlideControlResponse'
+        $ref: "#/components/schemas/SlideControlResponse"
     broadcastPointerControl:
       description: ポインター操作を配信する
       payload:
-        $ref: '#/components/schemas/PointerControlResponse'
+        $ref: "#/components/schemas/PointerControlResponse"
     broadcastException:
       description: 例外を配信する
       payload:
-        $ref: '#/components/schemas/ErrorResponse'
+        $ref: "#/components/schemas/ErrorResponse"
 
   schemas:
     TimerStartRequest:
@@ -248,7 +248,7 @@ components:
         users:
           description: ユーザリスト
           type: array
-          $ref: '#/components/schemas/UserResponse'
+          $ref: "#/components/schemas/UserResponse"
       required:
         - users
     TimerResponse:
@@ -294,7 +294,7 @@ components:
         user:
           description: ユーザ
           type: object
-          $ref: '#/components/schemas/UserResponse'
+          $ref: "#/components/schemas/UserResponse"
         isActive:
           description: ポインターがアクティブかどうか
           type: boolean
@@ -302,7 +302,7 @@ components:
           description: 回転数
           type: object
           nullable: true
-          $ref: '#/components/schemas/PointerRotationResponse'
+          $ref: "#/components/schemas/PointerRotationResponse"
       required:
         - user
         - enabled
