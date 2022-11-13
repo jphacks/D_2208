@@ -1,0 +1,13 @@
+{
+  "extends": "@tsconfig/strictest/tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "baseUrl": ".",
+    "composite": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "types": ["node"],
+    "resolveJsonModule": true
+  },
+  "include": ["vite.config.ts"]
+}

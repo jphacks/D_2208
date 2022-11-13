@@ -2,6 +2,8 @@ package dev.abelab.smartpointer.domain.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 import dev.abelab.smartpointer.enums.TimerStatus;
 import dev.abelab.smartpointer.exception.BadRequestException;
@@ -34,12 +36,18 @@ public class TimerModel implements Serializable {
     TimerStatus status = TimerStatus.READY;
 
     /**
-     * 初期値[s]
+     * 入力時間 [s]
      */
-    Integer value;
+    Integer inputTime;
 
     /**
-     * 終了日時
+     * 一時停止時点での残り時間 [s]
+     */
+    @Builder.Default
+    Optional<Integer> remainingTimeAtPaused = Optional.empty();
+
+    /**
+     * 終了時刻
      */
     LocalDateTime finishAt;
 
@@ -47,59 +55,70 @@ public class TimerModel implements Serializable {
         this.roomId = timer.getRoomId();
         this.status = TimerStatus.find(timer.getStatus()) //
             .orElseThrow(() -> new InternalServerErrorException(ErrorCode.UNEXPECTED_ERROR));
-        this.value = timer.getValue();
+        this.inputTime = timer.getInputTime();
+        this.remainingTimeAtPaused = Optional.ofNullable(timer.getRemainingTimeAtPaused());
         this.finishAt = timer.getFinishAt();
+
+        // DB上はRUNNINGだが終了時刻を過ぎている場合があるので、終了時刻を過ぎていたらREADYにする
+        if (LocalDateTime.now().isAfter(this.finishAt)) {
+            this.status = TimerStatus.READY;
+            this.remainingTimeAtPaused = Optional.empty();
+        }
     }
 
     /**
      * タイマーを開始
      * 
-     * @param value タイマー時間[s]
+     * @param inputTime 入力時間
      */
-    public void start(final Integer value) {
+    public void start(final Integer inputTime) {
         if (!this.getStatus().equals(TimerStatus.READY)) {
-            throw new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STARTED);
+            throw new BadRequestException(ErrorCode.TIMER_CANNOT_BE_STARTED);
         }
 
         this.setStatus(TimerStatus.RUNNING);
-        this.setValue(value);
-        this.setFinishAt(LocalDateTime.now().plusSeconds(value));
+        this.setInputTime(inputTime);
+        this.setRemainingTimeAtPaused(Optional.empty());
+        this.setFinishAt(LocalDateTime.now().plusSeconds(inputTime));
     }
 
     /**
      * タイマーを再開
-     * 
-     * @param value タイマー時間[s]
      */
-    public void resume(final Integer value) {
-        if (!this.getStatus().equals(TimerStatus.READY)) {
-            throw new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STARTED);
+    public void resume() {
+        if (!this.getStatus().equals(TimerStatus.PAUSED)) {
+            throw new BadRequestException(ErrorCode.TIMER_CANNOT_BE_RESUMED);
         }
 
+        this.setFinishAt(LocalDateTime.now().plusSeconds(this.remainingTimeAtPaused.orElse(0)));
         this.setStatus(TimerStatus.RUNNING);
-        this.setFinishAt(LocalDateTime.now().plusSeconds(value));
+        this.setRemainingTimeAtPaused(Optional.empty());
     }
 
     /**
-     * タイマーを停止
+     * タイマーを一時停止
      */
-    public void stop() {
+    public void pause() {
         if (!this.getStatus().equals(TimerStatus.RUNNING)) {
-            throw new BadRequestException(ErrorCode.TIMER_IS_ALREADY_STOPPED);
+            throw new BadRequestException(ErrorCode.TIMER_CANNOT_BE_PAUSED);
         }
 
-        this.setStatus(TimerStatus.READY);
+        // レイテンシによっては残り時間が0sを下回る可能性があるが、とりあえず考慮しない
+        this.setRemainingTimeAtPaused(Optional.of(Math.toIntExact(ChronoUnit.SECONDS.between(LocalDateTime.now(), this.finishAt))));
+        this.setStatus(TimerStatus.PAUSED);
     }
 
     /**
      * タイマーをリセット
      */
     public void reset() {
-        if (!this.getStatus().equals(TimerStatus.READY)) {
+        if (this.getStatus().equals(TimerStatus.READY)) {
             throw new BadRequestException(ErrorCode.TIMER_CANNOT_BE_RESET);
         }
 
-        this.setFinishAt(LocalDateTime.now().plusSeconds(this.getValue()));
+        this.setRemainingTimeAtPaused(Optional.empty());
+        this.setFinishAt(LocalDateTime.now().plusSeconds(this.getInputTime()));
+        this.setStatus(TimerStatus.READY);
     }
 
 }

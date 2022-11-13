@@ -1,0 +1,526 @@
+schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+}
+
+type Query {
+    """
+    ヘルスチェックAPI
+    """
+    health: Boolean!
+
+    """
+    ユーザリスト取得API
+    """
+    getUsers(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): Users!
+
+    """
+    タイマー取得API
+    """
+    getTimer(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): Timer!
+
+    """
+    カスタムポインターリスト取得API
+    """
+    getCustomPointers(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): CustomPointers!
+
+    """
+    ポインタータイプ取得API
+    """
+    getPointerType(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): String!
+}
+
+type Mutation {
+    """
+    ルーム作成API
+    """
+    createRoom(
+        """
+        ポインタータイプ
+        """
+        pointerType: String!
+    ): Room!
+
+    """
+    ルーム削除API
+    """
+    deleteRoom(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): ID!
+
+    """
+    ルーム入室API
+    """
+    joinRoom(
+        """
+        ルームID
+        """
+        roomId: ID!,
+
+        """
+        パスコード
+        """
+        passcode: String!,
+
+        """
+        ユーザ名
+        """
+        userName: String!
+    ): AccessToken!
+
+    """
+    タイマー開始API
+    """
+    startTimer(
+        """
+        入力時間 [s]
+        """
+        inputTime: Int!
+
+        """
+        アクセストークン
+        """
+        accessToken: String!
+    ): Timer!
+
+    """
+    タイマー再開API
+    """
+    resumeTimer(
+        """
+        アクセストークン
+        """
+        accessToken: String!
+    ): Timer!
+
+    """
+    タイマー一時停止API
+    """
+    pauseTimer(
+        """
+        アクセストークン
+        """
+        accessToken: String!
+    ): Timer!
+
+    """
+    タイマーリセットAPI
+    """
+    resetTimer(
+        """
+        アクセストークン
+        """
+        accessToken: String!
+    ): Timer!
+
+    """
+    スライドを進めるAPI
+    """
+    goNextSlide(
+        """
+        アクセストークン
+        """
+        accessToken: String!
+    ): SlideControl!
+
+    """
+    スライドを戻すAPI
+    """
+    goPreviousSlide(
+        """
+        アクセストークン
+        """
+        accessToken: String!
+    ): SlideControl!
+
+    """
+    ポインター操作API
+    """
+    movePointer(
+        """
+        α値
+        """
+        alpha: Float,
+
+        """
+        β値
+        """
+        beta: Float,
+
+        """
+        γ値
+        """
+        gamma: Float,
+
+        """
+        アクセストークン
+        """
+        accessToken: String!
+    ): PointerControl!
+
+    """
+    ポインター切断API
+    """
+    disconnectPointer(
+        """
+        アクセストークン
+        """
+        accessToken: String!
+    ): User!
+
+    """
+    カスタムポインター作成API
+    """
+    createCustomPointer(
+        """
+        ルームID
+        """
+        roomId: ID!
+
+        """
+        カスタムポインターID
+        """
+        id: ID!
+
+        """
+        ラベル
+        """
+        label: String!
+
+        """
+        画像コンテンツ(Base64)
+        """
+        content: String!
+    ): ID!
+
+    """
+    カスタムポインター削除API
+    """
+    deleteCustomPointer(
+        """
+        カスタムポインターID
+        """
+        id: ID!
+
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): ID!
+
+    """
+    ポインタータイプ変更API
+    """
+    changePointerType(
+        """
+        ポインタータイプ
+        """
+        pointerType: String!
+
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): String!
+}
+
+type Subscription {
+    """
+    ルーム終了イベント購読API
+    """
+    subscribeToRoomFinishEvent(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): ID!
+
+    """
+    ユーザリスト購読API
+    """
+    subscribeToUsers(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): Users!
+
+    """
+    タイマー購読API
+    """
+    subscribeToTimer(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): Timer!
+
+    """
+    スライド操作購読API
+    """
+    subscribeToSlideControl(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): SlideControl!
+
+    """
+    ポインター操作購読API
+    """
+    subscribeToPointer(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): PointerControl!
+
+    """
+    ポインター切断イベント購読API
+    """
+    subscribeToPointerDisconnectEvent(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): User!
+
+    """
+    カスタムポインターリスト購読API
+    """
+    subscribeToCustomPointers(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): CustomPointers!
+
+    """
+    ポインタータイプ購読API
+    """
+    subscribeToPointerType(
+        """
+        ルームID
+        """
+        roomId: ID!
+    ): String!
+}
+
+"""
+ルーム
+"""
+type Room {
+    """
+    ルームID
+    """
+    id: ID!
+
+    """
+    パスコード
+    """
+    passcode: String!
+
+    """
+    ポインタータイプ
+    """
+    pointerType: String!
+}
+
+"""
+アクセストークン
+"""
+type AccessToken {
+    """
+    トークンタイプ
+    """
+    tokenType: String!
+
+    """
+    アクセストークン
+    """
+    accessToken: String!
+
+    """
+    TTL [s]
+    """
+    ttl: Int!
+
+    """
+    ユーザ
+    """
+    user: User!
+}
+
+"""
+ユーザ
+"""
+type User {
+    """
+    ユーザID
+    """
+    id: ID!
+
+    """
+    ルーム名
+    """
+    name: String!
+}
+
+"""
+ユーザリスト
+"""
+type Users {
+    """
+    ユーザリスト
+    """
+    users: [User!]!
+}
+
+"""
+タイマー
+"""
+type Timer {
+    """
+    入力時間 [s]
+    """
+    inputTime: Int!
+
+    """
+    一時停止時点での残り時間 [s]
+    """
+    remainingTimeAtPaused: Int
+
+    """
+    終了時刻
+    """
+    finishAt: String!
+
+    """
+    ステータス
+    """
+    status: TimerStatus!
+}
+
+"""
+ポインター操作
+"""
+type PointerControl {
+    """
+    操作方向
+    """
+    orientation: PointerControlOrientation!
+
+    """
+    操作者
+    """
+    user: User!
+}
+
+"""
+ポインター操作方向
+"""
+type PointerControlOrientation {
+    """
+    α値
+    """
+    alpha: Float!
+
+    """
+    β値
+    """
+    beta: Float!
+
+    """
+    γ値
+    """
+    gamma: Float!
+}
+
+"""
+カスタムポインター
+"""
+type CustomPointer {
+    """
+    カスタムポインターID
+    """
+    id: ID!
+
+    """
+    ラベル
+    """
+    label: String!
+
+    """
+    URL
+    """
+    url: String!
+}
+
+"""
+カスタムポインターリスト
+"""
+type CustomPointers {
+    """
+    カスタムポインターリスト
+    """
+    customPointers: [CustomPointer!]!
+}
+
+"""
+タイマーステータス
+"""
+enum TimerStatus {
+    """
+    準備中
+    """
+    READY
+
+    """
+    実行中
+    """
+    RUNNING
+
+    """
+    一時停止中
+    """
+    PAUSED
+}
+
+"""
+スライド操作
+"""
+enum SlideControl {
+    """
+    進める
+    """
+    NEXT
+
+    """
+    戻す
+    """
+    PREVIOUS
+}

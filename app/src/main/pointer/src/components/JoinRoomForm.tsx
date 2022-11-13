@@ -11,11 +11,12 @@ import {
   PinInputField,
   Flex,
 } from "@chakra-ui/react";
-import { AxiosError } from "axios";
+import { ClientError } from "graphql-request";
 import { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { roomApi } from "@/api";
+import { initializeWsClient, requestHttp } from "@/api";
+import { graphql } from "@/gql";
 import { AuthData } from "@/types/AuthData";
 
 type Props = {
@@ -50,13 +51,36 @@ export const JoinRoomForm: FC<Props> = ({ onSubmit: onSubmitProps }) => {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const { data } = await roomApi.joinRoom(values.roomId, {
-        passcode: values.passcode,
-        name: values.userName,
+      const data = await requestHttp({
+        query: graphql(/* GraphQL */ `
+          mutation JoinRoom(
+            $roomId: ID!
+            $passcode: String!
+            $userName: String!
+          ) {
+            joinRoom(
+              roomId: $roomId
+              passcode: $passcode
+              userName: $userName
+            ) {
+              tokenType
+              accessToken
+              ttl
+              user {
+                id
+              }
+            }
+          }
+        `),
+        variables: values,
       });
+
+      initializeWsClient(data.joinRoom.accessToken);
+
       localStorage.setItem(localStorageKey, values.userName);
       onSubmitProps({
-        ...data,
+        accessToken: data.joinRoom.accessToken,
+        userId: data.joinRoom.user.id,
         userName: values.userName,
         roomId: values.roomId,
       });
@@ -68,10 +92,10 @@ export const JoinRoomForm: FC<Props> = ({ onSubmit: onSubmitProps }) => {
         isClosable: true,
       });
     } catch (error) {
-      if (error instanceof AxiosError) {
+      if (error instanceof ClientError) {
         toast({
           title: "ログインに失敗しました。",
-          description: error.response?.data.message,
+          description: error.response.errors?.map((e) => e.message).join(", "),
           status: "error",
           duration: 3000,
           isClosable: true,

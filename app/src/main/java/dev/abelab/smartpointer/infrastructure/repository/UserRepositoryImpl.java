@@ -30,6 +30,14 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public List<UserModel> selectAll() {
+        final var example = new UserExample();
+        return this.userMapper.selectByExample(example).stream() //
+            .map(UserModel::new) //
+            .collect(Collectors.toList());
+    }
+
+    @Override
     public List<UserModel> selectByRoomId(final String roomId) {
         final var example = new UserExample();
         example.createCriteria().andRoomIdEqualTo(roomId);

@@ -18,8 +18,8 @@ import net.rakugakibox.util.YamlResourceBundle;
 @Configuration
 public class MessageSourceConfig {
     @Bean
-    public MessageSource messageSource(@Value("${spring.messages.basename}") String basename,
-        @Value("${spring.messages.encoding}") String encoding) {
+    public MessageSource messageSource(@Value("${spring.messages.basename}") final String basename,
+        @Value("${spring.messages.encoding}") final String encoding) {
 
         final var messageSource = new YamlMessageSource();
 
@@ -31,7 +31,7 @@ public class MessageSourceConfig {
 
     private static class YamlMessageSource extends ResourceBundleMessageSource {
         @Override
-        protected ResourceBundle doGetBundle(String basename, Locale locale) throws MissingResourceException {
+        protected ResourceBundle doGetBundle(final String basename, final Locale locale) throws MissingResourceException {
             return ResourceBundle.getBundle(basename, locale, YamlResourceBundle.Control.INSTANCE);
         }
 

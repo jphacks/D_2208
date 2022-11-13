@@ -4,3 +4,10 @@ spring:
     username: smartpointer
     password: smartpointer
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+gcp:
+  project-id: GCP_PROJECT_ID
+  credentials-path: GCP_CREDENTIALS_PATH
+  cloud-storage:
+    enabled: false
+    bucket-name: GCP_BUCKET_NAME

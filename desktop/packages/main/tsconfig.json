@@ -1,0 +1,23 @@
+{
+  "extends": "@smartpointer-desktop/tsconfig/node",
+  "include": [
+    "src/**/*",
+    "vite.config.ts",
+    "@smartpointer-desktop/shared",
+    "src/view/window/.ts"
+  ],
+  "exclude": [
+    "src/gql/**/*"
+  ],
+  "compilerOptions": {
+    "importsNotUsedAsValues": "remove",
+    "exactOptionalPropertyTypes": false,
+    "noImplicitOverride": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
+  }
+}

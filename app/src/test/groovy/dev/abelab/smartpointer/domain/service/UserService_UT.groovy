@@ -1,5 +1,6 @@
 package dev.abelab.smartpointer.domain.service
 
+import dev.abelab.smartpointer.exception.BadRequestException
 import dev.abelab.smartpointer.exception.BaseException
 import dev.abelab.smartpointer.exception.ConflictException
 import dev.abelab.smartpointer.exception.ErrorCode
@@ -39,6 +40,35 @@ class UserService_UT extends AbstractService_UT {
         1 * this.userRepository.existsByRoomIdAndName(roomId, userName) >> true
         final BaseException exception = thrown()
         verifyException(exception, new ConflictException(ErrorCode.USER_NAME_IS_ALREADY_EXISTS))
+    }
+
+    def "checkIsNameValid: ユーザ名が有効な場合は何もしない"() {
+        when:
+        this.sut.checkIsNameValid(inputUserName)
+
+        then:
+        noExceptionThrown()
+
+        where:
+        inputUserName << [
+            RandomHelper.alphanumeric(1),
+            RandomHelper.alphanumeric(255),
+        ]
+    }
+
+    def "checkIsNameValid: ユーザ名が不正な場合は400エラー"() {
+        when:
+        this.sut.checkIsNameValid(inputUserName)
+
+        then:
+        final BaseException exception = thrown()
+        verifyException(exception, new BadRequestException(ErrorCode.INVALID_USER_NAME))
+
+        where:
+        inputUserName << [
+            RandomHelper.alphanumeric(0),
+            RandomHelper.alphanumeric(256),
+        ]
     }
 
 }

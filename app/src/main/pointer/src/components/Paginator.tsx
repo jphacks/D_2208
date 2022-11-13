@@ -1,27 +1,68 @@
-import { IconButton, Icon, Flex, VStack, Heading } from "@chakra-ui/react";
+import { IconButton, Icon, Flex, useToast } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { Sink } from "graphql-ws";
 import { FC } from "react";
 
-import { stompClient } from "@/stomp";
+import { requestWs } from "@/api";
+import { graphql } from "@/gql";
 import { AuthData } from "@/types/AuthData";
 
 type Props = {
   authData: AuthData;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const noop = () => {};
+
 export const Paginator: FC<Props> = ({ authData }) => {
-  const goNext = () => {
-    stompClient.publish({
-      destination: `/app/rooms/${authData.roomId}/slides/next`,
-      body: JSON.stringify({ room_id: authData.roomId }),
-    });
+  const toast = useToast();
+
+  const emptySink: Sink = {
+    next: noop,
+    complete: noop,
+    error(error) {
+      if (!(error instanceof Error)) {
+        throw error;
+      }
+      toast({
+        status: "error",
+        title: "エラーが発生しました",
+        description: error.message,
+      });
+    },
   };
 
-  const goPrevious = () =>
-    stompClient.publish({
-      destination: `/app/rooms/${authData.roomId}/slides/previous`,
-      body: JSON.stringify({ room_id: authData.roomId }),
-    });
+  const goNext = () => {
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          mutation GoNextSlide($accessToken: String!) {
+            goNextSlide(accessToken: $accessToken)
+          }
+        `),
+        variables: {
+          accessToken: authData.accessToken,
+        },
+      },
+      emptySink
+    );
+  };
+
+  const goPrevious = () => {
+    requestWs(
+      {
+        query: graphql(/* GraphQL */ `
+          mutation GoPreviousSlide($accessToken: String!) {
+            goPreviousSlide(accessToken: $accessToken)
+          }
+        `),
+        variables: {
+          accessToken: authData.accessToken,
+        },
+      },
+      emptySink
+    );
+  };
 
   return (
     <Flex

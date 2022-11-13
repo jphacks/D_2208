@@ -12,7 +12,7 @@ class RoomModel_UT extends AbstractSpecification {
         final room = RoomModel.builder().build()
 
         then:
-        room.id.length() == 36
+        room.id.length() == 11
         room.passcode.length() == 6
     }
 

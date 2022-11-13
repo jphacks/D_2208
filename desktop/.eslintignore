@@ -1,0 +1,8 @@
+**/node_modules
+**/dist
+**/*.svg
+
+**/vite.config.ts
+
+package-lock.json
+.electron-vendors.cache.json

@@ -21,7 +21,12 @@ public enum TimerStatus {
     /**
      * 実行中
      */
-    RUNNING(1);
+    RUNNING(1),
+
+    /**
+     * 一時停止中
+     */
+    PAUSED(2);
 
     /**
      * タイマーステータスID

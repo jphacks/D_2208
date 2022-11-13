@@ -1,1 +1,9 @@
-electron/main/generated/http-client/*
+**/node_modules
+**/dist
+**/*.svg
+**/*.json
+
+package-lock.json
+.electron-vendors.cache.json
+
+packages/main/src/gql/**/*

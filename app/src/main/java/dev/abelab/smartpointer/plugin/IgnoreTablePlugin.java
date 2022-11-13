@@ -45,7 +45,7 @@ public class IgnoreTablePlugin extends PluginAdapter {
     }
 
     @Override
-    public boolean sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable) {
+    public boolean sqlMapGenerated(final GeneratedXmlFile sqlMap, final IntrospectedTable introspectedTable) {
         return this.checkIsTableToGenerate(introspectedTable);
     }
 

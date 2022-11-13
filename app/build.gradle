@@ -2,7 +2,7 @@ import org.yaml.snakeyaml.Yaml
 
 buildscript {
     ext {
-        SPRING_BOOT_VERSION = "2.7.1"
+        SPRING_BOOT_VERSION = "2.7.5"
     }
     repositories {
         mavenCentral()
@@ -74,17 +74,22 @@ ext {
 dependencies {
     // spring boot
     implementation "org.springframework.boot:spring-boot-starter-web:${SPRING_BOOT_VERSION}"
+    implementation "org.springframework.boot:spring-boot-starter-webflux:${SPRING_BOOT_VERSION}"
     implementation "org.springframework.boot:spring-boot-starter-websocket:${SPRING_BOOT_VERSION}"
     implementation "org.springframework.boot:spring-boot-starter-validation:${SPRING_BOOT_VERSION}"
     implementation "org.springframework.boot:spring-boot-starter-security:${SPRING_BOOT_VERSION}"
+    implementation "org.springframework.boot:spring-boot-starter-graphql:${SPRING_BOOT_VERSION}"
+    implementation "org.springframework.boot:spring-boot-starter-actuator:${SPRING_BOOT_VERSION}"
+    implementation "org.springframework.boot:spring-boot-devtools:${SPRING_BOOT_VERSION}"
     testImplementation "org.springframework.boot:spring-boot-starter-test:${SPRING_BOOT_VERSION}"
+    testImplementation "org.springframework.graphql:spring-graphql-test:1.0.2"
+    testImplementation "io.projectreactor:reactor-test:3.5.0"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${SPRING_BOOT_VERSION}"
 
     // spring security
     implementation "org.springframework.security:spring-security-core:5.7.2"
     implementation "org.springframework.security:spring-security-web:5.7.2"
     implementation "org.springframework.security:spring-security-config:5.7.2"
-    // implementation "org.springframework.security:spring-security-messaging:5.7.2"
     testImplementation "org.springframework.security:spring-security-test:5.7.2"
 
     // spring session
@@ -110,13 +115,8 @@ dependencies {
     // mysql
     implementation "mysql:mysql-connector-java:8.0.29"
 
-    // swagger
-    implementation "io.springfox:springfox-boot-starter:3.0.0"
-    implementation "org.springdoc:springdoc-openapi-ui:1.6.9"
-    implementation "org.springdoc:springdoc-openapi-javadoc:1.6.9"
-    implementation "org.springdoc:springdoc-openapi-security:1.6.9"
-    implementation "com.github.therapi:therapi-runtime-javadoc:0.13.0"
-    annotationProcessor "com.github.therapi:therapi-runtime-javadoc-scribe:0.13.0"
+    // google cloud
+    implementation "com.google.cloud:google-cloud-storage:2.11.3"
 
     // test
     testImplementation "org.spockframework:spock-core:2.2-M1-groovy-4.0"
@@ -136,6 +136,9 @@ dependencies {
     implementation "commons-net:commons-net:3.8.0"
     implementation "commons-validator:commons-validator:1.7"
     implementation "net.rakugakibox.util:yaml-resource-bundle:1.2"
+
+    // support greater than java 11
+    implementation "javax.xml.bind:jaxb-api:2.3.1"
 }
 
 tasks.withType(Test) {

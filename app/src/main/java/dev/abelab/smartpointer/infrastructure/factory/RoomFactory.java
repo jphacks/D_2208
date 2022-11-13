@@ -21,6 +21,7 @@ public class RoomFactory {
         return Room.builder() //
             .id(roomModel.getId()) //
             .passcode(roomModel.getPasscode()) //
+            .pointerType(roomModel.getPointerType()) //
             .build();
     }
 

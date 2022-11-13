@@ -1,48 +1,31 @@
 package dev.abelab.smartpointer.infrastructure.api.controller
 
 import dev.abelab.smartpointer.AbstractDatabaseSpecification
+import dev.abelab.smartpointer.domain.model.UserModel
 import dev.abelab.smartpointer.exception.BaseException
-import dev.abelab.smartpointer.helper.JsonConvertHelper
-import dev.abelab.smartpointer.infrastructure.api.response.ErrorResponse
+import dev.abelab.smartpointer.helper.RandomHelper
 import dev.abelab.smartpointer.property.AuthProperty
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
-import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
-import org.springframework.messaging.converter.MappingJackson2MessageConverter
-import org.springframework.messaging.simp.stomp.StompSession
-import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
-import org.springframework.mock.web.MockHttpSession
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.MvcResult
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import org.springframework.transaction.PlatformTransactionManager
-import org.springframework.util.MultiValueMap
-import org.springframework.web.context.WebApplicationContext
-import org.springframework.web.socket.client.standard.StandardWebSocketClient
-import org.springframework.web.socket.messaging.WebSocketStompClient
-import org.springframework.web.socket.sockjs.client.SockJsClient
-import org.springframework.web.socket.sockjs.client.WebSocketTransport
-import spock.lang.Shared
+import org.springframework.graphql.test.tester.HttpGraphQlTester
+import org.springframework.graphql.test.tester.WebSocketGraphQlTester
+import org.springframework.web.reactive.socket.client.ReactorNettyWebSocketClient
+import reactor.core.publisher.Flux
+import reactor.test.StepVerifier
 
-import java.util.concurrent.TimeUnit
+import java.time.Duration
 
 /**
  * Controller統合テストの基底クラス
  */
 abstract class AbstractController_IT extends AbstractDatabaseSpecification {
 
-    private MockMvc mockMvc
-
-    private WebSocketStompClient stompClient
+    private WebSocketGraphQlTester webSocketGraphQlTester
 
     @Autowired
-    private WebApplicationContext webApplicationContext
-
-    @Autowired
-    private PlatformTransactionManager transactionManager
+    private HttpGraphQlTester httpGraphQlTester
 
     @Autowired
     private MessageSource messageSource
@@ -50,139 +33,90 @@ abstract class AbstractController_IT extends AbstractDatabaseSpecification {
     @Autowired
     protected AuthProperty authProperty
 
-    @Shared
-    protected MockHttpSession session = new MockHttpSession()
-
     /**
-     * GET request
+     * Execute query with HTTP / return response
      *
-     * @param path path
-     *
-     * @return HTTP request builder
-     */
-    MockHttpServletRequestBuilder getRequest(final String path) {
-        return MockMvcRequestBuilders.get(path)
-            .session(this.session)
-    }
-
-    /**
-     * POST request
-     *
-     * @param path path
-     *
-     * @return HTTP request builder
-     */
-    MockHttpServletRequestBuilder postRequest(final String path) {
-        return MockMvcRequestBuilders.post(path)
-            .session(this.session)
-    }
-
-    /**
-     * POST request (Form)
-     *
-     * @param path path
-     * @param params query params
-     *
-     * @return HTTP request builder
-     */
-    MockHttpServletRequestBuilder postRequest(final String path, final MultiValueMap<String, String> params) {
-        return MockMvcRequestBuilders.post(path)
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .params(params)
-            .session(this.session)
-    }
-
-    /**
-     * POST request (JSON)
-     *
-     * @param path path
-     * @param content request body
-     *
-     * @return HTTP request builder
-     */
-    MockHttpServletRequestBuilder postRequest(final String path, final Object content) {
-        return MockMvcRequestBuilders.post(path)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(JsonConvertHelper.convertObjectToJson(content))
-            .session(this.session)
-    }
-
-    /**
-     * PUT request (JSON)
-     *
-     * @param path path
-     * @param content request body
-     *
-     * @return HTTP request builder
-     */
-    MockHttpServletRequestBuilder putRequest(final String path, final Object content) {
-        return MockMvcRequestBuilders.put(path)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(JsonConvertHelper.convertObjectToJson(content))
-            .session(this.session)
-    }
-
-    /**
-     * DELETE request
-     *
-     * @param path path
-     *
-     * @return HTTP request builder
-     */
-    MockHttpServletRequestBuilder deleteRequest(final String path) {
-        return MockMvcRequestBuilders.delete(path)
-            .session(this.session)
-    }
-
-    /**
-     * Execute request
-     *
-     * @param request HTTP request builder
-     * @param status expected HTTP status
-     *
-     * @return MVC result
-     */
-    MvcResult execute(final MockHttpServletRequestBuilder request, final HttpStatus status) {
-        final result = mockMvc.perform(request).andReturn()
-
-        assert result.response.status == status.value()
-        return result
-    }
-
-    /**
-     * Execute request / return response
-     *
-     * @param request HTTP request builder
-     * @param status expected HTTP status
-     * @param clazz response class
-     *
+     * @param query query
+     * @param operation operation
+     * @param clazz clazz
      * @return response
      */
-    def <T> T execute(final MockHttpServletRequestBuilder request, final HttpStatus status, final Class<T> clazz) {
-        final result = mockMvc.perform(request).andReturn()
+    protected <T> T executeHttp(final String query, final String operation, final Class<T> clazz) {
+        final response = this.httpGraphQlTester.document(query).execute()
+            .path(operation)
+            .entity(clazz)
 
-        assert result.response.status == status.value()
-        return JsonConvertHelper.convertJsonToObject(result.getResponse().getContentAsString(), clazz)
+        return response.get()
     }
 
     /**
-     * Execute request / verify exception
+     * Execute query with HTTP / verify exception
      *
-     * @param request HTTP request builder
+     * @param query query
      * @param exception expected exception
-     *
-     * @return error response
      */
-    ErrorResponse execute(final MockHttpServletRequestBuilder request, final BaseException exception) {
-        final result = mockMvc.perform(request).andReturn()
-        final response = JsonConvertHelper.convertJsonToObject(result.response.contentAsString, ErrorResponse.class)
-
+    protected executeHttp(final String query, final BaseException exception) {
         final expectedErrorMessage = this.getErrorMessage(exception)
+        this.httpGraphQlTester.document(query).execute()
+            .errors()
+            .satisfy({
+                assert it[0].errorType == exception.errorType
+                assert it[0].message == expectedErrorMessage
+            })
+    }
 
-        assert result.response.status == exception.httpStatus.value()
-        assert response.code == exception.errorCode.code
-        assert response.message == expectedErrorMessage
-        return response
+    /**
+     * Execute query with WebSocket
+     *
+     * @param query query
+     */
+    protected void executeWebSocket(final String query) {
+        this.webSocketGraphQlTester.document(query).execute()
+    }
+
+    /**
+     * Execute query with WebSocket / return response
+     *
+     * @param query query
+     * @param operation operation
+     * @param clazz clazz
+     * @return response
+     */
+    protected <T> T executeWebSocket(final String query, final String operation, final Class<T> clazz) {
+        final response = this.webSocketGraphQlTester.document(query).execute()
+            .path(operation)
+            .entity(clazz)
+
+        return response.get()
+    }
+
+    /**
+     * Execute query with WebSocket / verify exception
+     *
+     * @param query query
+     * @param exception expected exception
+     */
+    protected executeWebSocket(final String query, final BaseException exception) {
+        final expectedErrorMessage = this.getErrorMessage(exception)
+        this.webSocketGraphQlTester.document(query).execute()
+            .errors()
+            .satisfy({
+                assert it[0].errorType == exception.errorType
+                assert it[0].message == expectedErrorMessage
+            })
+    }
+
+    /**
+     * Execute subscription query with WebSocket / return response
+     *
+     * @param query query
+     * @param operation operation
+     * @param clazz clazz
+     * @return response
+     */
+    protected <T> Flux<T> executeWebSocketSubscription(final String query, final String operation, final Class<T> clazz) {
+        return this.webSocketGraphQlTester.document(query).executeSubscription()
+            .toFlux(operation, clazz)
     }
 
     /**
@@ -198,41 +132,48 @@ abstract class AbstractController_IT extends AbstractDatabaseSpecification {
     }
 
     /**
-     * STOMPのコネクションを開始
+     * ログイン
      *
-     * @return session
+     * @param roomId ルームID
+     * @return ログインユーザ
      */
-    protected StompSession connect() {
-        final stompSessionHandler = new StompSessionHandlerAdapter() {}
-        return this.stompClient.connect(String.format("ws://localhost:%d/ws", PORT), stompSessionHandler)
-            .get(1, TimeUnit.SECONDS)
-    }
-
-    /**
-     * publish
-     *
-     * @param destination destination
-     * @param session stomp session
-     * @param payload payload
-     */
-    protected void publish(final String destination, final StompSession session, final Object payload) {
-        session.send(destination, JsonConvertHelper.convertObjectToJson(payload))
-    }
-
-    /**
-     * setup before test case
-     */
-    def setup() {
-        this.mockMvc = MockMvcBuilders
-            .webAppContextSetup(this.webApplicationContext)
-            .addFilter(({ request, response, chain ->
-                response.setCharacterEncoding("UTF-8")
-                chain.doFilter(request, response)
-            }))
+    protected UserModel login(final String roomId) {
+        final user = UserModel.builder()
+            .roomId(roomId)
+            .name(RandomHelper.alphanumeric(10))
             .build()
 
-        this.stompClient = new WebSocketStompClient(new SockJsClient(List.of(new WebSocketTransport(new StandardWebSocketClient()))))
-        this.stompClient.setMessageConverter(new MappingJackson2MessageConverter())
+        sql.dataSet("user").add(
+            id: user.id,
+            room_id: user.roomId,
+            name: user.name,
+        )
+
+        return user
+    }
+
+    /**
+     * アクセストークンを取得
+     *
+     * @param loginUser ログインユーザ
+     * @return アクセストークン
+     */
+    protected String getAccessToken(final UserModel loginUser) {
+        return Jwts.builder()
+            .setSubject(loginUser.id)
+            .setIssuer(this.authProperty.getJwt().getIssuer())
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + this.authProperty.getTtl() * 1000))
+            .signWith(SignatureAlgorithm.HS512, this.authProperty.getJwt().getSecret().getBytes())
+            .compact()
+    }
+
+    def setup() {
+        StepVerifier.setDefaultTimeout(Duration.ofSeconds(5))
+
+        this.webSocketGraphQlTester = WebSocketGraphQlTester
+            .builder("ws://localhost:${PORT}/graphql-ws", new ReactorNettyWebSocketClient())
+            .build()
     }
 
 }

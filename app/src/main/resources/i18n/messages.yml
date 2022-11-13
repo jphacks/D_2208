@@ -3,20 +3,25 @@ exception:
     validation_error: 不正なリクエストです。
     invalid_request_parameter: 不正なリクエストです。
     invalid_user_name: ユーザ名は1~255文字にしてください。
-    timer_is_already_started: タイマーは既に開始済みです。
-    timer_is_already_stopped: タイマーは既に停止済みです。
-    timer_cannot_be_reset: 実行中のタイマーはリセットできません。
-    invalid_timer_value: タイマー時間は1〜3600秒にしてください。
+    timer_cannot_be_started: タイマーを開始できません。
+    timer_cannot_be_paused: タイマーを一時停止できません。
+    timer_cannot_be_reset: タイマーをリセットできません。
+    timer_cannot_be_resumed: タイマーを再開できません。
+    invalid_timer_input_time: 1〜3600秒にしてください。
   unauthorized:
     user_not_logged_in: ユーザはログインしていません。
     incorrect_room_passcode: パスコードが間違えています。
+    invalid_access_token: 不正なアクセストークンです。
   forbidden:
     user_has_no_permission: その動作は許可されていません。
   not_found:
     api: APIが見つかりません。
     room: ルームが見つかりません。
     timer: タイマーが見つかりません。
+    custom_pointer: カスタムポインターが見つかりません。
   conflict:
     user_name_is_already_exists: そのユーザ名は既に使われています。
+    custom_pointer_is_already_exists: カスタムポインターは既に存在します。
   internal_server_error:
     unexpected_error: 予期しないエラーが発生しました。
+    failed_to_upload_file: アップロードに失敗しました。

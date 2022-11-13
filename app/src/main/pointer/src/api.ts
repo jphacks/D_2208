@@ -1,16 +1,78 @@
-import axios from "axios";
+import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
+import { ExecutionResult, print } from "graphql";
+import { GraphQLClient } from "graphql-request";
+import { RemoveIndex, RequestOptions } from "graphql-request/dist/types";
+import { Client, createClient, Sink } from "graphql-ws";
 
-import { Configuration, RoomApi } from "./generated/http-client";
+const graphqlHttpEndpoint = `${location.origin}/graphql`;
 
-const API_URL = location.origin;
+const graphqlHttpClient = new GraphQLClient(graphqlHttpEndpoint);
 
-const config = new Configuration({
-  basePath: API_URL,
-});
+export const requestHttp = <
+  T = unknown,
+  V extends Record<string, unknown> = Record<string, unknown>
+>({
+  query,
+  variables,
+}: {
+  query: TypedDocumentNode<T, V>;
+} & (V extends Record<string | number | symbol, never>
+  ? { variables?: V }
+  : keyof RemoveIndex<V> extends never
+  ? { variables?: V }
+  : { variables: V })): Promise<T> => {
+  return graphqlHttpClient.request<T, V>({
+    document: query,
+    variables: variables,
+  } as RequestOptions<V, T>);
+};
 
-const axiosInstance = axios.create({
-  baseURL: API_URL,
-  withCredentials: true,
-});
+const graphqlWsEndpoint = `wss://${location.host}/graphql-ws`;
 
-export const roomApi = new RoomApi(config, "", axiosInstance);
+let graphqlWsClient: Client | null = null;
+
+export const initializeWsClient = (accessToken: string) => {
+  graphqlWsClient = createClient({
+    url: graphqlWsEndpoint,
+    connectionParams: {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+    lazy: false,
+  });
+};
+
+export const closeWsClient = () => {
+  graphqlWsClient?.dispose();
+  graphqlWsClient = null;
+};
+
+export const requestWs = <
+  T = unknown,
+  V extends Record<string, unknown> = Record<string, unknown>
+>(
+  {
+    query,
+    variables,
+  }: {
+    query: TypedDocumentNode<T, V>;
+  } & (V extends Record<string | number | symbol, never>
+    ? { variables?: V }
+    : keyof RemoveIndex<V> extends never
+    ? { variables?: V }
+    : { variables: V }),
+  sink: Sink<ExecutionResult<T>>
+) => {
+  if (!graphqlWsClient) {
+    throw new Error("graphql-ws client not initialized");
+  }
+
+  graphqlWsClient.subscribe(
+    {
+      query: print(query),
+      variables,
+    },
+    sink
+  );
+};
